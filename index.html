@@ -1,9 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>استعلام الأعضاء</title>
+
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  margin-top: 50px;
+  direction: rtl;
+}
+
+input {
+  padding: 10px;
+  font-size: 18px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>أدخل رقم العضوية</h2>
+
+<input type="number" id="id" placeholder="رقم العضوية">
+<button onclick="search()">بحث</button>
+
+<div id="result"></div>
+
 <script>
 const sheetID = "1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk";
 const url = `https://opensheet.elk.sh/${sheetID}/Members`;
 
 let data = [];
 
+// جلب البيانات من Google Sheets
 fetch(url)
   .then(res => res.json())
   .then(json => {
@@ -12,15 +55,20 @@ fetch(url)
 
 function search(){
   let val = document.getElementById("id").value;
-  let m = data.find(x => x.membership_id == val);
+
+  let m = data.find(x => x.Membership_id == val);
 
   if(m){
     document.getElementById("result").innerHTML =
-    "الاسم: "+m.name+"<br>الإجمالي: "+m.total+
-    "<br>المدفوع: "+m.paid+
-    "<br>المتبقي: "+m.remaining;
+    "الاسم: " + m.name +
+    "<br>الإجمالي: " + m.total +
+    "<br>المدفوع: " + m["مدفوع"] +
+    "<br>المتبقي: " + m.remaining;
   } else {
     document.getElementById("result").innerHTML = "لا يوجد";
   }
 }
 </script>
+
+</body>
+</html>
