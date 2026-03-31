@@ -1,31 +1,18 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-<meta charset="UTF-8">
-<title>استعلام العضوية</title>
-<style>
-body { font-family: Arial; text-align: center; }
-</style>
-</head>
-
-<body>
-
-<h2>أدخل رقم العضوية</h2>
-
-<input type="text" id="id">
-<button onclick="search()">بحث</button>
-
-<div id="result"></div>
-
 <script>
-const data = [
-  {id:"143", name:"سيام جابيش", total:"50000000", paid:"2000000", remaining:"48000000"},
-  {id:"200", name:"محمد عساف", total:"2000000", paid:"500000", remaining:"1500000"}
-];
+const sheetID = "1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk";
+const url = `https://opensheet.elk.sh/${sheetID}/Members`;
+
+let data = [];
+
+fetch(url)
+  .then(res => res.json())
+  .then(json => {
+    data = json;
+  });
 
 function search(){
   let val = document.getElementById("id").value;
-  let m = data.find(x=>x.id==val);
+  let m = data.find(x => x.membership_id == val);
 
   if(m){
     document.getElementById("result").innerHTML =
@@ -37,6 +24,3 @@ function search(){
   }
 }
 </script>
-
-</body>
-</html>
