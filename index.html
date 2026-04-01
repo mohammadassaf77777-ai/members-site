@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Members</title>
+<title>Members System</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
@@ -13,57 +13,143 @@ body {
     background: #f5f5f5;
 }
 
+.container {
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+}
+
 button {
-    padding: 10px 20px;
-    font-size: 18px;
-    background: #4CAF50;
+    padding: 10px;
+    width: 95%;
+    margin-top: 10px;
+    background: #2196F3;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
+}
+
+.member-card {
+    background: white;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
 }
 </style>
+
 </head>
 
 <body>
 
-<h2>Download Members PDF</h2>
-<button onclick="generatePDF()">Download PDF</button>
+<!-- LOGIN -->
+<div class="container" id="loginBox">
+    <h3>Login</h3>
+    <input type="text" id="id" placeholder="Membership ID">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p id="error" style="color:red;"></p>
+</div>
+
+<!-- SEARCH -->
+<div class="container" id="searchBox" style="display:none;">
+    <h3>Search Members</h3>
+    <input type="text" id="search" placeholder="Search by name..." onkeyup="searchMember()">
+</div>
+
+<!-- RESULT -->
+<div id="result"></div>
 
 <script>
-function generatePDF() {
 
+let members = [];
+
+// 🔥 تحميل البيانات من Google Sheets مرة واحدة
+async function loadData() {
+    const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
+    const res = await fetch(url);
+    members = await res.json();
+}
+
+loadData();
+
+// LOGIN
+function login() {
+    let id = document.getElementById("id").value;
+    let password = document.getElementById("password").value;
+
+    let user = members.find(m =>
+        m.membership_id == id && m.password == password
+    );
+
+    if(user) {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("searchBox").style.display = "block";
+        showMembers(members);
+    } else {
+        document.getElementById("error").innerText = "Wrong ID or Password";
+    }
+}
+
+// SEARCH
+function searchMember() {
+    let value = document.getElementById("search").value.toLowerCase();
+
+    let filtered = members.filter(m =>
+        m.name.toLowerCase().includes(value)
+    );
+
+    showMembers(filtered);
+}
+
+// SHOW MEMBERS
+function showMembers(list) {
+    let result = document.getElementById("result");
+    result.innerHTML = "";
+
+    list.forEach(m => {
+        let remaining = m.total - m.paid;
+
+        result.innerHTML += `
+        <div class="member-card">
+            <h3>${m.name}</h3>
+            <p>ID: ${m.membership_id}</p>
+            <p>Total: ${m.total}</p>
+            <p>Paid: ${m.paid}</p>
+            <p>Remaining: ${remaining}</p>
+            <button onclick="downloadPDF('${m.membership_id}')">Download PDF</button>
+        </div>
+        `;
+    });
+}
+
+// PDF لكل عضو
+function downloadPDF(memberId) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    doc.setFont("Helvetica");
-    doc.setFontSize(12);
+    let m = members.find(x => x.membership_id == memberId);
+    let remaining = m.total - m.paid;
 
-    let y = 20;
+    doc.text("Member Info", 10, 10);
+    doc.text("Name: " + m.name, 10, 20);
+    doc.text("ID: " + m.membership_id, 10, 30);
+    doc.text("Total: " + m.total, 10, 40);
+    doc.text("Paid: " + m.paid, 10, 50);
+    doc.text("Remaining: " + remaining, 10, 60);
 
-    // بيانات (بدلها لاحقاً من Google Sheet)
-    let members = [
-        {id: 143, name: "Bassam Jawish", total: 5000000, paid: 2000000},
-        {id: 200, name: "Mohammad Assaf", total: 2000000, paid: 500000}
-    ];
-
-    members.forEach(m => {
-
-        let remaining = m.total - m.paid;
-
-        let text =
-            "Name: " + m.name +
-            " | ID: " + m.id +
-            " | Total: " + m.total +
-            " | Paid: " + m.paid +
-            " | Remaining: " + remaining;
-
-        doc.text(text, 10, y);
-
-        y += 10;
-    });
-
-    doc.save("members.pdf");
+    doc.save("member_" + m.membership_id + ".pdf");
 }
+
 </script>
 
 </body>
