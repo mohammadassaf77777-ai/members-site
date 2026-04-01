@@ -1,10 +1,10 @@
 {
-  "name": "نظام الأعضاء",
-  "short_name": "Members",
+  "name": "الجمعية السكنية",
+  "short_name": "الجمعية",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4facfe",
+  "background_color": "#1e3c72",
+  "theme_color": "#1e3c72",
   "icons": [
     {
       "src": "icon.png",
