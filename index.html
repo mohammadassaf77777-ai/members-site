@@ -10,35 +10,6 @@
 <meta name="theme-color" content="#141e30">
 
 <style>
-/* 💥 شاشة تحميل */
-.splash-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #141e30;
-}
-
-.splash-screen img {
-    width: 200px;
-    height: 200px;
-    object-fit: contain;
-    animation: fadeInOut 3s ease-in-out;
-}
-
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-/* باقي التنسيق */
 body {
     font-family: Arial;
     direction: rtl;
@@ -146,6 +117,133 @@ input, button {
 
 <div id="content"></div>
 
-<!-- 🖼 شاشة تحميل -->
-<div class="splash-screen" id="splashScreen">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADgCAIAAAD1fgoRAAAACXBIWXMAAB7CAAAewgFu0HU+AAEAAElEQVR4nOzdfZgU5b7G8d/+hKtQ0ykq0xxiy7sZq0M2gztZqOlUtShlqYpjquG5J7tNh21Z5yDpBRthp8I0LFPII2CUpzJ2UWIiCoEgYzoAeVZ26Qk9vTPWjxDhf3lZScJpx35DhA9fiCKgU77fP8XItEgmOllHzqXrgslnN+TBYFvXdmEX07//dEEsUKUOynU2hLf/3PzvlO1h30V+SgmyDfgfgjvq0zng5xfXzwbcu2NVozQp6fFm4c9AFWv1VGlgWl+DEr4Tdd8J4neZXtKnI//TdrL7Vm1+dJw0tZlHfg3DydtZ4zOt6vBlgFxnTpEEj4fgv12HfH3Ek1XXONq6xOLq+XK71YAOdHp62fsoP2f2PU30cP7oUyjGJ8FHZ15lW+rmn6AeYYhVx8jNSIsb0pmj4OUmfo+J5ONrzDJM9xntydpzmk42kwyktvS0N8anZGZ9IXWUpT9UE5t0gHAB1bnhtXZoym30KYYwVjz86bY1Jbmqp2Jw1r0vKp2jVpCHXvvfV0twHjxxn1z2mQO8UuJlT2M4jJZKX+X4ehau4TnxCBM9fPdzgKM3zyKL+05Whl6Xz0hsLtctfozy7fYlqDW6h9rZJwX2jfyc4+6LgZ1zTk7imZCoOGIjjECX5wN64sVE0r+8bGHHqu7rfhnxx4+m2scO2YX4sreY9TV96Fh6Kjwxx4AfnwN5fqS1Cv5UehBw7ubj5c9TrvXz5PTt18j6XJzOtkfmfL72HtVXDWpbh0U8Dd5bpTjps9gnrGJ3T1+FptTPST1dGxFjZlL+ZIFiMzSFGvhkqdFJlVrlhA+Z+0OZlm3y6zoD9QnYWfZUb2vO4m9i/Le4bjpqkLY3fhXDb0r1IneT0boiFyMVEbiGJmTDDcpewljVrEAA5Z79F5YVw7DN7pDoVjYrxaOGUHlE9dt6Pq1g3B4k7D0p6YXyImD5gqa2KwTLwGpZpIT05fTLy1R2wUzqAZmXhSfyDrUlfhyFkf0o7zZfMbpBBE3qtK0Gs9nyXYOIJ5DoAHHR7HG0DcnkHCUZn/F9rNiCtbRPGj9tXJ/kVuIF77wLFv/WKPoeh6Myos0wEwI07JwG5XyXzRwyUJpsPPhvjiG2oyrLXXrrYJtRfez1AfrrG3kXclSTqlGxjcF7/Yo8E57KT5B0Rp2XddNqtVpHH6cXk8F3cLk4b6t3JLeIcWpk8bhjb2wTLK5S7zdqtbGb28gnYRmRdfY1vE1gS6THZo2hjslzhtdQczlf74bIwrM3dFjsFPeml9d/4R2ZCV5bb+X0Ew4wW7hfL5Qzy95sa9D9JY4ntZj3tJ4gxEkYHZxjc4Dph4+yNrsgKxbVqQp7x+d4fb9S0v7z02O71B2v/jaxmfhXrwiF4e2rjwX9LgbfjNkgE4W5hmbBaNYrsCJpIjTxqpH00ZKpa0vjdA2bTPyNxk2g8bmL5U5tMF0veHZPqlIrxNnyl2g8LPfmGmLOE5vpxiTXiOji15LS7gEKyIDjwAEoEwA7fc/smJhHe0YAp1YNh53paNK1gWpv0mxXM4jmEgUuQ7ygntdI6mPbOg8cyktfnlQntmX9OMfP0YHcPq3q7nk9WQG3vXwd2WkUqgnmFYyuwlgWVgsUSF4mJS3qlF5eRrAWwJkeGZMQdzTXj8cf5bw1yG99VV5BlJS5tdXykA0m74el0CzFE3Rsc6qH40D1HXJw4khxuT3Q==
+<script>
+
+let members = [];
+
+// 📅 تاريخ آخر تحديث
+let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
+
+// 📊 تحميل البيانات
+async function loadData(){
+    const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
+    const res = await fetch(url);
+    members = await res.json();
+}
+loadData();
+
+// 🔐 تسجيل الدخول
+function login(){
+    let id = document.getElementById("id").value;
+    let pass = document.getElementById("pass").value;
+
+    if(id == "9999" && pass == "admin123"){
+        updateDate();
+        showAdmin(true);
+        return;
+    }
+
+    let user = members.find(m => m.membership_id == id && m.password == pass);
+
+    if(user){
+        showUser(user);
+    } else {
+        document.getElementById("error").innerText = "❌ بيانات خاطئة";
+    }
+}
+
+// 👤 العضو
+function showUser(user){
+    document.getElementById("loginBox").style.display="none";
+
+    document.getElementById("content").innerHTML = `
+    <div class="card">
+
+        <div class="alert">🔔 تم تحديث البيانات مؤخراً</div>
+
+        <h3>${user.name}</h3>
+
+        <p>💰 الإجمالي: ${user.total}</p>
+        <p>💵 المدفوع: ${user.paid}</p>
+        <p>📉 المتبقي: ${user.remaining}</p>
+
+        <p>📅 آخر تحديث: ${lastUpdate}</p>
+
+        <button class="whatsapp" onclick="openWA()">
+        للتواصل مع الجمعية اضغط هنا
+        </button>
+
+        <button class="logout" onclick="location.reload()">خروج</button>
+    </div>
+    `;
+}
+
+// 👑 الأدمن
+function showAdmin(showAlert=false){
+    document.getElementById("loginBox").style.display="none";
+
+    let alertBox = showAlert ? `<div class="alert">🔔 تم تحديث التاريخ بنجاح</div>` : "";
+
+    let html = `<div class="card">
+    ${alertBox}
+    <h3>👑 لوحة التحكم</h3>
+
+    <p>📅 آخر تحديث: ${lastUpdate}</p>
+
+    <button class="admin" onclick="refreshData()">🔄 تحديث البيانات</button>
+
+    <table border="1">
+    <tr>
+    <th>الاسم</th>
+    <th>رقم</th>
+    <th>إجمالي</th>
+    <th>مدفوع</th>
+    <th>متبقي</th>
+    </tr>`;
+
+    members.forEach(m=>{
+        html += `
+        <tr>
+        <td>${m.name}</td>
+        <td>${m.membership_id}</td>
+        <td>${m.total}</td>
+        <td>${m.paid}</td>
+        <td>${m.remaining}</td>
+        </tr>`;
+    });
+
+    html += `</table>
+
+    <button class="logout" onclick="location.reload()">خروج</button>
+    </div>`;
+
+    document.getElementById("content").innerHTML = html;
+}
+
+// 📱 واتساب
+function openWA(){
+    window.open("https://wa.me/963980049054", "_blank");
+}
+
+// 🔗 روابط
+function openLink(url){
+    window.open(url, "_blank");
+}
+
+// 🔄 تحديث البيانات
+function refreshData(){
+    loadData();
+    alert("تم تحديث البيانات 🔄");
+}
+
+// 📅 تحديث التاريخ
+function updateDate(){
+    let now = new Date().toLocaleString();
+    localStorage.setItem("lastUpdate", now);
+    lastUpdate = now;
+}
+
+</script>
+
+</body>
+</html>
