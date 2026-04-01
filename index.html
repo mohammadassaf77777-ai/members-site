@@ -4,44 +4,60 @@
   <meta charset="UTF-8">
   <title>تسجيل دخول الأعضاء</title>
 
-  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     body {
-      background-color: #f5f7fa;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
       direction: rtl;
       text-align: center;
       font-family: Arial;
+      height: 100vh;
+    }
+
+    .main-box {
+      margin-top: 120px;
     }
 
     .card {
-      border-radius: 15px;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    input {
+      height: 50px;
+      font-size: 18px;
+    }
+
+    button {
+      height: 50px;
+      font-size: 18px;
     }
 
     h2 {
-      color: #0d6efd;
+      color: white;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="container mt-5">
+<div class="container main-box">
 
-  <h2 class="mb-4">🔐 تسجيل دخول العضو</h2>
+  <h2>🔐 تسجيل دخول العضو</h2>
 
-  <div class="card p-4 shadow">
+  <div class="card shadow">
 
     <input type="number" id="id" class="form-control mb-3" placeholder="رقم العضوية">
 
     <input type="password" id="pass" class="form-control mb-3" placeholder="كلمة السر">
 
-    <button class="btn btn-primary" onclick="login()">دخول</button>
+    <button class="btn btn-primary w-100" onclick="login()">دخول</button>
 
   </div>
 
-  <div id="result" class="card p-3 shadow mt-4" style="display:none;">
+  <div id="result" class="card shadow mt-4" style="display:none;">
     <h4 id="name"></h4>
     <p>💰 الإجمالي: <span id="total"></span></p>
     <p>💵 المدفوع: <span id="paid"></span></p>
