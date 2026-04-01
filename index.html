@@ -10,23 +10,31 @@ body {
     font-family: Arial;
     direction: rtl;
     text-align: center;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background: linear-gradient(135deg, #141e30, #243b55);
     color: white;
     margin:0;
 }
 
+/* 🔝 الهيدر */
 .header {
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.4);
     padding:15px;
     font-size:18px;
 }
 
-.header a {
-    color: #00ffcc;
-    display:block;
-    margin-top:5px;
+/* 🔵 زر فيسبوك */
+.fb-btn {
+    display:inline-block;
+    background:#1877f2;
+    color:white;
+    padding:10px 15px;
+    border-radius:10px;
+    margin-top:10px;
+    text-decoration:none;
+    font-weight:bold;
 }
 
+/* 🧊 كرت */
 .card {
     background: white;
     color:black;
@@ -35,9 +43,10 @@ body {
     width:90%;
     max-width:400px;
     margin:20px auto;
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
+/* 🔘 أزرار */
 input, button {
     width:90%;
     padding:12px;
@@ -52,24 +61,32 @@ input, button {
 .whatsapp { background:#25D366; color:white; }
 .group { background:#128C7E; color:white; }
 
-table {
-    width:100%;
-    font-size:12px;
+/* 🔔 إشعار */
+.alert {
+    background:#4CAF50;
+    color:white;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:10px;
+    font-size:14px;
 }
 </style>
 
 </head>
 <body>
 
-<!-- 🏠 العنوان -->
+<!-- 🏠 الهيدر -->
 <div class="header">
 الجمعية التعاونية الشعبية للسكن و الاصطياف بحلب
-<a href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
-📘 صفحة الفيسبوك
+
+<br>
+
+<a class="fb-btn" href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
+📘 زيارة صفحة الفيسبوك
 </a>
 </div>
 
-<!-- 👥 مجموعات الواتساب -->
+<!-- 👥 مجموعات -->
 <div class="card">
 <h3>👥 مجموعات المشاريع</h3>
 
@@ -118,7 +135,7 @@ function login(){
 
     if(id == "9999" && pass == "admin123"){
         updateDate();
-        showAdmin();
+        showAdmin(true);
         return;
     }
 
@@ -131,12 +148,15 @@ function login(){
     }
 }
 
-// 👤 عرض العضو
+// 👤 العضو
 function showUser(user){
     document.getElementById("loginBox").style.display="none";
 
     document.getElementById("content").innerHTML = `
     <div class="card">
+
+        <div class="alert">🔔 تم تحديث البيانات مؤخراً</div>
+
         <h3>${user.name}</h3>
 
         <p>💰 الإجمالي: ${user.total}</p>
@@ -154,12 +174,16 @@ function showUser(user){
     `;
 }
 
-// 👑 لوحة الأدمن
-function showAdmin(){
+// 👑 الأدمن
+function showAdmin(showAlert=false){
     document.getElementById("loginBox").style.display="none";
 
+    let alertBox = showAlert ? `<div class="alert">🔔 تم تحديث التاريخ بنجاح</div>` : "";
+
     let html = `<div class="card">
+    ${alertBox}
     <h3>👑 لوحة التحكم</h3>
+
     <p>📅 آخر تحديث: ${lastUpdate}</p>
 
     <button class="admin" onclick="refreshData()">🔄 تحديث البيانات</button>
@@ -192,12 +216,12 @@ function showAdmin(){
     document.getElementById("content").innerHTML = html;
 }
 
-// 📱 واتساب مباشر
+// 📱 واتساب
 function openWA(){
     window.open("https://wa.me/963980049054", "_blank");
 }
 
-// 📱 فتح روابط (مهم للتطبيق)
+// 🔗 روابط
 function openLink(url){
     window.open(url, "_blank");
 }
@@ -205,7 +229,7 @@ function openLink(url){
 // 🔄 تحديث البيانات
 function refreshData(){
     loadData();
-    alert("تم تحديث البيانات");
+    alert("تم تحديث البيانات 🔄");
 }
 
 // 📅 تحديث التاريخ
