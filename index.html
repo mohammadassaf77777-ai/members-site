@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>نظام الأعضاء</title>
+<title>الجمعية</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -10,47 +10,73 @@ body {
     font-family: Arial;
     direction: rtl;
     text-align: center;
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    margin:0;
+}
+
+.header {
+    background: rgba(0,0,0,0.3);
+    padding:15px;
+    font-size:18px;
+}
+
+.header a {
+    color: #00ffcc;
+    display:block;
+    margin-top:5px;
 }
 
 .card {
     background: white;
-    padding: 20px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 400px;
-    margin: auto;
-    margin-top: 20px;
+    color:black;
+    padding:20px;
+    border-radius:20px;
+    width:90%;
+    max-width:400px;
+    margin:20px auto;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
 input, button {
-    width: 90%;
-    padding: 10px;
-    margin: 8px;
+    width:90%;
+    padding:12px;
+    margin:8px;
+    border-radius:10px;
+    border:none;
 }
 
-.admin { background: orange; color: white; }
-.login { background: green; color: white; }
-.logout { background: red; color: white; }
-.whatsapp { background: #25D366; color: white; }
+.login { background:#4CAF50; color:white; }
+.logout { background:red; color:white; }
+.admin { background:orange; color:white; }
+.whatsapp { background:#25D366; color:white; }
 
 table {
-    width: 100%;
-    font-size: 12px;
+    width:100%;
+    font-size:12px;
 }
 </style>
 
 </head>
 <body>
 
+<!-- 🏠 العنوان -->
+<div class="header">
+الجمعية التعاونية الشعبية للسكن و الاصطياف بحلب
+<a href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
+📘 صفحة الفيسبوك
+</a>
+</div>
+
+<!-- 🔐 تسجيل الدخول -->
 <div class="card" id="loginBox">
-<h3>🔐 تسجيل الدخول</h3>
+<h3>تسجيل الدخول</h3>
 
 <input id="id" placeholder="رقم العضوية">
 <input id="pass" type="password" placeholder="كلمة السر">
 
 <button class="login" onclick="login()">دخول</button>
-<p id="error"></p>
+<p id="error" style="color:red;"></p>
 </div>
 
 <div id="content"></div>
@@ -59,7 +85,11 @@ table {
 
 let members = [];
 
-async function loadData() {
+// 📅 تاريخ آخر تحديث
+let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
+
+// 📊 تحميل البيانات
+async function loadData(){
     const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
     const res = await fetch(url);
     members = await res.json();
@@ -71,8 +101,9 @@ function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
 
-    // 👑 دخول الأدمن
+    // 👑 أدمن
     if(id == "9999" && pass == "admin123"){
+        updateDate();
         showAdmin();
         return;
     }
@@ -81,25 +112,30 @@ function login(){
 
     if(user){
         showUser(user);
-    }else{
-        document.getElementById("error").innerText = "❌ خطأ";
+    } else {
+        document.getElementById("error").innerText = "❌ بيانات خاطئة";
     }
 }
 
-// 👤 العضو
+// 👤 عرض العضو
 function showUser(user){
     document.getElementById("loginBox").style.display="none";
 
     document.getElementById("content").innerHTML = `
     <div class="card">
-    <h3>${user.name}</h3>
-    <p>الإجمالي: ${user.total}</p>
-    <p>المدفوع: ${user.paid}</p>
-    <p>المتبقي: ${user.remaining}</p>
+        <h3>${user.name}</h3>
 
-    <button class="whatsapp" onclick="openWA('https://wa.me/963980049054')">واتساب</button>
+        <p>💰 الإجمالي: ${user.total}</p>
+        <p>💵 المدفوع: ${user.paid}</p>
+        <p>📉 المتبقي: ${user.remaining}</p>
 
-    <button class="logout" onclick="location.reload()">خروج</button>
+        <p>📅 آخر تحديث: ${lastUpdate}</p>
+
+        <button class="whatsapp" onclick="openWA()">
+        للتواصل مع الجمعية اضغط هنا
+        </button>
+
+        <button class="logout" onclick="location.reload()">خروج</button>
     </div>
     `;
 }
@@ -110,6 +146,10 @@ function showAdmin(){
 
     let html = `<div class="card">
     <h3>👑 لوحة التحكم</h3>
+    <p>📅 آخر تحديث: ${lastUpdate}</p>
+
+    <button class="admin" onclick="refreshData()">🔄 تحديث البيانات</button>
+
     <table border="1">
     <tr>
     <th>الاسم</th>
@@ -124,29 +164,36 @@ function showAdmin(){
         <tr>
         <td>${m.name}</td>
         <td>${m.membership_id}</td>
-        <td contenteditable>${m.total}</td>
-        <td contenteditable>${m.paid}</td>
-        <td contenteditable>${m.remaining}</td>
-        </tr>
-        `;
+        <td>${m.total}</td>
+        <td>${m.paid}</td>
+        <td>${m.remaining}</td>
+        </tr>`;
     });
 
     html += `</table>
 
-    <button class="admin" onclick="alert('التعديل يتم من Google Sheet مباشرة')">
-    حفظ التعديلات
-    </button>
-
     <button class="logout" onclick="location.reload()">خروج</button>
-
     </div>`;
 
     document.getElementById("content").innerHTML = html;
 }
 
 // 📱 واتساب
-function openWA(url){
-    window.open(url, "_blank");
+function openWA(){
+    window.open("https://wa.me/963980049054", "_blank");
+}
+
+// 🔄 تحديث البيانات
+function refreshData(){
+    loadData();
+    alert("تم تحديث البيانات");
+}
+
+// 📅 تحديث التاريخ
+function updateDate(){
+    let now = new Date().toLocaleString();
+    localStorage.setItem("lastUpdate", now);
+    lastUpdate = now;
 }
 
 </script>
