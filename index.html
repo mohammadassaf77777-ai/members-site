@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Members</title>
@@ -16,7 +16,7 @@ body {
 button {
     padding: 10px 20px;
     font-size: 18px;
-    background: #2196F3;
+    background: #4CAF50;
     color: white;
     border: none;
     border-radius: 8px;
@@ -26,8 +26,8 @@ button {
 
 <body>
 
-<h2>تحميل كشف PDF</h2>
-<button onclick="generatePDF()">تحميل PDF</button>
+<h2>Download Members PDF</h2>
+<button onclick="generatePDF()">Download PDF</button>
 
 <script>
 function generatePDF() {
@@ -35,20 +35,15 @@ function generatePDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // تحويل النص العربي بشكل صحيح
-    function fixArabic(text) {
-        return text.split("").reverse().join("");
-    }
-
     doc.setFont("Helvetica");
-    doc.setFontSize(14);
+    doc.setFontSize(12);
 
     let y = 20;
 
-    // بيانات تجريبية (بدلها من Google Sheet عندك)
+    // بيانات (بدلها لاحقاً من Google Sheet)
     let members = [
-        {id: 143, name: "بسام جاويش", total: 5000000, paid: 2000000},
-        {id: 200, name: "محمد عساف", total: 2000000, paid: 500000}
+        {id: 143, name: "Bassam Jawish", total: 5000000, paid: 2000000},
+        {id: 200, name: "Mohammad Assaf", total: 2000000, paid: 500000}
     ];
 
     members.forEach(m => {
@@ -56,13 +51,13 @@ function generatePDF() {
         let remaining = m.total - m.paid;
 
         let text =
-            "الاسم: " + m.name +
-            " | رقم: " + m.id +
-            " | الإجمالي: " + m.total +
-            " | المدفوع: " + m.paid +
-            " | المتبقي: " + remaining;
+            "Name: " + m.name +
+            " | ID: " + m.id +
+            " | Total: " + m.total +
+            " | Paid: " + m.paid +
+            " | Remaining: " + remaining;
 
-        doc.text(fixArabic(text), 190, y, { align: "right" });
+        doc.text(text, 10, y);
 
         y += 10;
     });
