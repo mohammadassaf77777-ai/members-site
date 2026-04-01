@@ -50,6 +50,7 @@ input, button {
 .logout { background:red; color:white; }
 .admin { background:orange; color:white; }
 .whatsapp { background:#25D366; color:white; }
+.group { background:#128C7E; color:white; }
 
 table {
     width:100%;
@@ -66,6 +67,20 @@ table {
 <a href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
 📘 صفحة الفيسبوك
 </a>
+</div>
+
+<!-- 👥 مجموعات الواتساب -->
+<div class="card">
+<h3>👥 مجموعات المشاريع</h3>
+
+<button class="group" onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
+📌 المشروع السادس - الريادة الأول
+</button>
+
+<button class="group" onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
+📌 المشروع الثامن - توسع المدينة W3
+</button>
+
 </div>
 
 <!-- 🔐 تسجيل الدخول -->
@@ -101,7 +116,6 @@ function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
 
-    // 👑 أدمن
     if(id == "9999" && pass == "admin123"){
         updateDate();
         showAdmin();
@@ -178,9 +192,14 @@ function showAdmin(){
     document.getElementById("content").innerHTML = html;
 }
 
-// 📱 واتساب
+// 📱 واتساب مباشر
 function openWA(){
     window.open("https://wa.me/963980049054", "_blank");
+}
+
+// 📱 فتح روابط (مهم للتطبيق)
+function openLink(url){
+    window.open(url, "_blank");
 }
 
 // 🔄 تحديث البيانات
