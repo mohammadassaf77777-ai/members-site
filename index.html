@@ -2,134 +2,72 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>تسجيل دخول الأعضاء</title>
+<title>Members</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  direction: rtl;
-  text-align: center;
-  font-family: Arial;
-  height: 100vh;
-  color: white;
+    font-family: Arial;
+    text-align: center;
+    background: #f5f5f5;
 }
 
-.main-box { margin-top: 100px; }
-
-.card {
-  border-radius: 20px;
-  padding: 20px;
-  color: black;
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 8px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container main-box">
-
-<h2>🔐 تسجيل دخول العضو</h2>
-
-<div id="loginBox" class="card shadow">
-<input type="number" id="id" class="form-control mb-3" placeholder="رقم العضوية">
-<input type="password" id="pass" class="form-control mb-3" placeholder="كلمة السر">
-<button class="btn btn-primary w-100" onclick="login()">دخول</button>
-</div>
-
-<div id="result" class="card shadow mt-4" style="display:none;">
-<h4 id="name"></h4>
-<p>💰 الإجمالي: <span id="total"></span></p>
-<p>💵 المدفوع: <span id="paid"></span></p>
-<p>📉 المتبقي: <span id="remaining"></span></p>
-
-<button class="btn btn-success w-100 mt-2" onclick="downloadPDF()">📄 تحميل PDF</button>
-<button class="btn btn-danger w-100 mt-2" onclick="logout()">🚪 تسجيل خروج</button>
-</div>
-
-<div id="error" class="alert alert-danger mt-3" style="display:none;">
-❌ خطأ في البيانات
-</div>
-
-</div>
+<h2>تحميل كشف PDF</h2>
+<button onclick="generatePDF()">تحميل PDF</button>
 
 <script>
-let membersData = [];
-let currentUser = null;
+function generatePDF() {
 
-async function loadData() {
-  const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
-  const res = await fetch(url);
-  membersData = await res.json();
-  checkSavedLogin();
-}
-loadData();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-function login() {
-  const id = document.getElementById("id").value;
-  const pass = document.getElementById("pass").value;
+    // تحويل النص العربي بشكل صحيح
+    function fixArabic(text) {
+        return text.split("").reverse().join("");
+    }
 
-  const user = membersData.find(item =>
-    item.membership_id == id && item.password == pass
-  );
+    doc.setFont("Helvetica");
+    doc.setFontSize(14);
 
-  if (user) {
-    currentUser = user;
-    localStorage.setItem("user", JSON.stringify(user));
-    showUser(user);
-  } else {
-    document.getElementById("error").style.display = "block";
-  }
-}
+    let y = 20;
 
-function showUser(user) {
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("result").style.display = "block";
-  document.getElementById("error").style.display = "none";
+    // بيانات تجريبية (بدلها من Google Sheet عندك)
+    let members = [
+        {id: 143, name: "بسام جاويش", total: 5000000, paid: 2000000},
+        {id: 200, name: "محمد عساف", total: 2000000, paid: 500000}
+    ];
 
-  document.getElementById("name").innerText = "👤 " + user.name;
-  document.getElementById("total").innerText = user.total;
-  document.getElementById("paid").innerText = user.paid;
-  document.getElementById("remaining").innerText = user.remaining;
-}
+    members.forEach(m => {
 
-function checkSavedLogin() {
-  const saved = localStorage.getItem("user");
-  if (saved) {
-    currentUser = JSON.parse(saved);
-    showUser(currentUser);
-  }
-}
+        let remaining = m.total - m.paid;
 
-function logout() {
-  localStorage.removeItem("user");
-  location.reload();
-}
+        let text =
+            "الاسم: " + m.name +
+            " | رقم: " + m.id +
+            " | الإجمالي: " + m.total +
+            " | المدفوع: " + m.paid +
+            " | المتبقي: " + remaining;
 
-// 🔥 حل العربي: عكس النص
-function arabic(text) {
-  return text.split("").reverse().join("");
-}
+        doc.text(fixArabic(text), 190, y, { align: "right" });
 
-// 📄 PDF عربي
-function downloadPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+        y += 10;
+    });
 
-  doc.setFont("Helvetica");
-  doc.setFontSize(14);
-
-  doc.text(arabic("بيانات العضو"), 180, 20, { align: "right" });
-  doc.text(arabic("الاسم: " + currentUser.name), 180, 40, { align: "right" });
-  doc.text(arabic("الإجمالي: " + currentUser.total), 180, 60, { align: "right" });
-  doc.text(arabic("المدفوع: " + currentUser.paid), 180, 80, { align: "right" });
-  doc.text(arabic("المتبقي: " + currentUser.remaining), 180, 100, { align: "right" });
-
-  doc.save("member.pdf");
+    doc.save("members.pdf");
 }
 </script>
 
