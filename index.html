@@ -6,24 +6,16 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="manifest" href="manifest.json">
-
 <style>
 body {
-    margin: 0;
     font-family: Arial;
     direction: rtl;
+    text-align: center;
     background: linear-gradient(135deg, #4facfe, #00f2fe);
     color: white;
 }
 
-.header {
-    padding: 20px;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.container { margin-top: 60px; }
+.container { margin-top: 40px; }
 
 .card {
     background: white;
@@ -34,53 +26,61 @@ body {
     max-width: 380px;
     margin: auto;
     margin-bottom: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
+/* أزرار المجموعات */
+.groupBtn {
+    background: #25D366;
+    color: white;
+    margin: 8px 0;
+}
+
+/* تسجيل الدخول */
 input {
     width: 90%;
     padding: 12px;
     margin: 10px;
-    border-radius: 10px;
 }
 
 button {
     width: 95%;
     padding: 12px;
-    margin-top: 8px;
     border-radius: 10px;
     border: none;
+    font-size: 15px;
 }
 
 .login { background: #4CAF50; color: white; }
 .logout { background: red; color: white; }
-.refresh { background: orange; color: white; }
 
-.member {
-    background: #fff;
-    color: black;
-    margin: 10px;
-    padding: 15px;
-    border-radius: 15px;
-}
-
-.update {
-    font-size: 13px;
-    margin-top: 10px;
-    color: #555;
-}
 </style>
 </head>
 
 <body>
 
-<div class="header">📱 نظام الأعضاء</div>
-
 <div class="container">
 
+<!-- 👥 المجموعات -->
+<div class="card">
+<h3>👥 مجموعات المشاريع</h3>
+
+<a target="_blank" href="https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk?mode=gi_t">
+<button class="groupBtn">📌 المشروع السادس - الريادة الأول</button>
+</a>
+
+<a target="_blank" href="https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD?mode=gi_t">
+<button class="groupBtn">📌 المشروع الثامن - توسع المدينة W3</button>
+</a>
+
+</div>
+
+<!-- 🔐 تسجيل الدخول -->
 <div id="loginBox" class="card">
+<h3>🔐 تسجيل الدخول</h3>
+
 <input id="id" placeholder="رقم العضوية">
 <input id="pass" type="password" placeholder="كلمة السر">
+
 <button class="login" onclick="login()">دخول</button>
 <p id="error" style="color:red;"></p>
 </div>
@@ -92,48 +92,19 @@ button {
 <script>
 
 let members = [];
-let lastUpdate = "";
 
 // تحميل البيانات
 async function loadData() {
-
-  const cacheTime = 5 * 60 * 1000;
-
-  let savedData = localStorage.getItem("membersData");
-  let savedTime = localStorage.getItem("membersTime");
-
-  let now = new Date().getTime();
-
-  if (savedData && savedTime && (now - savedTime < cacheTime)) {
-    members = JSON.parse(savedData);
-    lastUpdate = new Date(parseInt(savedTime)).toLocaleString();
-  } else {
     const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
     const res = await fetch(url);
     members = await res.json();
-
-    localStorage.setItem("membersData", JSON.stringify(members));
-    localStorage.setItem("membersTime", now);
-
-    lastUpdate = new Date(now).toLocaleString();
-  }
 }
-
 loadData();
 
-// Admin
-const ADMIN_ID = "9999";
-const ADMIN_PASS = "admin123";
-
-// Login
+// تسجيل الدخول
 function login() {
     const id = document.getElementById("id").value;
     const pass = document.getElementById("pass").value;
-
-    if(id === ADMIN_ID && pass === ADMIN_PASS){
-        showAdmin();
-        return;
-    }
 
     const user = members.find(m =>
         m.membership_id == id && m.password == pass
@@ -142,47 +113,25 @@ function login() {
     if(user){
         showUser(user);
     } else {
-        document.getElementById("error").innerText = "❌ خطأ";
+        document.getElementById("error").innerText = "❌ البيانات غير صحيحة";
     }
 }
 
-// عضو
+// عرض العضو
 function showUser(user){
     document.getElementById("loginBox").style.display = "none";
 
     document.getElementById("result").innerHTML = `
     <div class="card">
-        <h3>👋 أهلاً ${user.name}</h3>
+        <h3>👤 ${user.name}</h3>
+
         <p>💰 الإجمالي: ${user.total}</p>
         <p>💵 المدفوع: ${user.paid}</p>
         <p>📉 المتبقي: ${user.remaining}</p>
 
-        <p class="update">📅 آخر تحديث: ${lastUpdate}</p>
-
         <button class="logout" onclick="location.reload()">🚪 خروج</button>
     </div>
     `;
-}
-
-// Admin
-function showAdmin(){
-    document.getElementById("loginBox").style.display = "none";
-
-    document.getElementById("result").innerHTML = `
-    <div class="card">
-        <h3>👑 لوحة التحكم</h3>
-        <p class="update">📅 آخر تحديث: ${lastUpdate}</p>
-
-        <button class="refresh" onclick="refreshNow()">🔄 تحديث</button>
-        <button class="logout" onclick="location.reload()">🚪 خروج</button>
-    </div>
-    `;
-}
-
-// تحديث يدوي
-function refreshNow(){
-    localStorage.clear();
-    location.reload();
 }
 
 </script>
