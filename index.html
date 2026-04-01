@@ -38,6 +38,12 @@
       color: white;
       margin-bottom: 20px;
     }
+
+    .whatsapp {
+      background-color: #25D366;
+      color: white;
+      border: none;
+    }
   </style>
 </head>
 
@@ -62,6 +68,10 @@
     <p>💰 الإجمالي: <span id="total"></span></p>
     <p>💵 المدفوع: <span id="paid"></span></p>
     <p>📉 المتبقي: <span id="remaining"></span></p>
+
+    <a id="whatsappLink" target="_blank">
+      <button class="btn whatsapp w-100 mt-3">📱 تواصل معنا عبر واتساب</button>
+    </a>
   </div>
 
   <div id="error" class="alert alert-danger mt-3" style="display:none;">
@@ -92,6 +102,15 @@ async function login() {
     document.getElementById("total").innerText = user.total;
     document.getElementById("paid").innerText = user.paid;
     document.getElementById("remaining").innerText = user.remaining;
+
+    // ✅ رقمك
+    const phone = "963980049054";
+
+    const message = "مرحبا، أنا العضو رقم " + user.membership_id + " (" + user.name + ")";
+
+    const link = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+
+    document.getElementById("whatsappLink").href = link;
 
   } else {
     document.getElementById("result").style.display = "none";
