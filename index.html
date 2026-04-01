@@ -6,22 +6,32 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+  <!-- مكتبة PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     body {
-      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      background: linear-gradient(135deg, #667eea, #764ba2);
       direction: rtl;
       text-align: center;
       font-family: Arial;
       height: 100vh;
+      color: white;
     }
 
     .main-box {
-      margin-top: 120px;
+      margin-top: 100px;
     }
 
     .card {
       border-radius: 20px;
       padding: 20px;
+      color: black;
+    }
+
+    button {
+      height: 50px;
+      font-size: 18px;
     }
   </style>
 </head>
@@ -32,10 +42,9 @@
 
   <h2>🔐 تسجيل دخول العضو</h2>
 
-  <div class="card shadow">
+  <div id="loginBox" class="card shadow">
 
     <input type="number" id="id" class="form-control mb-3" placeholder="رقم العضوية">
-
     <input type="password" id="pass" class="form-control mb-3" placeholder="كلمة السر">
 
     <button class="btn btn-primary w-100" onclick="login()">دخول</button>
@@ -48,9 +57,9 @@
     <p>💵 المدفوع: <span id="paid"></span></p>
     <p>📉 المتبقي: <span id="remaining"></span></p>
 
-    <a id="whatsappLink" target="_blank">
-      <button class="btn btn-success w-100 mt-3">📱 واتساب</button>
-    </a>
+    <button class="btn btn-success w-100 mt-2" onclick="downloadPDF()">📄 تحميل PDF</button>
+
+    <button class="btn btn-danger w-100 mt-2" onclick="logout()">🚪 تسجيل خروج</button>
   </div>
 
   <div id="error" class="alert alert-danger mt-3" style="display:none;">
@@ -61,17 +70,20 @@
 
 <script>
 let membersData = [];
+let currentUser = null;
 
-// 🔥 تحميل البيانات مرة واحدة فقط
+// تحميل البيانات مرة واحدة
 async function loadData() {
   const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
   const res = await fetch(url);
   membersData = await res.json();
+
+  checkSavedLogin();
 }
 
-// تحميل عند فتح الصفحة
 loadData();
 
+// تسجيل الدخول
 function login() {
   const id = document.getElementById("id").value;
   const pass = document.getElementById("pass").value;
@@ -81,24 +93,58 @@ function login() {
   );
 
   if (user) {
-    document.getElementById("result").style.display = "block";
-    document.getElementById("error").style.display = "none";
+    currentUser = user;
 
-    document.getElementById("name").innerText = "👤 " + user.name;
-    document.getElementById("total").innerText = user.total;
-    document.getElementById("paid").innerText = user.paid;
-    document.getElementById("remaining").innerText = user.remaining;
+    localStorage.setItem("user", JSON.stringify(user));
 
-    const phone = "963980049054";
-    const message = "مرحبا، أنا العضو رقم " + user.membership_id;
-
-    document.getElementById("whatsappLink").href =
-      "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+    showUser(user);
 
   } else {
-    document.getElementById("result").style.display = "none";
     document.getElementById("error").style.display = "block";
   }
+}
+
+// عرض البيانات
+function showUser(user) {
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("error").style.display = "none";
+
+  document.getElementById("name").innerText = "👤 " + user.name;
+  document.getElementById("total").innerText = user.total;
+  document.getElementById("paid").innerText = user.paid;
+  document.getElementById("remaining").innerText = user.remaining;
+}
+
+// تحقق من تسجيل محفوظ
+function checkSavedLogin() {
+  const saved = localStorage.getItem("user");
+
+  if (saved) {
+    const user = JSON.parse(saved);
+    currentUser = user;
+    showUser(user);
+  }
+}
+
+// تسجيل خروج
+function logout() {
+  localStorage.removeItem("user");
+  location.reload();
+}
+
+// تحميل PDF
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.text("بيانات العضو", 20, 20);
+  doc.text("الاسم: " + currentUser.name, 20, 40);
+  doc.text("الإجمالي: " + currentUser.total, 20, 60);
+  doc.text("المدفوع: " + currentUser.paid, 20, 80);
+  doc.text("المتبقي: " + currentUser.remaining, 20, 100);
+
+  doc.save("member.pdf");
 }
 </script>
 
