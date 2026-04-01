@@ -1,49 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Members System</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<title>نظام الأعضاء</title>
 
 <style>
 body {
     font-family: Arial;
+    direction: rtl;
     text-align: center;
-    background: #f5f5f5;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
 }
 
 .container {
+    margin-top: 120px;
+}
+
+.card {
     background: white;
+    color: black;
     padding: 20px;
-    margin: 20px auto;
+    border-radius: 20px;
     width: 90%;
-    max-width: 400px;
-    border-radius: 10px;
+    max-width: 350px;
+    margin: auto;
 }
 
 input {
     width: 90%;
-    padding: 10px;
-    margin: 5px;
+    padding: 12px;
+    margin: 10px;
     font-size: 16px;
 }
 
 button {
-    padding: 10px;
     width: 95%;
+    padding: 12px;
     margin-top: 10px;
-    background: #2196F3;
-    color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
+    font-size: 16px;
 }
 
-.member-card {
-    background: white;
-    margin: 10px;
-    padding: 15px;
-    border-radius: 10px;
+.login-btn {
+    background: #4CAF50;
+    color: white;
+}
+
+.whatsapp {
+    background: #25D366;
+    color: white;
+}
+
+.logout {
+    background: red;
+    color: white;
+}
+
+.result {
+    margin-top: 60px;
 }
 </style>
 
@@ -51,105 +67,96 @@ button {
 
 <body>
 
-<!-- LOGIN -->
-<div class="container" id="loginBox">
-    <h3>Login</h3>
-    <input type="text" id="id" placeholder="Membership ID">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
+<div class="container">
+
+<h2>🔐 تسجيل دخول العضو</h2>
+
+<div id="loginBox" class="card">
+    <input type="text" id="id" placeholder="رقم العضوية">
+    <input type="password" id="pass" placeholder="كلمة السر">
+    <button class="login-btn" onclick="login()">دخول</button>
     <p id="error" style="color:red;"></p>
 </div>
 
-<!-- SEARCH -->
-<div class="container" id="searchBox" style="display:none;">
-    <h3>Search Members</h3>
-    <input type="text" id="search" placeholder="Search by name..." onkeyup="searchMember()">
+<div id="result" class="card result" style="display:none;">
+    <h3 id="name"></h3>
+    <p>💰 الإجمالي: <span id="total"></span></p>
+    <p>💵 المدفوع: <span id="paid"></span></p>
+    <p>📉 المتبقي: <span id="remaining"></span></p>
+
+    <a id="whatsappLink" target="_blank">
+        <button class="whatsapp">📱 تواصل عبر واتساب</button>
+    </a>
+
+    <button class="logout" onclick="logout()">🚪 تسجيل خروج</button>
 </div>
 
-<!-- RESULT -->
-<div id="result"></div>
+</div>
 
 <script>
-
 let members = [];
+let currentUser = null;
 
-// 🔥 تحميل البيانات من Google Sheets مرة واحدة
+// تحميل البيانات
 async function loadData() {
     const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
     const res = await fetch(url);
     members = await res.json();
+
+    checkLogin();
 }
 
 loadData();
 
-// LOGIN
+// تسجيل الدخول
 function login() {
-    let id = document.getElementById("id").value;
-    let password = document.getElementById("password").value;
+    const id = document.getElementById("id").value;
+    const pass = document.getElementById("pass").value;
 
-    let user = members.find(m =>
-        m.membership_id == id && m.password == password
+    const user = members.find(m =>
+        m.membership_id == id && m.password == pass
     );
 
-    if(user) {
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("searchBox").style.display = "block";
-        showMembers(members);
+    if(user){
+        currentUser = user;
+        localStorage.setItem("user", JSON.stringify(user));
+        showUser(user);
     } else {
-        document.getElementById("error").innerText = "Wrong ID or Password";
+        document.getElementById("error").innerText = "❌ البيانات غير صحيحة";
     }
 }
 
-// SEARCH
-function searchMember() {
-    let value = document.getElementById("search").value.toLowerCase();
+// عرض بيانات العضو فقط
+function showUser(user){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("result").style.display = "block";
 
-    let filtered = members.filter(m =>
-        m.name.toLowerCase().includes(value)
-    );
+    document.getElementById("name").innerText = "👤 " + user.name;
+    document.getElementById("total").innerText = user.total;
+    document.getElementById("paid").innerText = user.paid;
+    document.getElementById("remaining").innerText = user.remaining;
 
-    showMembers(filtered);
+    // واتساب
+    const phone = "963980049054";
+    const message = "مرحبا، أنا العضو رقم " + user.membership_id + " (" + user.name + ")";
+    document.getElementById("whatsappLink").href =
+        "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
 }
 
-// SHOW MEMBERS
-function showMembers(list) {
-    let result = document.getElementById("result");
-    result.innerHTML = "";
-
-    list.forEach(m => {
-        let remaining = m.total - m.paid;
-
-        result.innerHTML += `
-        <div class="member-card">
-            <h3>${m.name}</h3>
-            <p>ID: ${m.membership_id}</p>
-            <p>Total: ${m.total}</p>
-            <p>Paid: ${m.paid}</p>
-            <p>Remaining: ${remaining}</p>
-            <button onclick="downloadPDF('${m.membership_id}')">Download PDF</button>
-        </div>
-        `;
-    });
+// حفظ تسجيل الدخول
+function checkLogin(){
+    const saved = localStorage.getItem("user");
+    if(saved){
+        currentUser = JSON.parse(saved);
+        showUser(currentUser);
+    }
 }
 
-// PDF لكل عضو
-function downloadPDF(memberId) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    let m = members.find(x => x.membership_id == memberId);
-    let remaining = m.total - m.paid;
-
-    doc.text("Member Info", 10, 10);
-    doc.text("Name: " + m.name, 10, 20);
-    doc.text("ID: " + m.membership_id, 10, 30);
-    doc.text("Total: " + m.total, 10, 40);
-    doc.text("Paid: " + m.paid, 10, 50);
-    doc.text("Remaining: " + remaining, 10, 60);
-
-    doc.save("member_" + m.membership_id + ".pdf");
+// تسجيل خروج
+function logout(){
+    localStorage.removeItem("user");
+    location.reload();
 }
-
 </script>
 
 </body>
