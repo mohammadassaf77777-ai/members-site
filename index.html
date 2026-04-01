@@ -11,85 +11,52 @@ body {
     direction: rtl;
     text-align: center;
     background: linear-gradient(135deg, #4facfe, #00f2fe);
-    color: white;
 }
-
-.container { margin-top: 40px; }
 
 .card {
     background: white;
-    color: black;
     padding: 20px;
     border-radius: 20px;
     width: 90%;
-    max-width: 380px;
+    max-width: 400px;
     margin: auto;
-    margin-bottom: 15px;
+    margin-top: 20px;
 }
 
-button {
-    width: 95%;
-    padding: 12px;
-    margin-top: 8px;
-    border-radius: 10px;
-    border: none;
-    font-size: 15px;
-}
-
-.groupBtn { background: #25D366; color: white; }
-.login { background: #4CAF50; color: white; }
-.logout { background: red; color: white; }
-.whatsapp { background: #128C7E; color: white; }
-
-input {
+input, button {
     width: 90%;
-    padding: 12px;
-    margin: 10px;
+    padding: 10px;
+    margin: 8px;
+}
+
+.admin { background: orange; color: white; }
+.login { background: green; color: white; }
+.logout { background: red; color: white; }
+.whatsapp { background: #25D366; color: white; }
+
+table {
+    width: 100%;
+    font-size: 12px;
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<div class="container">
-
-<!-- 👥 مجموعات -->
-<div class="card">
-<h3>👥 مجموعات المشاريع</h3>
-
-<button class="groupBtn" onclick="openWA('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
-📌 المشروع السادس - الريادة الأول
-</button>
-
-<button class="groupBtn" onclick="openWA('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
-📌 المشروع الثامن - توسع المدينة W3
-</button>
-
-</div>
-
-<!-- 🔐 تسجيل الدخول -->
-<div id="loginBox" class="card">
+<div class="card" id="loginBox">
 <h3>🔐 تسجيل الدخول</h3>
 
 <input id="id" placeholder="رقم العضوية">
 <input id="pass" type="password" placeholder="كلمة السر">
 
 <button class="login" onclick="login()">دخول</button>
-<p id="error" style="color:red;"></p>
+<p id="error"></p>
 </div>
 
-<div id="result"></div>
-
-</div>
+<div id="content"></div>
 
 <script>
 
-// 🔥 فتح واتساب بشكل مضمون داخل التطبيق
-function openWA(url){
-    window.open(url, "_blank");
-}
-
-// 📊 تحميل البيانات
 let members = [];
 
 async function loadData() {
@@ -100,40 +67,86 @@ async function loadData() {
 loadData();
 
 // 🔐 تسجيل الدخول
-function login() {
-    const id = document.getElementById("id").value;
-    const pass = document.getElementById("pass").value;
+function login(){
+    let id = document.getElementById("id").value;
+    let pass = document.getElementById("pass").value;
 
-    const user = members.find(m =>
-        m.membership_id == id && m.password == pass
-    );
+    // 👑 دخول الأدمن
+    if(id == "9999" && pass == "admin123"){
+        showAdmin();
+        return;
+    }
+
+    let user = members.find(m => m.membership_id == id && m.password == pass);
 
     if(user){
         showUser(user);
-    } else {
-        document.getElementById("error").innerText = "❌ البيانات غير صحيحة";
+    }else{
+        document.getElementById("error").innerText = "❌ خطأ";
     }
 }
 
-// 👤 عرض بيانات العضو
+// 👤 العضو
 function showUser(user){
-    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("loginBox").style.display="none";
 
-    document.getElementById("result").innerHTML = `
+    document.getElementById("content").innerHTML = `
     <div class="card">
-        <h3>👤 ${user.name}</h3>
+    <h3>${user.name}</h3>
+    <p>الإجمالي: ${user.total}</p>
+    <p>المدفوع: ${user.paid}</p>
+    <p>المتبقي: ${user.remaining}</p>
 
-        <p>💰 الإجمالي: ${user.total}</p>
-        <p>💵 المدفوع: ${user.paid}</p>
-        <p>📉 المتبقي: ${user.remaining}</p>
+    <button class="whatsapp" onclick="openWA('https://wa.me/963980049054')">واتساب</button>
 
-        <button class="whatsapp" onclick="openWA('https://wa.me/963980049054')">
-        📱 تواصل واتساب
-        </button>
-
-        <button class="logout" onclick="location.reload()">🚪 تسجيل الخروج</button>
+    <button class="logout" onclick="location.reload()">خروج</button>
     </div>
     `;
+}
+
+// 👑 لوحة الأدمن
+function showAdmin(){
+    document.getElementById("loginBox").style.display="none";
+
+    let html = `<div class="card">
+    <h3>👑 لوحة التحكم</h3>
+    <table border="1">
+    <tr>
+    <th>الاسم</th>
+    <th>رقم</th>
+    <th>إجمالي</th>
+    <th>مدفوع</th>
+    <th>متبقي</th>
+    </tr>`;
+
+    members.forEach(m=>{
+        html += `
+        <tr>
+        <td>${m.name}</td>
+        <td>${m.membership_id}</td>
+        <td contenteditable>${m.total}</td>
+        <td contenteditable>${m.paid}</td>
+        <td contenteditable>${m.remaining}</td>
+        </tr>
+        `;
+    });
+
+    html += `</table>
+
+    <button class="admin" onclick="alert('التعديل يتم من Google Sheet مباشرة')">
+    حفظ التعديلات
+    </button>
+
+    <button class="logout" onclick="location.reload()">خروج</button>
+
+    </div>`;
+
+    document.getElementById("content").innerHTML = html;
+}
+
+// 📱 واتساب
+function openWA(url){
+    window.open(url, "_blank");
 }
 
 </script>
