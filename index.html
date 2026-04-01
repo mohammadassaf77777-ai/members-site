@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>نظام الأعضاء</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -15,7 +14,7 @@ body {
     color: white;
 }
 
-.container { margin-top: 30px; }
+.container { margin-top: 40px; }
 
 .card {
     background: white;
@@ -28,38 +27,24 @@ body {
     margin-bottom: 15px;
 }
 
-/* Buttons */
 button {
     width: 95%;
     padding: 12px;
     margin-top: 8px;
     border-radius: 10px;
     border: none;
+    font-size: 15px;
 }
 
+.groupBtn { background: #25D366; color: white; }
 .login { background: #4CAF50; color: white; }
 .logout { background: red; color: white; }
-.whatsapp { background: #25D366; color: white; }
-.groupBtn { background: #128C7E; color: white; }
-.refresh { background: orange; color: white; }
+.whatsapp { background: #128C7E; color: white; }
 
 input {
     width: 90%;
     padding: 12px;
     margin: 10px;
-}
-
-.member {
-    background: #fff;
-    color: black;
-    margin: 10px;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.update {
-    font-size: 13px;
-    color: #555;
 }
 </style>
 </head>
@@ -72,13 +57,13 @@ input {
 <div class="card">
 <h3>👥 مجموعات المشاريع</h3>
 
-<a href="intent://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk#Intent;package=com.whatsapp;scheme=https;end;">
-<button class="groupBtn">📌 المشروع السادس - الريادة الأول</button>
-</a>
+<button class="groupBtn" onclick="openWA('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
+📌 المشروع السادس - الريادة الأول
+</button>
 
-<a href="intent://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD#Intent;package=com.whatsapp;scheme=https;end;">
-<button class="groupBtn">📌 المشروع الثامن - توسع المدينة W3</button>
-</a>
+<button class="groupBtn" onclick="openWA('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
+📌 المشروع الثامن - توسع المدينة W3
+</button>
 
 </div>
 
@@ -99,10 +84,14 @@ input {
 
 <script>
 
-let members = [];
-let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
+// 🔥 فتح واتساب بشكل مضمون داخل التطبيق
+function openWA(url){
+    window.open(url, "_blank");
+}
 
-// تحميل البيانات
+// 📊 تحميل البيانات
+let members = [];
+
 async function loadData() {
     const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
     const res = await fetch(url);
@@ -110,19 +99,10 @@ async function loadData() {
 }
 loadData();
 
-// 👑 ADMIN
-const ADMIN_ID = "9999";
-const ADMIN_PASS = "admin123";
-
-// تسجيل الدخول
+// 🔐 تسجيل الدخول
 function login() {
     const id = document.getElementById("id").value;
     const pass = document.getElementById("pass").value;
-
-    if(id === ADMIN_ID && pass === ADMIN_PASS){
-        showAdmin();
-        return;
-    }
 
     const user = members.find(m =>
         m.membership_id == id && m.password == pass
@@ -131,11 +111,11 @@ function login() {
     if(user){
         showUser(user);
     } else {
-        document.getElementById("error").innerText = "❌ خطأ";
+        document.getElementById("error").innerText = "❌ البيانات غير صحيحة";
     }
 }
 
-// 👤 عرض العضو
+// 👤 عرض بيانات العضو
 function showUser(user){
     document.getElementById("loginBox").style.display = "none";
 
@@ -147,69 +127,13 @@ function showUser(user){
         <p>💵 المدفوع: ${user.paid}</p>
         <p>📉 المتبقي: ${user.remaining}</p>
 
-        <p class="update">📅 آخر تحديث: ${lastUpdate}</p>
+        <button class="whatsapp" onclick="openWA('https://wa.me/963980049054')">
+        📱 تواصل واتساب
+        </button>
 
-        <a href="https://wa.me/963980049054?text=مرحبا أنا العضو ${user.membership_id}">
-        <button class="whatsapp">📱 تواصل واتساب</button>
-        </a>
-
-        <button class="logout" onclick="location.reload()">🚪 خروج</button>
+        <button class="logout" onclick="location.reload()">🚪 تسجيل الخروج</button>
     </div>
     `;
-}
-
-// 👑 الأدمن
-function showAdmin(){
-    document.getElementById("loginBox").style.display = "none";
-
-    document.getElementById("result").innerHTML = `
-    <div class="card">
-        <h3>👑 لوحة التحكم</h3>
-
-        <p>📅 آخر تحديث: ${lastUpdate}</p>
-
-        <input id="newDate" placeholder="اكتب تاريخ جديد">
-        <button onclick="updateDate()">✏️ تحديث التاريخ</button>
-
-        <button class="refresh" onclick="refresh()">🔄 تحديث البيانات</button>
-        <button class="logout" onclick="location.reload()">🚪 خروج</button>
-    </div>
-
-    <div id="adminList"></div>
-    `;
-
-    showAll();
-}
-
-// عرض كل الأعضاء
-function showAll(){
-    let html = "";
-
-    members.forEach(m => {
-        html += `
-        <div class="member">
-            <b>${m.name}</b><br>
-            ID: ${m.membership_id}<br>
-            Total: ${m.total}<br>
-            Paid: ${m.paid}
-        </div>
-        `;
-    });
-
-    document.getElementById("adminList").innerHTML = html;
-}
-
-// تحديث التاريخ
-function updateDate(){
-    let val = document.getElementById("newDate").value;
-    localStorage.setItem("lastUpdate", val);
-    alert("تم التحديث ✅");
-    location.reload();
-}
-
-// تحديث البيانات
-function refresh(){
-    location.reload();
 }
 
 </script>
