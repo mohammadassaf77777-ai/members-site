@@ -4,62 +4,88 @@
 <meta charset="UTF-8">
 <title>نظام الأعضاء</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body {
+    margin: 0;
     font-family: Arial;
     direction: rtl;
-    text-align: center;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
     color: white;
 }
 
-.container { margin-top: 100px; }
+/* Header */
+.header {
+    padding: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
 
+/* Container */
+.container {
+    margin-top: 60px;
+}
+
+/* Cards */
 .card {
     background: white;
     color: black;
     padding: 20px;
     border-radius: 20px;
     width: 90%;
-    max-width: 400px;
+    max-width: 380px;
     margin: auto;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
+/* Inputs */
 input {
     width: 90%;
     padding: 12px;
     margin: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
 }
 
+/* Buttons */
 button {
     width: 95%;
     padding: 12px;
-    margin-top: 10px;
+    margin-top: 8px;
     border-radius: 10px;
     border: none;
+    font-size: 15px;
 }
 
 .login { background: #4CAF50; color: white; }
 .logout { background: red; color: white; }
 .whatsapp { background: #25D366; color: white; }
+.refresh { background: orange; color: white; }
 
+/* Member cards */
 .member {
     background: #fff;
     color: black;
     margin: 10px;
     padding: 15px;
-    border-radius: 10px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="header">📱 نظام الأعضاء</div>
 
-<h2>🔐 تسجيل الدخول</h2>
+<div class="container">
 
 <div id="loginBox" class="card">
 <input id="id" placeholder="رقم العضوية">
@@ -76,26 +102,42 @@ button {
 
 let members = [];
 
-// تحميل البيانات من الشيت
+// ⚡ تحميل + كاش
 async function loadData() {
+  const cacheTime = 5 * 60 * 1000;
+
+  let savedData = localStorage.getItem("membersData");
+  let savedTime = localStorage.getItem("membersTime");
+
+  let now = new Date().getTime();
+
+  if (savedData && savedTime && (now - savedTime < cacheTime)) {
+    members = JSON.parse(savedData);
+  } else {
     const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
     const res = await fetch(url);
     members = await res.json();
+
+    localStorage.setItem("membersData", JSON.stringify(members));
+    localStorage.setItem("membersTime", now);
+  }
 }
 loadData();
 
-// تسجيل الدخول
+// Admin
+const ADMIN_ID = "9999";
+const ADMIN_PASS = "admin123";
+
+// Login
 function login() {
     const id = document.getElementById("id").value;
     const pass = document.getElementById("pass").value;
 
-    // 👑 ADMIN
-    if(id == "9999" && pass == "admin123"){
+    if(id === ADMIN_ID && pass === ADMIN_PASS){
         showAdmin();
         return;
     }
 
-    // 👤 MEMBER
     const user = members.find(m =>
         m.membership_id == id && m.password == pass
     );
@@ -107,13 +149,13 @@ function login() {
     }
 }
 
-// عرض عضو
+// Member
 function showUser(user){
     document.getElementById("loginBox").style.display = "none";
 
     document.getElementById("result").innerHTML = `
     <div class="card">
-        <h3>👤 ${user.name}</h3>
+        <h3>👋 أهلاً ${user.name}</h3>
         <p>💰 الإجمالي: ${user.total}</p>
         <p>💵 المدفوع: ${user.paid}</p>
         <p>📉 المتبقي: ${user.remaining}</p>
@@ -127,7 +169,7 @@ function showUser(user){
     `;
 }
 
-// عرض الأدمن
+// Admin
 function showAdmin(){
     document.getElementById("loginBox").style.display = "none";
 
@@ -135,17 +177,41 @@ function showAdmin(){
     <div class="card">
         <h3>👑 لوحة التحكم</h3>
         <input id="search" placeholder="بحث..." onkeyup="searchAdmin()">
+        <button class="refresh" onclick="refreshNow()">🔄 تحديث</button>
         <button class="logout" onclick="location.reload()">🚪 خروج</button>
     </div>
+    <div id="stats"></div>
     <div id="adminList"></div>
     `;
 
     document.getElementById("result").innerHTML = html;
 
+    showStats();
     showAll(members);
 }
 
-// عرض كل الأعضاء
+// Stats
+function showStats(){
+    let totalMembers = members.length;
+    let totalMoney = 0;
+    let totalPaid = 0;
+
+    members.forEach(m => {
+        totalMoney += Number(m.total);
+        totalPaid += Number(m.paid);
+    });
+
+    document.getElementById("stats").innerHTML = `
+    <div class="card">
+        <h3>📊 الإحصائيات</h3>
+        <p>عدد الأعضاء: ${totalMembers}</p>
+        <p>الإجمالي: ${totalMoney}</p>
+        <p>المدفوع: ${totalPaid}</p>
+    </div>
+    `;
+}
+
+// Show list
 function showAll(list){
     let html = "";
 
@@ -159,14 +225,6 @@ function showAll(list){
             <p>Total: ${m.total}</p>
             <p>Paid: ${m.paid}</p>
             <p>Remaining: ${remaining}</p>
-
-            <button onclick="copyData('${m.name}', '${m.membership_id}', '${m.total}', '${m.paid}', '${remaining}')">📋 نسخ</button>
-
-            <button onclick="downloadPDF('${m.membership_id}')">📄 PDF</button>
-
-            <a target="_blank" href="https://wa.me/963980049054?text=العضو ${m.membership_id}">
-            <button class="whatsapp">📱 واتساب</button>
-            </a>
         </div>
         `;
     });
@@ -174,7 +232,7 @@ function showAll(list){
     document.getElementById("adminList").innerHTML = html;
 }
 
-// بحث الأدمن
+// Search
 function searchAdmin(){
     let value = document.getElementById("search").value.toLowerCase();
 
@@ -185,29 +243,15 @@ function searchAdmin(){
     showAll(filtered);
 }
 
-// نسخ
-function copyData(name, id, total, paid, remaining){
-    let text = `Name: ${name} ID: ${id} Total: ${total} Paid: ${paid} Remaining: ${remaining}`;
-    navigator.clipboard.writeText(text);
-    alert("تم النسخ ✅");
+// Refresh
+function refreshNow(){
+    localStorage.clear();
+    location.reload();
 }
 
-// PDF
-function downloadPDF(id){
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    let m = members.find(x => x.membership_id == id);
-    let remaining = m.total - m.paid;
-
-    doc.text("Member Info", 10, 10);
-    doc.text("Name: " + m.name, 10, 20);
-    doc.text("ID: " + m.membership_id, 10, 30);
-    doc.text("Total: " + m.total, 10, 40);
-    doc.text("Paid: " + m.paid, 10, 50);
-    doc.text("Remaining: " + remaining, 10, 60);
-
-    doc.save("member_" + id + ".pdf");
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
 }
 
 </script>
