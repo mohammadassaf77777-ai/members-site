@@ -6,10 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- PWA -->
 <link rel="manifest" href="manifest.json">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 body {
@@ -20,19 +17,14 @@ body {
     color: white;
 }
 
-/* Header */
 .header {
     padding: 20px;
     font-size: 22px;
     font-weight: bold;
 }
 
-/* Container */
-.container {
-    margin-top: 60px;
-}
+.container { margin-top: 60px; }
 
-/* Cards */
 .card {
     background: white;
     color: black;
@@ -45,38 +37,37 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-/* Inputs */
 input {
     width: 90%;
     padding: 12px;
     margin: 10px;
     border-radius: 10px;
-    border: 1px solid #ddd;
 }
 
-/* Buttons */
 button {
     width: 95%;
     padding: 12px;
     margin-top: 8px;
     border-radius: 10px;
     border: none;
-    font-size: 15px;
 }
 
 .login { background: #4CAF50; color: white; }
 .logout { background: red; color: white; }
-.whatsapp { background: #25D366; color: white; }
 .refresh { background: orange; color: white; }
 
-/* Member cards */
 .member {
     background: #fff;
     color: black;
     margin: 10px;
     padding: 15px;
     border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.update {
+    font-size: 13px;
+    margin-top: 10px;
+    color: #555;
 }
 </style>
 </head>
@@ -101,9 +92,11 @@ button {
 <script>
 
 let members = [];
+let lastUpdate = "";
 
-// ⚡ تحميل + كاش
+// تحميل البيانات
 async function loadData() {
+
   const cacheTime = 5 * 60 * 1000;
 
   let savedData = localStorage.getItem("membersData");
@@ -113,6 +106,7 @@ async function loadData() {
 
   if (savedData && savedTime && (now - savedTime < cacheTime)) {
     members = JSON.parse(savedData);
+    lastUpdate = new Date(parseInt(savedTime)).toLocaleString();
   } else {
     const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
     const res = await fetch(url);
@@ -120,8 +114,11 @@ async function loadData() {
 
     localStorage.setItem("membersData", JSON.stringify(members));
     localStorage.setItem("membersTime", now);
+
+    lastUpdate = new Date(now).toLocaleString();
   }
 }
+
 loadData();
 
 // Admin
@@ -149,7 +146,7 @@ function login() {
     }
 }
 
-// Member
+// عضو
 function showUser(user){
     document.getElementById("loginBox").style.display = "none";
 
@@ -160,9 +157,7 @@ function showUser(user){
         <p>💵 المدفوع: ${user.paid}</p>
         <p>📉 المتبقي: ${user.remaining}</p>
 
-        <a target="_blank" href="https://wa.me/963980049054?text=مرحبا أنا العضو ${user.membership_id}">
-        <button class="whatsapp">📱 واتساب</button>
-        </a>
+        <p class="update">📅 آخر تحديث: ${lastUpdate}</p>
 
         <button class="logout" onclick="location.reload()">🚪 خروج</button>
     </div>
@@ -173,85 +168,21 @@ function showUser(user){
 function showAdmin(){
     document.getElementById("loginBox").style.display = "none";
 
-    let html = `
+    document.getElementById("result").innerHTML = `
     <div class="card">
         <h3>👑 لوحة التحكم</h3>
-        <input id="search" placeholder="بحث..." onkeyup="searchAdmin()">
+        <p class="update">📅 آخر تحديث: ${lastUpdate}</p>
+
         <button class="refresh" onclick="refreshNow()">🔄 تحديث</button>
         <button class="logout" onclick="location.reload()">🚪 خروج</button>
     </div>
-    <div id="stats"></div>
-    <div id="adminList"></div>
-    `;
-
-    document.getElementById("result").innerHTML = html;
-
-    showStats();
-    showAll(members);
-}
-
-// Stats
-function showStats(){
-    let totalMembers = members.length;
-    let totalMoney = 0;
-    let totalPaid = 0;
-
-    members.forEach(m => {
-        totalMoney += Number(m.total);
-        totalPaid += Number(m.paid);
-    });
-
-    document.getElementById("stats").innerHTML = `
-    <div class="card">
-        <h3>📊 الإحصائيات</h3>
-        <p>عدد الأعضاء: ${totalMembers}</p>
-        <p>الإجمالي: ${totalMoney}</p>
-        <p>المدفوع: ${totalPaid}</p>
-    </div>
     `;
 }
 
-// Show list
-function showAll(list){
-    let html = "";
-
-    list.forEach(m => {
-        let remaining = m.total - m.paid;
-
-        html += `
-        <div class="member">
-            <h4>${m.name}</h4>
-            <p>ID: ${m.membership_id}</p>
-            <p>Total: ${m.total}</p>
-            <p>Paid: ${m.paid}</p>
-            <p>Remaining: ${remaining}</p>
-        </div>
-        `;
-    });
-
-    document.getElementById("adminList").innerHTML = html;
-}
-
-// Search
-function searchAdmin(){
-    let value = document.getElementById("search").value.toLowerCase();
-
-    let filtered = members.filter(m =>
-        m.name.toLowerCase().includes(value)
-    );
-
-    showAll(filtered);
-}
-
-// Refresh
+// تحديث يدوي
 function refreshNow(){
     localStorage.clear();
     location.reload();
-}
-
-// PWA Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
 }
 
 </script>
