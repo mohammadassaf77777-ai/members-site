@@ -23,27 +23,6 @@
       border-radius: 20px;
       padding: 20px;
     }
-
-    input {
-      height: 50px;
-      font-size: 18px;
-    }
-
-    button {
-      height: 50px;
-      font-size: 18px;
-    }
-
-    h2 {
-      color: white;
-      margin-bottom: 20px;
-    }
-
-    .whatsapp {
-      background-color: #25D366;
-      color: white;
-      border: none;
-    }
   </style>
 </head>
 
@@ -70,27 +49,34 @@
     <p>📉 المتبقي: <span id="remaining"></span></p>
 
     <a id="whatsappLink" target="_blank">
-      <button class="btn whatsapp w-100 mt-3">📱 تواصل معنا عبر واتساب</button>
+      <button class="btn btn-success w-100 mt-3">📱 واتساب</button>
     </a>
   </div>
 
   <div id="error" class="alert alert-danger mt-3" style="display:none;">
-    ❌ رقم العضوية أو كلمة السر غير صحيحة
+    ❌ خطأ في البيانات
   </div>
 
 </div>
 
 <script>
-async function login() {
+let membersData = [];
+
+// 🔥 تحميل البيانات مرة واحدة فقط
+async function loadData() {
+  const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
+  const res = await fetch(url);
+  membersData = await res.json();
+}
+
+// تحميل عند فتح الصفحة
+loadData();
+
+function login() {
   const id = document.getElementById("id").value;
   const pass = document.getElementById("pass").value;
 
-  const url = "https://opensheet.elk.sh/1NZ-7RFkxg8WloP4oU0mNmxdsyOCI1v4k8IuBDbpErOk/Members";
-
-  const res = await fetch(url);
-  const data = await res.json();
-
-  const user = data.find(item => 
+  const user = membersData.find(item => 
     item.membership_id == id && item.password == pass
   );
 
@@ -103,14 +89,11 @@ async function login() {
     document.getElementById("paid").innerText = user.paid;
     document.getElementById("remaining").innerText = user.remaining;
 
-    // ✅ رقمك
     const phone = "963980049054";
+    const message = "مرحبا، أنا العضو رقم " + user.membership_id;
 
-    const message = "مرحبا، أنا العضو رقم " + user.membership_id + " (" + user.name + ")";
-
-    const link = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
-
-    document.getElementById("whatsappLink").href = link;
+    document.getElementById("whatsappLink").href =
+      "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
 
   } else {
     document.getElementById("result").style.display = "none";
