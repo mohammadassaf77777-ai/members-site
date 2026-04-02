@@ -1,22 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الجمعية</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#141e30">
+
+<style>
+body {
+    font-family: Arial;
+    direction: rtl;
+    text-align: center;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: white;
+    margin:0;
+}
+
+.header {
+    background: rgba(0,0,0,0.4);
+    padding:15px;
+    font-size:18px;
+}
+
+.fb-btn {
+    display:inline-block;
+    background:linear-gradient(45deg,#1877f2,#0d5ed7);
+    color:white;
+    padding:12px 18px;
+    border-radius:12px;
+    margin-top:10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.card {
+    background: white;
+    color:black;
+    padding:20px;
+    border-radius:20px;
+    width:90%;
+    max-width:400px;
+    margin:20px auto;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+input, button {
+    width:90%;
+    padding:12px;
+    margin:8px;
+    border-radius:10px;
+    border:none;
+}
+
+.login { background:#4CAF50; color:white; }
+.logout { background:red; color:white; }
+.admin { background:orange; color:white; }
+.whatsapp { background:#25D366; color:white; }
+.group { background:#128C7E; color:white; }
+
+.alert {
+    background:#4CAF50;
+    color:white;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:10px;
+    font-size:14px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+الجمعية التعاونية الشعبية للسكن و الاصطياف بحلب
+<br>
+<a class="fb-btn" href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
+📘 زيارة صفحة الفيسبوك
+</a>
+</div>
+
+<div class="card">
+<h3>👥 مجموعات المشاريع</h3>
+
+<button class="group" onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
+📌 المشروع السادس - الريادة الأول
+</button>
+
+<button class="group" onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
+📌 المشروع الثامن - توسع المدينة W3
+</button>
+
+</div>
+
+<div class="card" id="loginBox">
+<h3>تسجيل الدخول</h3>
+
+<input id="id" placeholder="رقم العضوية">
+<input id="pass" type="password" placeholder="كلمة السر">
+
+<button class="login" onclick="login()">دخول</button>
+<p id="error" style="color:red;"></p>
+</div>
+
+<div id="content"></div>
+
 <script>
 
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
 
-// ✅ رابط السيرفر (Google Script)
 const API_URL = "https://script.google.com/macros/s/AKfycbwPT3HpCK9ucjnkgGZJefJ-sTZSi4YaGeOVi26P_EB3ZjJorA-QVMf7LtvFCDlBirvYIQ/exec";
 
-// 🔐 تسجيل الدخول (من السيرفر مباشرة)
+// 🔐 تسجيل الدخول
 function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
 
     if(id == "9999" && pass == "admin123"){
         updateDate();
-        showAdmin(true);
+        showAdmin();
         return;
     }
 
-    fetch(`${API_URL}?id=${id}&password=${pass}`)
+    fetch(API_URL + "?id=" + id + "&password=" + pass)
     .then(res => res.json())
     .then(data => {
         if(data.status === "success"){
@@ -30,20 +137,21 @@ function login(){
         } else {
             document.getElementById("error").innerText = "❌ بيانات خاطئة";
         }
+    })
+    .catch(() => {
+        document.getElementById("error").innerText = "❌ خطأ بالاتصال";
     });
 }
 
-// 👤 عرض العضو (نفس تصميمك)
+// 👤 العضو
 function showUser(user){
     document.getElementById("loginBox").style.display="none";
 
     document.getElementById("content").innerHTML = `
     <div class="card">
-
         <div class="alert">🔔 تم تحميل البيانات من السيرفر</div>
 
         <h3>${user.name}</h3>
-
         <p>💰 الإجمالي: ${user.total}</p>
         <p>💵 المدفوع: ${user.paid}</p>
         <p>📉 المتبقي: ${user.remaining}</p>
@@ -67,7 +175,7 @@ function showUser(user){
     `;
 }
 
-// 🔐 تغيير كلمة السر (فوري)
+// 🔐 تغيير كلمة السر
 function changePassword(userId){
     let newPass = document.getElementById("newPass").value;
 
@@ -87,34 +195,27 @@ function changePassword(userId){
     .then(response => {
         if(response === "success"){
             document.getElementById("msg").innerText = "✅ تم تغيير كلمة السر";
-            
-            // 🔥 تحديث فوري
             setTimeout(()=> location.reload(), 1000);
-
         } else {
             document.getElementById("msg").innerText = "❌ فشل التغيير";
         }
+    })
+    .catch(() => {
+        document.getElementById("msg").innerText = "❌ خطأ بالسيرفر";
     });
 }
 
-// 👑 الأدمن (نفسه بدون تعديل)
-function showAdmin(showAlert=false){
+// 👑 الأدمن
+function showAdmin(){
     document.getElementById("loginBox").style.display="none";
 
-    let alertBox = showAlert ? `<div class="alert">🔔 تم تحديث التاريخ</div>` : "";
-
-    let html = `<div class="card">
-    ${alertBox}
-    <h3>👑 لوحة التحكم</h3>
-
-    <p>📅 آخر تحديث: ${lastUpdate}</p>
-
-    <p>⚠️ البيانات الآن من السيرفر مباشرة</p>
-
-    <button class="logout" onclick="location.reload()">خروج</button>
-    </div>`;
-
-    document.getElementById("content").innerHTML = html;
+    document.getElementById("content").innerHTML = `
+    <div class="card">
+        <h3>👑 لوحة التحكم</h3>
+        <p>📅 آخر تحديث: ${lastUpdate}</p>
+        <button class="logout" onclick="location.reload()">خروج</button>
+    </div>
+    `;
 }
 
 // 📱 واتساب
@@ -127,7 +228,7 @@ function openLink(url){
     window.open(url, "_blank");
 }
 
-// 📅 تحديث التاريخ
+// 📅 التاريخ
 function updateDate(){
     let now = new Date().toLocaleString();
     localStorage.setItem("lastUpdate", now);
@@ -135,3 +236,6 @@ function updateDate(){
 }
 
 </script>
+
+</body>
+</html>
