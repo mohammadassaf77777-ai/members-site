@@ -119,10 +119,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-// 🔥 تسجيل Service Worker (مهم جداً)
-navigator.serviceWorker.register("firebase-messaging-sw.js")
+// ✅ الحل النهائي
+navigator.serviceWorker.register("/members-site/firebase-messaging-sw.js")
 .then((registration) => {
     console.log("Service Worker Registered");
+})
+.catch((err) => {
+    console.log("SW Error:", err);
 });
 
 // 🔔 زر التفعيل
