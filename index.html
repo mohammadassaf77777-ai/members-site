@@ -109,10 +109,18 @@ input, button {
 <script>
 
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
-
 const API_URL = "https://script.google.com/macros/s/AKfycbwPT3HpCK9ucjnkgGZJefJ-sTZSi4YaGeOVi26P_EB3ZjJorA-QVMf7LtvFCDlBirvYIQ/exec";
 
-// 🔐 تسجيل الدخول (مع كاش)
+// 🚀 تسجيل تلقائي عند فتح الموقع
+window.onload = function(){
+    let savedUser = localStorage.getItem("currentUser");
+    if(savedUser){
+        let user = JSON.parse(savedUser);
+        showUser(user);
+    }
+};
+
+// 🔐 تسجيل الدخول
 function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
@@ -123,18 +131,6 @@ function login(){
         return;
     }
 
-    // ⚡ كاش
-    let saved = localStorage.getItem("user_"+id);
-
-    if(saved){
-        let user = JSON.parse(saved);
-        if(user.password == pass){
-            showUser(user);
-            return;
-        }
-    }
-
-    // 🌐 سيرفر
     fetch(API_URL + "?id=" + id + "&password=" + pass)
     .then(res => res.json())
     .then(data => {
@@ -149,7 +145,7 @@ function login(){
                 remaining: data.remaining
             };
 
-            localStorage.setItem("user_"+id, JSON.stringify(user));
+            localStorage.setItem("currentUser", JSON.stringify(user));
 
             showUser(user);
 
@@ -157,8 +153,8 @@ function login(){
             document.getElementById("error").innerText = "❌ بيانات خاطئة";
         }
     })
-    .catch(() => {
-        document.getElementById("error").innerText = "❌ خطأ بالاتصال";
+    .catch(()=>{
+        document.getElementById("error").innerText = "❌ تحقق من الإنترنت";
     });
 }
 
@@ -168,7 +164,7 @@ function showUser(user){
 
     document.getElementById("content").innerHTML = `
     <div class="card">
-        <div class="alert">🔔 تم تحميل البيانات</div>
+        <div class="alert">🔔 أنت مسجل دخول تلقائياً</div>
 
         <h3>${user.name}</h3>
         <p>💰 الإجمالي: ${user.total}</p>
@@ -189,9 +185,15 @@ function showUser(user){
         للتواصل مع الجمعية اضغط هنا
         </button>
 
-        <button class="logout" onclick="location.reload()">خروج</button>
+        <button class="logout" onclick="logout()">خروج</button>
     </div>
     `;
+}
+
+// 🚪 تسجيل خروج
+function logout(){
+    localStorage.removeItem("currentUser");
+    location.reload();
 }
 
 // 🔐 تغيير كلمة السر
@@ -214,12 +216,8 @@ function changePassword(userId){
     .then(response => {
         if(response === "success"){
             document.getElementById("msg").innerText = "✅ تم تغيير كلمة السر";
-
-            // ❌ حذف الكاش القديم
-            localStorage.removeItem("user_"+userId);
-
+            localStorage.removeItem("currentUser");
             setTimeout(()=> location.reload(), 1000);
-
         } else {
             document.getElementById("msg").innerText = "❌ فشل التغيير";
         }
@@ -234,7 +232,7 @@ function showAdmin(){
     <div class="card">
         <h3>👑 لوحة التحكم</h3>
         <p>📅 آخر تحديث: ${lastUpdate}</p>
-        <button class="logout" onclick="location.reload()">خروج</button>
+        <button class="logout" onclick="logout()">خروج</button>
     </div>
     `;
 }
