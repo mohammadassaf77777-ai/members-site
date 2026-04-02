@@ -112,7 +112,7 @@ let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
 
 const API_URL = "https://script.google.com/macros/s/AKfycbwPT3HpCK9ucjnkgGZJefJ-sTZSi4YaGeOVi26P_EB3ZjJorA-QVMf7LtvFCDlBirvYIQ/exec";
 
-// 🔐 تسجيل الدخول
+// 🔐 تسجيل الدخول (مع كاش)
 function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
@@ -123,17 +123,36 @@ function login(){
         return;
     }
 
+    // ⚡ كاش
+    let saved = localStorage.getItem("user_"+id);
+
+    if(saved){
+        let user = JSON.parse(saved);
+        if(user.password == pass){
+            showUser(user);
+            return;
+        }
+    }
+
+    // 🌐 سيرفر
     fetch(API_URL + "?id=" + id + "&password=" + pass)
     .then(res => res.json())
     .then(data => {
         if(data.status === "success"){
-            showUser({
+
+            let user = {
                 membership_id: id,
+                password: pass,
                 name: data.name,
                 total: data.total,
                 paid: data.paid,
                 remaining: data.remaining
-            });
+            };
+
+            localStorage.setItem("user_"+id, JSON.stringify(user));
+
+            showUser(user);
+
         } else {
             document.getElementById("error").innerText = "❌ بيانات خاطئة";
         }
@@ -149,7 +168,7 @@ function showUser(user){
 
     document.getElementById("content").innerHTML = `
     <div class="card">
-        <div class="alert">🔔 تم تحميل البيانات من السيرفر</div>
+        <div class="alert">🔔 تم تحميل البيانات</div>
 
         <h3>${user.name}</h3>
         <p>💰 الإجمالي: ${user.total}</p>
@@ -195,13 +214,15 @@ function changePassword(userId){
     .then(response => {
         if(response === "success"){
             document.getElementById("msg").innerText = "✅ تم تغيير كلمة السر";
+
+            // ❌ حذف الكاش القديم
+            localStorage.removeItem("user_"+userId);
+
             setTimeout(()=> location.reload(), 1000);
+
         } else {
             document.getElementById("msg").innerText = "❌ فشل التغيير";
         }
-    })
-    .catch(() => {
-        document.getElementById("msg").innerText = "❌ خطأ بالسيرفر";
     });
 }
 
