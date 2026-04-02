@@ -5,7 +5,6 @@
 <title>الجمعية</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- 🔥 PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141e30">
 
@@ -19,26 +18,23 @@ body {
     margin:0;
 }
 
-/* 🔝 الهيدر */
 .header {
     background: rgba(0,0,0,0.4);
     padding:15px;
     font-size:18px;
 }
 
-/* 🔵 زر فيسبوك */
 .fb-btn {
     display:inline-block;
-    background:#1877f2;
+    background:linear-gradient(45deg,#1877f2,#0d5ed7);
     color:white;
-    padding:10px 15px;
-    border-radius:10px;
+    padding:12px 18px;
+    border-radius:12px;
     margin-top:10px;
     text-decoration:none;
     font-weight:bold;
 }
 
-/* 🧊 كرت */
 .card {
     background: white;
     color:black;
@@ -50,7 +46,6 @@ body {
     box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
-/* 🔘 أزرار */
 input, button {
     width:90%;
     padding:12px;
@@ -65,7 +60,6 @@ input, button {
 .whatsapp { background:#25D366; color:white; }
 .group { background:#128C7E; color:white; }
 
-/* 🔔 إشعار */
 .alert {
     background:#4CAF50;
     color:white;
@@ -79,18 +73,14 @@ input, button {
 </head>
 <body>
 
-<!-- 🏠 الهيدر -->
 <div class="header">
 الجمعية التعاونية الشعبية للسكن و الاصطياف بحلب
-
 <br>
-
 <a class="fb-btn" href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
 📘 زيارة صفحة الفيسبوك
 </a>
 </div>
 
-<!-- 👥 مجموعات -->
 <div class="card">
 <h3>👥 مجموعات المشاريع</h3>
 
@@ -104,7 +94,6 @@ input, button {
 
 </div>
 
-<!-- 🔐 تسجيل الدخول -->
 <div class="card" id="loginBox">
 <h3>تسجيل الدخول</h3>
 
@@ -120,9 +109,10 @@ input, button {
 <script>
 
 let members = [];
-
-// 📅 تاريخ آخر تحديث
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
+
+// 🔗 رابط Google Script تبعك
+const API_URL = "https://script.google.com/macros/s/AKfycbzF4wWLqDbJpANS1kVMir4MD3xXz1fBVEfJirb4zaeL6nT_cYFPHX9hZ9CtEUcvbXB5pQ/exec";
 
 // 📊 تحميل البيانات
 async function loadData(){
@@ -152,7 +142,7 @@ function login(){
     }
 }
 
-// 👤 العضو
+// 👤 عرض العضو
 function showUser(user){
     document.getElementById("loginBox").style.display="none";
 
@@ -169,6 +159,14 @@ function showUser(user){
 
         <p>📅 آخر تحديث: ${lastUpdate}</p>
 
+        <hr>
+
+        <h4>🔑 تغيير كلمة السر</h4>
+        <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
+        <button class="admin" onclick="changePassword('${user.membership_id}')">حفظ</button>
+
+        <p id="msg"></p>
+
         <button class="whatsapp" onclick="openWA()">
         للتواصل مع الجمعية اضغط هنا
         </button>
@@ -178,11 +176,37 @@ function showUser(user){
     `;
 }
 
+// 🔐 تغيير كلمة السر
+function changePassword(userId){
+    let newPass = document.getElementById("newPass").value;
+
+    if(!newPass){
+        document.getElementById("msg").innerText = "❌ اكتب كلمة السر";
+        return;
+    }
+
+    fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+            id: userId,
+            password: newPass
+        })
+    })
+    .then(res => res.text())
+    .then(response => {
+        if(response === "success"){
+            document.getElementById("msg").innerText = "✅ تم تغيير كلمة السر";
+        } else {
+            document.getElementById("msg").innerText = "❌ فشل التغيير";
+        }
+    });
+}
+
 // 👑 الأدمن
 function showAdmin(showAlert=false){
     document.getElementById("loginBox").style.display="none";
 
-    let alertBox = showAlert ? `<div class="alert">🔔 تم تحديث التاريخ بنجاح</div>` : "";
+    let alertBox = showAlert ? `<div class="alert">🔔 تم تحديث التاريخ</div>` : "";
 
     let html = `<div class="card">
     ${alertBox}
