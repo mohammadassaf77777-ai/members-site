@@ -20,7 +20,6 @@ body {
 .header {
     background: rgba(0,0,0,0.4);
     padding:15px;
-    font-size:18px;
 }
 .fb-btn {
     display:inline-block;
@@ -30,7 +29,6 @@ body {
     border-radius:12px;
     margin-top:10px;
     text-decoration:none;
-    font-weight:bold;
 }
 .card {
     background: white;
@@ -98,7 +96,7 @@ input, button {
 
 <div id="content"></div>
 
-<!-- ✅ Firebase -->
+<!-- 🔔 Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
@@ -115,7 +113,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-// 🔔 طلب إذن الإشعارات
 Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
         getToken(messaging, {
@@ -126,7 +123,6 @@ Notification.requestPermission().then((permission) => {
     }
 });
 
-// 🔔 استقبال إشعار
 onMessage(messaging, (payload) => {
     alert("📩 إشعار جديد: " + payload.notification.title);
 });
@@ -136,6 +132,7 @@ onMessage(messaging, (payload) => {
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
 const API_URL = "https://script.google.com/macros/s/AKfycbwPT3HpCK9ucjnkgGZJefJ-sTZSi4YaGeOVi26P_EB3ZjJorA-QVMf7LtvFCDlBirvYIQ/exec";
 
+// 🚀 تسجيل تلقائي
 window.onload = function(){
     let savedUser = localStorage.getItem("currentUser");
     if(savedUser){
@@ -143,6 +140,7 @@ window.onload = function(){
     }
 };
 
+// 🔐 تسجيل الدخول
 function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
@@ -166,23 +164,78 @@ function login(){
     });
 }
 
+// 👤 عرض المستخدم
 function showUser(user){
     document.getElementById("loginBox").style.display="none";
+
     document.getElementById("content").innerHTML = `
     <div class="card">
+        <div class="alert">🔔 أنت مسجل دخول</div>
+
         <h3>${user.name}</h3>
         <p>💰 ${user.total}</p>
         <p>💵 ${user.paid}</p>
         <p>📉 ${user.remaining}</p>
+
+        <p>📅 آخر تحديث: ${lastUpdate}</p>
+
+        <hr>
+
+        <h4>🔑 تغيير كلمة السر</h4>
+        <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
+        <button class="admin" onclick="changePassword('${user.membership_id}')">حفظ</button>
+
+        <p id="msg"></p>
+
+        <button class="whatsapp" onclick="openWA()">
+        📱 تواصل معنا
+        </button>
+
         <button class="logout" onclick="logout()">خروج</button>
-    </div>`;
+    </div>
+    `;
 }
 
+// 🔐 تغيير كلمة السر
+function changePassword(userId){
+    let newPass = document.getElementById("newPass").value;
+
+    if(!newPass){
+        document.getElementById("msg").innerText = "❌ اكتب كلمة السر";
+        return;
+    }
+
+    fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+            id: userId,
+            password: newPass
+        })
+    })
+    .then(res => res.text())
+    .then(response => {
+        if(response === "success"){
+            document.getElementById("msg").innerText = "✅ تم تغيير كلمة السر";
+            localStorage.removeItem("currentUser");
+            setTimeout(()=> location.reload(), 1000);
+        } else {
+            document.getElementById("msg").innerText = "❌ فشل التغيير";
+        }
+    });
+}
+
+// 📱 واتساب
+function openWA(){
+    window.open("https://wa.me/963980049054", "_blank");
+}
+
+// 🚪 خروج
 function logout(){
     localStorage.removeItem("currentUser");
     location.reload();
 }
 
+// 🔗 روابط
 function openLink(url){
     window.open(url, "_blank");
 }
