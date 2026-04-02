@@ -11,15 +11,8 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-// 🔔 استقبال الإشعارات بالخلفية
 messaging.onBackgroundMessage(function(payload) {
-    console.log("📩 إشعار بالخلفية:", payload);
-
-    const notificationTitle = payload.notification.title;
-    const notificationOptions = {
-        body: payload.notification.body,
-        icon: "/icon.png" // تأكد عندك icon.png بالموقع
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
+  self.registration.showNotification(payload.notification.title, {
+    body: payload.notification.body
+  });
 });
