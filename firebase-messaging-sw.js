@@ -1,0 +1,25 @@
+importScripts('https://www.gstatic.com/firebasejs/12.11.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+  apiKey: "AIzaSyAqV1kUhJM2Y8UxtBX4uUc_QevWLdwKC_g",
+  authDomain: "alchaiba.firebaseapp.com",
+  projectId: "alchaiba",
+  messagingSenderId: "586209422699",
+  appId: "1:586209422699:web:cdcb2f2ffc48902e30302e"
+});
+
+const messaging = firebase.messaging();
+
+// 🔔 استقبال الإشعارات بالخلفية
+messaging.onBackgroundMessage(function(payload) {
+    console.log("📩 إشعار بالخلفية:", payload);
+
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: "/icon.png" // تأكد عندك icon.png بالموقع
+    };
+
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});
