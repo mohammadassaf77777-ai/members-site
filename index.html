@@ -58,6 +58,7 @@ input, button {
     border-radius:10px;
     margin-bottom:10px;
 }
+.notify { background:#ff9800; color:white; }
 </style>
 </head>
 
@@ -70,6 +71,11 @@ input, button {
 📘 زيارة صفحة الفيسبوك
 </a>
 </div>
+
+<!-- 🔔 زر الإشعارات -->
+<button class="notify" onclick="enableNotifications()">
+🔔 تفعيل الإشعارات
+</button>
 
 <div class="card">
 <h3>👥 مجموعات المشاريع</h3>
@@ -84,13 +90,6 @@ input, button {
 
 </div>
 
-<!-- 🔔 زر تفعيل الإشعارات -->
-<div class="card">
-<button class="admin" onclick="initNotifications()">
-🔔 تفعيل الإشعارات
-</button>
-</div>
-
 <div class="card" id="loginBox">
 <h3>تسجيل الدخول</h3>
 
@@ -103,7 +102,7 @@ input, button {
 
 <div id="content"></div>
 
-<!-- 🔥 Firebase + Service Worker -->
+<!-- 🔔 Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
@@ -120,35 +119,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-// 🔥 تسجيل Service Worker
-navigator.serviceWorker.register('/firebase-messaging-sw.js')
+// 🔥 تسجيل Service Worker (مهم جداً)
+navigator.serviceWorker.register("firebase-messaging-sw.js")
 .then((registration) => {
-    console.log("SW registered");
+    console.log("Service Worker Registered");
 });
 
-// 🔔 تفعيل الإشعارات
-window.initNotifications = async function(){
-    try{
-        const permission = await Notification.requestPermission();
-
-        if(permission === "granted"){
-            const token = await getToken(messaging, {
+// 🔔 زر التفعيل
+window.enableNotifications = function(){
+    Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+            getToken(messaging, {
                 vapidKey: "BERirHvZXQZ9invNBodU6-6rDgbH-2Q1sR8T5mBjzMOCPO2DtLOJvMJvohtqZCxF3-2pbI9tyj6hxHvMRpjPgpE"
+            }).then((token) => {
+                console.log("TOKEN:", token);
+                alert("✅ تم التفعيل\nافتح Console وانسخ التوكن");
             });
-
-            console.log("TOKEN:", token);
-            alert("✅ تم تفعيل الإشعارات");
-        }else{
-            alert("❌ لازم توافق على الإشعارات");
+        } else {
+            alert("❌ لازم تسمح بالإشعارات");
         }
-    }catch(err){
-        console.log(err);
-    }
+    });
 };
 
-// 🔔 استقبال إشعار
+// استقبال الإشعار
 onMessage(messaging, (payload) => {
-    alert("📩 إشعار: " + payload.notification.title);
+    alert("📩 إشعار جديد: " + payload.notification.title);
 });
 </script>
 
@@ -156,7 +151,6 @@ onMessage(messaging, (payload) => {
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
 const API_URL = "https://script.google.com/macros/s/AKfycbwPT3HpCK9ucjnkgGZJefJ-sTZSi4YaGeOVi26P_EB3ZjJorA-QVMf7LtvFCDlBirvYIQ/exec";
 
-// 🚀 تسجيل تلقائي
 window.onload = function(){
     let savedUser = localStorage.getItem("currentUser");
     if(savedUser){
@@ -164,7 +158,6 @@ window.onload = function(){
     }
 };
 
-// 🔐 تسجيل الدخول
 function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
@@ -188,7 +181,6 @@ function login(){
     });
 }
 
-// 👤 عرض المستخدم
 function showUser(user){
     document.getElementById("loginBox").style.display="none";
 
@@ -206,60 +198,35 @@ function showUser(user){
         <hr>
 
         <h4>🔑 تغيير كلمة السر</h4>
-        <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
+        <input id="newPass" type="password">
         <button class="admin" onclick="changePassword('${user.membership_id}')">حفظ</button>
 
         <p id="msg"></p>
 
-        <button class="whatsapp" onclick="openWA()">
-        📱 تواصل معنا
-        </button>
-
+        <button class="whatsapp" onclick="openWA()">📱 تواصل معنا</button>
         <button class="logout" onclick="logout()">خروج</button>
     </div>
     `;
 }
 
-// 🔐 تغيير كلمة السر
 function changePassword(userId){
     let newPass = document.getElementById("newPass").value;
 
-    if(!newPass){
-        document.getElementById("msg").innerText = "❌ اكتب كلمة السر";
-        return;
-    }
-
     fetch(API_URL, {
         method: "POST",
-        body: JSON.stringify({
-            id: userId,
-            password: newPass
-        })
-    })
-    .then(res => res.text())
-    .then(response => {
-        if(response === "success"){
-            document.getElementById("msg").innerText = "✅ تم تغيير كلمة السر";
-            localStorage.removeItem("currentUser");
-            setTimeout(()=> location.reload(), 1000);
-        } else {
-            document.getElementById("msg").innerText = "❌ فشل التغيير";
-        }
+        body: JSON.stringify({ id: userId, password: newPass })
     });
 }
 
-// 📱 واتساب
 function openWA(){
     window.open("https://wa.me/963980049054", "_blank");
 }
 
-// 🚪 خروج
 function logout(){
     localStorage.removeItem("currentUser");
     location.reload();
 }
 
-// 🔗 روابط
 function openLink(url){
     window.open(url, "_blank");
 }
