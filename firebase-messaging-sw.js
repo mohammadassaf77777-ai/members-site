@@ -10,3 +10,11 @@ firebase.initializeApp({
 });
 
 const messaging = firebase.messaging();
+
+// 🔥 هذا أهم جزء
+messaging.onBackgroundMessage(function(payload) {
+  self.registration.showNotification(payload.notification.title, {
+    body: payload.notification.body,
+    icon: '/icon.png'
+  });
+});
