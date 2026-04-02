@@ -84,6 +84,13 @@ input, button {
 
 </div>
 
+<!-- 🔔 زر تفعيل الإشعارات -->
+<div class="card">
+<button class="admin" onclick="initNotifications()">
+🔔 تفعيل الإشعارات
+</button>
+</div>
+
 <div class="card" id="loginBox">
 <h3>تسجيل الدخول</h3>
 
@@ -96,7 +103,7 @@ input, button {
 
 <div id="content"></div>
 
-<!-- 🔔 Firebase -->
+<!-- 🔥 Firebase + Service Worker -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
@@ -113,18 +120,35 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-Notification.requestPermission().then((permission) => {
-    if (permission === "granted") {
-        getToken(messaging, {
-            vapidKey: "BERirHvZXQZ9invNBodU6-6rDgbH-2Q1sR8T5mBjzMOCPO2DtLOJvMJvohtqZCxF3-2pbI9tyj6hxHvMRpjPgpE"
-        }).then((token) => {
-            console.log("TOKEN:", token);
-        });
-    }
+// 🔥 تسجيل Service Worker
+navigator.serviceWorker.register('/firebase-messaging-sw.js')
+.then((registration) => {
+    console.log("SW registered");
 });
 
+// 🔔 تفعيل الإشعارات
+window.initNotifications = async function(){
+    try{
+        const permission = await Notification.requestPermission();
+
+        if(permission === "granted"){
+            const token = await getToken(messaging, {
+                vapidKey: "BERirHvZXQZ9invNBodU6-6rDgbH-2Q1sR8T5mBjzMOCPO2DtLOJvMJvohtqZCxF3-2pbI9tyj6hxHvMRpjPgpE"
+            });
+
+            console.log("TOKEN:", token);
+            alert("✅ تم تفعيل الإشعارات");
+        }else{
+            alert("❌ لازم توافق على الإشعارات");
+        }
+    }catch(err){
+        console.log(err);
+    }
+};
+
+// 🔔 استقبال إشعار
 onMessage(messaging, (payload) => {
-    alert("📩 إشعار جديد: " + payload.notification.title);
+    alert("📩 إشعار: " + payload.notification.title);
 });
 </script>
 
