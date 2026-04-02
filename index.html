@@ -119,16 +119,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-// ✅ الحل النهائي
-navigator.serviceWorker.register("/members-site/firebase-messaging-sw.js")
-.then((registration) => {
-    console.log("Service Worker Registered");
-})
-.catch((err) => {
-    console.log("SW Error:", err);
-});
+// ✅ تسجيل Service Worker (الحل النهائي)
+navigator.serviceWorker.register("./firebase-messaging-sw.js")
+.then(() => console.log("Service Worker Registered"))
+.catch(err => console.log("SW Error:", err));
 
-// 🔔 زر التفعيل
+// 🔔 تفعيل الإشعارات
 window.enableNotifications = function(){
     Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
@@ -154,6 +150,7 @@ onMessage(messaging, (payload) => {
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
 const API_URL = "https://script.google.com/macros/s/AKfycbwPT3HpCK9ucjnkgGZJefJ-sTZSi4YaGeOVi26P_EB3ZjJorA-QVMf7LtvFCDlBirvYIQ/exec";
 
+// تسجيل تلقائي
 window.onload = function(){
     let savedUser = localStorage.getItem("currentUser");
     if(savedUser){
@@ -161,6 +158,7 @@ window.onload = function(){
     }
 };
 
+// تسجيل الدخول
 function login(){
     let id = document.getElementById("id").value;
     let pass = document.getElementById("pass").value;
@@ -184,6 +182,7 @@ function login(){
     });
 }
 
+// عرض المستخدم
 function showUser(user){
     document.getElementById("loginBox").style.display="none";
 
@@ -212,6 +211,7 @@ function showUser(user){
     `;
 }
 
+// تغيير كلمة السر
 function changePassword(userId){
     let newPass = document.getElementById("newPass").value;
 
@@ -221,15 +221,18 @@ function changePassword(userId){
     });
 }
 
+// واتساب
 function openWA(){
     window.open("https://wa.me/963980049054", "_blank");
 }
 
+// خروج
 function logout(){
     localStorage.removeItem("currentUser");
     location.reload();
 }
 
+// روابط
 function openLink(url){
     window.open(url, "_blank");
 }
