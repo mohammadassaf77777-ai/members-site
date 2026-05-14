@@ -7,102 +7,330 @@
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141e30">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-body {
-    font-family: Arial;
-    direction: rtl;
-    text-align: center;
-    background: linear-gradient(135deg, #141e30, #243b55);
-    color: white;
-    margin:0;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #1a6b4a;
+  --primary-light: #25a370;
+  --accent: #f0a500;
+  --dark: #0d1f2d;
+  --dark2: #162535;
+  --card-bg: rgba(255,255,255,0.97);
+  --shadow: 0 8px 32px rgba(0,0,0,0.25);
 }
+
+body {
+  font-family: 'Cairo', Arial, sans-serif;
+  direction: rtl;
+  text-align: center;
+  background: linear-gradient(160deg, #0d1f2d 0%, #1a3a2a 50%, #0d1f2d 100%);
+  color: white;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
 .header {
-    background: rgba(0,0,0,0.4);
-    padding:15px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.6), rgba(26,107,74,0.3));
+  padding: 20px 15px 15px;
+  border-bottom: 2px solid rgba(240,165,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40px; left: -40px;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(240,165,0,0.15), transparent);
+  border-radius: 50%;
+}
+.header-logo {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+.header-title {
+  font-size: 17px;
+  font-weight: 900;
+  color: white;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.header-title span {
+  color: var(--accent);
 }
 .fb-btn {
-    display:inline-block;
-    background:linear-gradient(45deg,#1877f2,#0d5ed7);
-    color:white;
-    padding:12px 18px;
-    border-radius:12px;
-    margin-top:10px;
-    text-decoration:none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(45deg, #1877f2, #0d5ed7);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(24,119,242,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+.fb-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(24,119,242,0.5); }
+
+/* ===== NOTIFY BTN ===== */
+.notify-wrap {
+  padding: 12px;
+}
+.notify {
+  background: linear-gradient(45deg, #ff6f00, #ff9800);
+  color: white;
+  padding: 11px 24px;
+  border-radius: 50px;
+  border: none;
+  font-family: 'Cairo', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(255,152,0,0.4);
+  transition: transform 0.2s;
+  width: auto;
+}
+.notify:hover { transform: scale(1.03); }
+
+/* ===== INFO SECTION ===== */
+.info-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 92%;
+  max-width: 420px;
+  margin: 14px auto;
+}
+.info-card {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 14px 10px;
+  backdrop-filter: blur(8px);
+}
+.info-card .icon { font-size: 24px; margin-bottom: 6px; }
+.info-card .label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 3px;
+}
+.info-card .value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.info-card.full {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: right;
+  padding: 14px 16px;
+}
+.info-card.full .icon { font-size: 28px; flex-shrink: 0; }
+.info-card.full .text .label { font-size: 11px; color: rgba(255,255,255,0.6); }
+.info-card.full .text .value { font-size: 13px; font-weight: 600; color: white; line-height: 1.6; }
+
+/* ===== CARDS ===== */
 .card {
-    background: white;
-    color:black;
-    padding:20px;
-    border-radius:20px;
-    width:90%;
-    max-width:400px;
-    margin:20px auto;
+  background: var(--card-bg);
+  color: #1a1a1a;
+  padding: 20px 18px;
+  border-radius: 22px;
+  width: 92%;
+  max-width: 420px;
+  margin: 12px auto;
+  box-shadow: var(--shadow);
 }
-input, button {
-    width:90%;
-    padding:12px;
-    margin:8px;
-    border-radius:10px;
-    border:none;
+.card h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: var(--dark);
 }
-.login { background:#4CAF50; color:white; }
-.logout { background:red; color:white; }
-.admin { background:orange; color:white; }
-.whatsapp { background:#25D366; color:white; }
-.group { background:#128C7E; color:white; }
+
+/* ===== INPUTS ===== */
+input {
+  width: 100%;
+  padding: 13px 16px;
+  margin: 7px 0;
+  border-radius: 12px;
+  border: 2px solid #e8e8e8;
+  font-family: 'Cairo', Arial, sans-serif;
+  font-size: 14px;
+  background: #f8f8f8;
+  color: #333;
+  transition: border 0.2s;
+  display: block;
+}
+input:focus { outline: none; border-color: var(--primary-light); background: white; }
+
+/* ===== BUTTONS ===== */
+button {
+  width: 100%;
+  padding: 13px;
+  margin: 6px 0;
+  border-radius: 12px;
+  border: none;
+  font-family: 'Cairo', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+button:active { transform: scale(0.97); }
+
+.login {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  box-shadow: 0 4px 15px rgba(26,107,74,0.35);
+}
+.login:hover { box-shadow: 0 6px 20px rgba(26,107,74,0.5); }
+.login:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.logout {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  color: white;
+}
+.admin {
+  background: linear-gradient(135deg, #e67e22, #f39c12);
+  color: white;
+}
+.whatsapp {
+  background: linear-gradient(135deg, #128C7E, #25D366);
+  color: white;
+}
+.group {
+  background: linear-gradient(135deg, #0d6b5e, #128C7E);
+  color: white;
+  text-align: right;
+  padding-right: 16px;
+}
+
+/* ===== ALERT / STATUS ===== */
 .alert {
-    background:#4CAF50;
-    color:white;
-    padding:10px;
-    border-radius:10px;
-    margin-bottom:10px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  font-weight: 700;
+  font-size: 14px;
 }
-.notify { background:#ff9800; color:white; }
+
+/* ===== USER INFO ===== */
+.user-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #f5f5f5;
+  border-radius: 10px;
+  margin: 6px 0;
+  font-size: 14px;
+}
+.user-stat .stat-label { color: #666; }
+.user-stat .stat-value { font-weight: 700; color: var(--dark); }
+
+.divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 16px 0;
+}
+
+/* ===== LOADING ===== */
+.loading-spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 3px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== FOOTER ===== */
+.footer {
+  padding: 20px;
+  color: rgba(255,255,255,0.35);
+  font-size: 11px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
-الجمعية التعاونية الشعبية للسكن و الاصطياف بحلب
-<br>
-<a class="fb-btn" href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
-📘 زيارة صفحة الفيسبوك
-</a>
+  <div class="header-logo">🏛️ الجمعية التعاونية الشعبية</div>
+  <div class="header-title">للسكن والاصطياف<br><span>بحلب</span></div>
+  <a class="fb-btn" href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
+    📘 صفحتنا على فيسبوك
+  </a>
 </div>
 
-<!-- 🔔 زر الإشعارات -->
-<button class="notify" onclick="enableNotifications()">
-🔔 تفعيل الإشعارات
-</button>
+<!-- NOTIFY -->
+<div class="notify-wrap">
+  <button class="notify" onclick="enableNotifications()">
+    🔔 تفعيل الإشعارات
+  </button>
+</div>
 
+<!-- INFO ABOUT ASSOCIATION -->
+<div class="info-section">
+  <div class="info-card">
+    <div class="icon">🏘️</div>
+    <div class="label">المشاريع</div>
+    <div class="value">المشروع ٦ و ٨</div>
+  </div>
+  <div class="info-card">
+    <div class="icon">📍</div>
+    <div class="label">الموقع</div>
+    <div class="value">حلب، سوريا</div>
+  </div>
+  <div class="info-card full">
+    <div class="icon">ℹ️</div>
+    <div class="text">
+      <div class="label">عن الجمعية</div>
+      <div class="value">جمعية تعاونية لخدمة الأعضاء في مجال السكن والاصطياف — سجّل دخولك لمتابعة حسابك ودفعاتك</div>
+    </div>
+  </div>
+</div>
+
+<!-- GROUPS -->
 <div class="card">
-<h3>👥 مجموعات المشاريع</h3>
-
-<button class="group" onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
-📌 المشروع السادس
-</button>
-
-<button class="group" onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
-📌 المشروع الثامن
-</button>
-
+  <h3>👥 مجموعات واتساب</h3>
+  <button class="group" onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
+    📌 مجموعة المشروع السادس
+  </button>
+  <button class="group" onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
+    📌 مجموعة المشروع الثامن
+  </button>
 </div>
 
+<!-- LOGIN -->
 <div class="card" id="loginBox">
-<h3>تسجيل الدخول</h3>
-
-<input id="id" placeholder="رقم العضوية">
-<input id="pass" type="password" placeholder="كلمة السر">
-
-<button class="login" onclick="login()">دخول</button>
-<p id="error" style="color:red;"></p>
+  <h3>🔐 تسجيل الدخول</h3>
+  <input id="id" placeholder="رقم العضوية" inputmode="numeric">
+  <input id="pass" type="password" placeholder="كلمة السر">
+  <button class="login" id="loginBtn" onclick="login()">دخول</button>
+  <p id="error" style="color:#e74c3c; font-size:13px; margin-top:8px;"></p>
 </div>
 
 <div id="content"></div>
 
-<!-- 🔔 Firebase -->
+<div class="footer">جمعية السكن والاصطياف © حلب</div>
+
+<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
@@ -119,30 +347,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
-// ✅ تسجيل Service Worker (الحل النهائي)
 navigator.serviceWorker.register("./firebase-messaging-sw.js")
-.then(() => console.log("Service Worker Registered"))
-.catch(err => console.log("SW Error:", err));
+  .then(() => console.log("Service Worker Registered"))
+  .catch(err => console.log("SW Error:", err));
 
-// 🔔 تفعيل الإشعارات
 window.enableNotifications = function(){
-    Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-            getToken(messaging, {
-                vapidKey: "BERirHvZXQZ9invNBodU6-6rDgbH-2Q1sR8T5mBjzMOCPO2DtLOJvMJvohtqZCxF3-2pbI9tyj6hxHvMRpjPgpE"
-            }).then((token) => {
-                console.log("TOKEN:", token);
-                alert("✅ تم التفعيل\nافتح Console وانسخ التوكن");
-            });
-        } else {
-            alert("❌ لازم تسمح بالإشعارات");
-        }
-    });
+  Notification.requestPermission().then((permission) => {
+    if (permission === "granted") {
+      getToken(messaging, {
+        vapidKey: "BERirHvZXQZ9invNBodU6-6rDgbH-2Q1sR8T5mBjzMOCPO2DtLOJvMJvohtqZCxF3-2pbI9tyj6hxHvMRpjPgpE"
+      }).then((token) => {
+        console.log("TOKEN:", token);
+        alert("✅ تم تفعيل الإشعارات بنجاح!");
+      });
+    } else {
+      alert("❌ لازم تسمح بالإشعارات لتفعيل هذه الخاصية");
+    }
+  });
 };
 
-// استقبال الإشعار
 onMessage(messaging, (payload) => {
-    alert("📩 إشعار جديد: " + payload.notification.title);
+  alert("📩 إشعار جديد: " + payload.notification.title);
 });
 </script>
 
@@ -150,92 +375,125 @@ onMessage(messaging, (payload) => {
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
 const API_URL = "https://script.google.com/macros/s/AKfycbwPT3HpCK9ucjnkgGZJefJ-sTZSi4YaGeOVi26P_EB3ZjJorA-QVMf7LtvFCDlBirvYIQ/exec";
 
-// تسجيل تلقائي
 window.onload = function(){
-    let savedUser = localStorage.getItem("currentUser");
-    if(savedUser){
-        showUser(JSON.parse(savedUser));
-    }
+  let savedUser = localStorage.getItem("currentUser");
+  if(savedUser){ showUser(JSON.parse(savedUser)); }
 };
 
-// تسجيل الدخول
 function login(){
-    let id = document.getElementById("id").value;
-    let pass = document.getElementById("pass").value;
+  let id = document.getElementById("id").value.trim();
+  let pass = document.getElementById("pass").value.trim();
+  let errorEl = document.getElementById("error");
+  let btn = document.getElementById("loginBtn");
 
-    fetch(API_URL + "?id=" + id + "&password=" + pass)
-    .then(res => res.json())
-    .then(data => {
-        if(data.status === "success"){
-            let user = {
-                membership_id: id,
-                name: data.name,
-                total: data.total,
-                paid: data.paid,
-                remaining: data.remaining
-            };
-            localStorage.setItem("currentUser", JSON.stringify(user));
-            showUser(user);
-        } else {
-            document.getElementById("error").innerText = "❌ بيانات خاطئة";
-        }
-    });
+  errorEl.innerText = "";
+
+  if(!id || !pass){
+    errorEl.innerText = "⚠️ الرجاء إدخال رقم العضوية وكلمة السر";
+    return;
+  }
+
+  // Loading state
+  btn.disabled = true;
+  btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
+
+  fetch(API_URL + "?id=" + id + "&password=" + pass)
+  .then(res => res.json())
+  .then(data => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+    if(data.status === "success"){
+      let user = {
+        membership_id: id,
+        name: data.name,
+        total: data.total,
+        paid: data.paid,
+        remaining: data.remaining
+      };
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      showUser(user);
+    } else {
+      errorEl.innerText = "❌ رقم العضوية أو كلمة السر غير صحيحة";
+    }
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+    errorEl.innerText = "⚠️ خطأ في الاتصال، حاول مجدداً";
+  });
 }
 
-// عرض المستخدم
 function showUser(user){
-    document.getElementById("loginBox").style.display="none";
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("content").innerHTML = `
+  <div class="card">
+    <div class="alert">✅ أهلاً ${user.name}</div>
 
-    document.getElementById("content").innerHTML = `
-    <div class="card">
-        <div class="alert">🔔 أنت مسجل دخول</div>
-
-        <h3>${user.name}</h3>
-        <p>💰 ${user.total}</p>
-        <p>💵 ${user.paid}</p>
-        <p>📉 ${user.remaining}</p>
-
-        <p>📅 آخر تحديث: ${lastUpdate}</p>
-
-        <hr>
-
-        <h4>🔑 تغيير كلمة السر</h4>
-        <input id="newPass" type="password">
-        <button class="admin" onclick="changePassword('${user.membership_id}')">حفظ</button>
-
-        <p id="msg"></p>
-
-        <button class="whatsapp" onclick="openWA()">📱 تواصل معنا</button>
-        <button class="logout" onclick="logout()">خروج</button>
+    <div class="user-stat">
+      <span class="stat-label">💰 المبلغ الإجمالي</span>
+      <span class="stat-value">${user.total}</span>
     </div>
-    `;
+    <div class="user-stat">
+      <span class="stat-label">💵 المدفوع</span>
+      <span class="stat-value" style="color:#1a6b4a">${user.paid}</span>
+    </div>
+    <div class="user-stat">
+      <span class="stat-label">📉 المتبقي</span>
+      <span class="stat-value" style="color:#e74c3c">${user.remaining}</span>
+    </div>
+    <p style="font-size:12px; color:#999; margin-top:10px;">📅 آخر تحديث: ${lastUpdate}</p>
+
+    <hr class="divider">
+
+    <h4 style="margin-bottom:10px; font-size:15px;">🔑 تغيير كلمة السر</h4>
+    <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
+    <button class="admin" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
+    <p id="msg" style="font-size:13px; color:#1a6b4a; margin-top:6px;"></p>
+
+    <hr class="divider">
+
+    <button class="whatsapp" onclick="openWA()">📱 تواصل معنا على واتساب</button>
+    <button class="logout" onclick="logout()">🚪 تسجيل الخروج</button>
+  </div>
+  `;
 }
 
-// تغيير كلمة السر
 function changePassword(userId){
-    let newPass = document.getElementById("newPass").value;
+  let newPass = document.getElementById("newPass").value.trim();
+  let msg = document.getElementById("msg");
 
-    fetch(API_URL, {
-        method: "POST",
-        body: JSON.stringify({ id: userId, password: newPass })
-    });
+  if(!newPass){
+    msg.style.color = "#e74c3c";
+    msg.innerText = "⚠️ الرجاء إدخال كلمة السر الجديدة";
+    return;
+  }
+
+  msg.style.color = "#999";
+  msg.innerText = "جاري الحفظ...";
+
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({ id: userId, password: newPass })
+  })
+  .then(() => {
+    msg.style.color = "#1a6b4a";
+    msg.innerText = "✅ تم تغيير كلمة السر بنجاح";
+    document.getElementById("newPass").value = "";
+  })
+  .catch(() => {
+    msg.style.color = "#e74c3c";
+    msg.innerText = "❌ فشل الحفظ، حاول مجدداً";
+  });
 }
 
-// واتساب
-function openWA(){
-    window.open("https://wa.me/963980049054", "_blank");
-}
+function openWA(){ window.open("https://wa.me/963980049054", "_blank"); }
 
-// خروج
 function logout(){
-    localStorage.removeItem("currentUser");
-    location.reload();
+  localStorage.removeItem("currentUser");
+  location.reload();
 }
 
-// روابط
-function openLink(url){
-    window.open(url, "_blank");
-}
+function openLink(url){ window.open(url, "_blank"); }
 </script>
 
 </body>
