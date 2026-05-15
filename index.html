@@ -243,29 +243,44 @@ body{
   100% { transform: translate3d(100%, 0, 0); }
 }
 
-/* NOTIFY */
+/* TABS SYSTEM (NAVIGATION AFTER LOGIN) */
 
-.notify-wrap{
-  padding:14px;
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: 92%;
+  max-width: 420px;
+  margin: 15px auto 5px auto;
 }
 
-.notify{
-  background:
-  linear-gradient(45deg,#ff6f00,#ff9800);
+.tab-btn {
+  flex: 1;
+  padding: 10px 5px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  margin: 0;
+  transition: 0.25s;
+}
 
-  color:white;
-  padding:12px 24px;
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(26,107,74,0.3);
+}
 
-  border:none;
-  border-radius:50px;
+.tab-content {
+  display: none;
+}
 
-  font-family:'Cairo';
-  font-size:14px;
-  font-weight:700;
-
-  cursor:pointer;
-
-  box-shadow:0 4px 15px rgba(255,152,0,0.4);
+.tab-content.active {
+  display: block;
 }
 
 /* INFO */
@@ -337,7 +352,7 @@ body{
   font-size:13px;
 }
 
-/* GROUPS */
+/* CARDS */
 
 .card{
   background:rgba(255,255,255,0.1);
@@ -374,7 +389,7 @@ body{
 
 /* INPUTS */
 
-input{
+input, select{
   width:100%;
 
   padding:13px 16px;
@@ -400,10 +415,15 @@ input::placeholder{
   color:rgba(255,255,255,0.5);
 }
 
-input:focus{
+input:focus, select:focus{
   outline:none;
   border-color:var(--primary-light);
   transform:scale(1.01);
+}
+
+select option {
+  background: var(--dark2);
+  color: white;
 }
 
 /* BUTTONS */
@@ -570,10 +590,10 @@ button:hover::before{
 /* PROJECT GALLERY */
 
 .project-gallery-section {
-  padding: 30px 15px;
+  padding: 15px 5px;
   width: 92%;
   max-width: 420px;
-  margin: 14px auto;
+  margin: 10px auto;
   text-align: right;
 }
 
@@ -645,9 +665,9 @@ button:hover::before{
 /* FOOTER */
 
 .footer{
-  padding:30px;
-  color:rgba(255,255,255,0.35);
-  font-size:11px;
+  padding: 30px;
+  color: rgba(255,255,255,0.35);
+  font-size: 11px;
 }
 
 </style>
@@ -702,153 +722,178 @@ button:hover::before{
   </div>
 </div>
 
-<!-- NOTIFY -->
 
-<div class="notify-wrap">
+<!-- ======================== [1] الصفحة الرئيسية (قبل تسجيل الدخول) ======================== -->
+<div id="mainPublicPage">
 
-  <button class="notify" onclick="enableNotifications()">
-    🔔 تفعيل الإشعارات
-  </button>
-
-</div>
-
-<!-- INFO -->
-
-<div class="info-section">
-
-  <div class="info-card">
-    <div class="icon">🏘️</div>
-    <div class="label">المشاريع</div>
-    <div class="value">المشروع ٦ و ٨</div>
-  </div>
-
-  <div class="info-card">
-    <div class="icon">📍</div>
-    <div class="label">الموقع</div>
-    <div class="value">حلب، سوريا</div>
-  </div>
-
-  <div class="info-card full">
-
-    <div class="icon">🗺️</div>
-
-    <div class="text">
-      <div class="label">موقع الجمعية</div>
-
-      <div class="value">
-
-        <a href="PUT_GOOGLE_MAPS_LINK_HERE"
-        target="_blank"
-        style="
-        color:#f0a500;
-        text-decoration:none;
-        font-weight:700;
-        ">
-
-        عرض الموقع على الخريطة
-
-        </a>
-
-      </div>
-    </div>
-
-  </div>
-
-  <div class="info-card full">
-
-    <div class="icon">ℹ️</div>
-
-    <div class="text">
-      <div class="label">عن الجمعية</div>
-
-      <div class="value">
-        جمعية تعاونية لخدمة الأعضاء في مجال السكن والاصطياف — سجّل دخولك لمتابعة حسابك ودفعاتك
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
-<!-- GROUPS -->
-
-<div class="card">
-
-  <h3>👥 مجموعات واتساب</h3>
-
-  <button class="group"
-  onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
-
-    📌 مجموعة المشروع السادس
-
-  </button>
-
-  <button class="group"
-  onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
-
-    📌 مجموعة المشروع الثامن
-
-  </button>
-
-</div>
-
-<!-- LOGIN -->
-
-<div class="card" id="loginBox">
-
-  <h3>🔐 تسجيل الدخول</h3>
-
-  <input id="id"
-  placeholder="رقم العضوية"
-  inputmode="numeric">
-
-  <input id="pass"
-  type="password"
-  placeholder="كلمة السر">
-
-  <button class="login"
-  id="loginBtn"
-  onclick="login()">
-
-  دخول
-
-  </button>
-
-  <p id="error"
-  style="
-  color:#ff8f8f;
-  font-size:13px;
-  margin-top:8px;
-  "></p>
-
-</div>
-
-<div id="content"></div>
-
-<!-- PROJECT GALLERY -->
-
-<section class="project-gallery-section">
-  <h2 class="gallery-heading">📸 أرض الموقع والمشاريع</h2>
-  <p class="gallery-subheading">توثيق حي ومباشر لآخر الأعمال الإنشائية وما يحدث على أرض الواقع</p>
-  
-  <div class="gallery-grid">
-    <!-- الصورة الأولى: أرض الموقع -->
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop" alt="أرض الموقع">
-      <div class="image-overlay">
-        <div class="overlay-text">معاينة أرض موقع الجمعية والبدء بالتجهيزات الأولى</div>
-      </div>
-    </div>
+  <!-- قسم آخر الأخبار الميدانية والصور المباشرة (الواجهة الأساسية) -->
+  <section class="project-gallery-section">
+    <h2 class="gallery-heading">📸 أرض الموقع والمشاريع</h2>
+    <p class="gallery-subheading">توثيق حي ومباشر لآخر الأعمال الإنشائية وما يحدث على أرض الواقع</p>
     
-    <!-- الصورة الثانية: آخر التطورات -->
-    <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop" alt="أعمال المشروع">
-      <div class="image-overlay">
-        <div class="overlay-text">سير الأعمال والإنشاءات الجارية على أرض الواقع</div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop" alt="أرض الموقع">
+        <div class="image-overlay">
+          <div class="overlay-text">معاينة أرض موقع الجمعية والبدء بالتجهيزات الأولى</div>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop" alt="أعمال المشروع">
+        <div class="image-overlay">
+          <div class="overlay-text">سير الأعمال والإنشاءات الجارية على أرض الواقع</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- قسم قنوات ومواقع التواصل الاجتماعي والمجموعات -->
+  <div class="card">
+    <h3>👥 مجموعات واتساب والتواصل</h3>
+    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">انضم إلى المجموعات الرسمية للمشاريع لمتابعة الإعلانات والمستجدات العاجلة:</p>
+
+    <button class="group"
+    onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
+      📌 مجموعة المشروع السادس
+    </button>
+
+    <button class="group"
+    onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
+      📌 مجموعة المشروع الثامن
+    </button>
+  </div>
+
+  <!-- قسم معلومات عامة عن موقع الجمعية الميداني -->
+  <div class="info-section">
+    <div class="info-card">
+      <div class="icon">🏘️</div>
+      <div class="label">المشاريع الحالية</div>
+      <div class="value">المشروع ٦ و ٨</div>
+    </div>
+
+    <div class="info-card">
+      <div class="icon">📍</div>
+      <div class="label">الموقع الرئيسي</div>
+      <div class="value">حلب، سوريا</div>
+    </div>
+  </div>
+
+  <!-- صندوق تسجيل الدخول في نهاية الصفحة الرئيسية للعموم -->
+  <div class="card" id="loginBox">
+    <h3>🔐 تسجيل دخول الأعضاء</h3>
+    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية الخاص بك للاطلاع على بيانات شقتك والمدفوعات</p>
+
+    <input id="id"
+    placeholder="رقم العضوية"
+    inputmode="numeric">
+
+    <input id="pass"
+    type="password"
+    placeholder="كلمة السر">
+
+    <button class="login"
+    id="loginBtn"
+    onclick="login()">
+    دخول
+    </button>
+
+    <p id="error"
+    style="
+    color:#ff8f8f;
+    font-size:13px;
+    margin-top:8px;
+    "></p>
+  </div>
+
+</div>
+
+
+<!-- ======================== [2] لوحة تحكم العضو الحاصة (بعد تسجيل الدخول) ======================== -->
+<div id="memberDashboard" style="display: none;">
+  
+  <!-- أزرار التنقل بين أقسام لوحة التحكم الداخية -->
+  <div class="tabs-container">
+    <button class="tab-btn active" onclick="switchTab('financialTab', this)">💰 الدفعات والوصل</button>
+    <button class="tab-btn" onclick="switchTab('apartmentTab', this)">🏢 تفاصيل الشقة</button>
+    <button class="tab-btn" onclick="switchTab('newsTab', this)">📢 الأخبار والموقع</button>
+  </div>
+
+  <!-- محتوى القسم الأول: الحساب المالي وإرسال الوصل -->
+  <div id="financialTab" class="tab-content active">
+    <div class="card" id="content">
+       <!-- يتم ملء هذا الجزء برمجياً بعد جلب بيانات العضو الماليّة -->
+    </div>
+  </div>
+
+  <!-- محتوى القسم الثاني: تفاصيل الشقة الجغرافية والداخلية -->
+  <div id="apartmentTab" class="tab-content">
+    <div class="card">
+      <h3>🏢 تفاصيل الشقة والموقع</h3>
+      <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 15px;">المعطيات المسجلة لشقتك السكنية ضمن قيود الجمعية:</p>
+      
+      <div class="user-stat">
+        <span class="stat-label">🏗️ رصيد مشروع رقم</span>
+        <span class="stat-value" id="aptProject">-</span>
+      </div>
+      <div class="user-stat">
+        <span class="stat-label">🪜 الطابق</span>
+        <span class="stat-value" id="aptFloor">-</span>
+      </div>
+      <div class="user-stat">
+        <span class="stat-label">🧭 اتجاه الشقة (القبلة)</span>
+        <span class="stat-value" id="aptDirection">-</span>
+      </div>
+      <div class="user-stat">
+        <span class="stat-label">🚪 عدد الغرف والمنافع</span>
+        <span class="stat-value" id="aptRooms">-</span>
+      </div>
+
+      <hr class="divider">
+      
+      <div class="user-stat" style="background: rgba(240, 165, 0, 0.1); border: 1px solid rgba(240, 165, 0, 0.3);">
+        <span class="stat-label" style="color: var(--accent);">🗺️ الإحداثيات الجغرافية:</span>
+        <span class="stat-value">
+          <a href="PUT_GOOGLE_MAPS_LINK_HERE" target="_blank" style="color:#f0a500; text-decoration:none; font-weight:700;">
+            عرض على Google Maps
+          </a>
+        </span>
       </div>
     </div>
   </div>
-</section>
+
+  <!-- محتوى القسم الثالث: آخر الأخبار مستنسخة من الواجهة لراحة العضو داخل حسابه -->
+  <div id="newsTab" class="tab-content">
+     <div class="info-section">
+        <div class="info-card full">
+          <div class="icon">ℹ️</div>
+          <div class="text">
+            <div class="label">بيان رسمي</div>
+            <div class="value">جمعية تعاونية لخدمة الأعضاء في مجال السكن والاصطياف بحلب - نتابع التطوير والعمل الميداني لضمان تسليم الوحدات في أوقاتها المحددة.</div>
+          </div>
+        </div>
+     </div>
+     
+     <section class="project-gallery-section" style="width:100%; margin:0;">
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop" alt="أرض الموقع">
+            <div class="image-overlay">
+              <div class="overlay-text">معاينة أرض موقع الجمعية والبدء بالتجهيزات الأولى</div>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop" alt="أعمال المشروع">
+            <div class="image-overlay">
+              <div class="overlay-text">سير الأعمال والإنشاءات الجارية على أرض الواقع</div>
+            </div>
+          </div>
+        </div>
+     </section>
+  </div>
+
+</div>
+
 
 <div class="footer">
   جمعية السكن والاصطياف © حلب
@@ -976,294 +1021,15 @@ window.addEventListener("load", ()=>{
 
 });
 
-function login(){
-
-  let id =
-  document.getElementById("id")
-  .value.trim();
-
-  let pass =
-  document.getElementById("pass")
-  .value.trim();
-
-  let errorEl =
-  document.getElementById("error");
-
-  let btn =
-  document.getElementById("loginBtn");
-
-  errorEl.innerText = "";
-
-  if(!id || !pass){
-
-    errorEl.innerText =
-    "⚠️ الرجاء إدخال البيانات";
-
-    return;
-
+// دالة التنقل بين ألسنة العرض الداخلية (Tabs)
+function switchTab(tabId, element) {
+  let contents = document.getElementsByClassName('tab-content');
+  for (let i = 0; i < contents.length; i++) {
+    contents[i].classList.remove('active');
   }
-
-  btn.disabled = true;
-
-  btn.innerHTML =
-  'جاري التحقق <span class="loading-spinner"></span>';
-
-  fetch(API_URL + "?id=" + id + "&password=" + pass)
-
-  .then(res => res.json())
-
-  .then(data => {
-
-    btn.disabled = false;
-
-    btn.innerHTML = "دخول";
-
-    if(data.status === "success"){
-
-      let user = {
-
-        membership_id:id,
-        name:data.name,
-        total:data.total,
-        paid:data.paid,
-        remaining:data.remaining
-
-      };
-
-      localStorage.setItem(
-      "currentUser",
-      JSON.stringify(user)
-      );
-
-      showUser(user);
-
-    } else {
-
-      errorEl.innerText =
-      "❌ البيانات غير صحيحة";
-
-    }
-
-  })
-
-  .catch(() => {
-
-    btn.disabled = false;
-
-    btn.innerHTML = "دخول";
-
-    errorEl.innerText =
-    "⚠️ خطأ في الاتصال";
-
-  });
-
-}
-
-function showUser(user){
-
-  document.getElementById("loginBox")
-  .style.display = "none";
-
-  document.getElementById("content")
-  .innerHTML = `
-
-  <div class="card">
-
-    <div class="alert">
-      ✅ أهلاً ${user.name}
-    </div>
-
-    <div class="user-stat">
-      <span class="stat-label">
-      💰 المبلغ الإجمالي
-      </span>
-
-      <span class="stat-value">
-      ${user.total}
-      </span>
-    </div>
-
-    <div class="user-stat">
-
-      <span class="stat-label">
-      💵 المدفوع
-      </span>
-
-      <span class="stat-value"
-      style="color:#4effb0">
-
-      ${user.paid}
-
-      </span>
-
-    </div>
-
-    <div class="user-stat">
-
-      <span class="stat-label">
-      📉 المتبقي
-      </span>
-
-      <span class="stat-value"
-      style="color:#ff8f8f">
-
-      ${user.remaining}
-
-      </span>
-
-    </div>
-
-    <p style="
-    font-size:12px;
-    color:rgba(255,255,255,0.5);
-    margin-top:10px;
-    ">
-
-    📅 آخر تحديث:
-    ${lastUpdate}
-
-    </p>
-
-    <hr class="divider">
-
-    <h4 style="
-    margin-bottom:10px;
-    font-size:15px;
-    ">
-
-    🔑 تغيير كلمة السر
-
-    </h4>
-
-    <input id="newPass"
-    type="password"
-    placeholder="كلمة السر الجديدة">
-
-    <button class="admin"
-    onclick="changePassword('${user.membership_id}')">
-
-    💾 حفظ كلمة السر
-
-    </button>
-
-    <p id="msg"
-    style="
-    font-size:13px;
-    color:#1a6b4a;
-    margin-top:6px;
-    "></p>
-
-    <hr class="divider">
-
-    <button class="whatsapp"
-    onclick="openWA()">
-
-    📱 تواصل معنا على واتساب
-
-    </button>
-
-    <button class="logout"
-    onclick="logout()">
-
-    🚪 تسجيل الخروج
-
-    </button>
-
-  </div>
-
-  `;
-
-}
-
-function changePassword(userId){
-
-  let newPass =
-  document.getElementById("newPass")
-  .value.trim();
-
-  let msg =
-  document.getElementById("msg");
-
-  if(!newPass){
-
-    msg.style.color = "#ff8f8f";
-
-    msg.innerText =
-    "⚠️ أدخل كلمة السر";
-
-    return;
-
+  let buttons = document.getElementsByClassName('tab-btn');
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].classList.remove('active');
   }
-
-  msg.style.color =
-  "rgba(255,255,255,0.6)";
-
-  msg.innerText =
-  "جاري الحفظ...";
-
-  fetch(API_URL, {
-
-    method:"POST",
-
-    body:JSON.stringify({
-
-      id:userId,
-      password:newPass
-
-    })
-
-  })
-
-  .then(() => {
-
-    msg.style.color =
-    "#4effb0";
-
-    msg.innerText =
-    "✅ تم تغيير كلمة السر";
-
-    document.getElementById("newPass")
-    .value = "";
-
-  })
-
-  .catch(() => {
-
-    msg.style.color =
-    "#ff8f8f";
-
-    msg.innerText =
-    "❌ فشل الحفظ";
-
-  });
-
-}
-
-function openWA(){
-
-  window.open(
-  "https://wa.me/963980049054",
-  "_blank"
-  );
-
-}
-
-function logout(){
-
-  localStorage.removeItem("currentUser");
-
-  location.reload();
-
-}
-
-function openLink(url){
-
-  window.open(url,"_blank");
-
-}
-
-</script>
-
-</body>
-</html>
-
+  document.getElementById(tabId).classList.add('active');
+  element.classList.add(
