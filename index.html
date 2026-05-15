@@ -4,938 +4,95 @@
 <meta charset="UTF-8">
 <title>الجمعية</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#141e30">
-
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
-
-:root{
-  --primary:#1a6b4a;
-  --primary-light:#25a370;
-  --accent:#f0a500;
-  --dark:#0d1f2d;
-  --dark2:#162535;
-  --card-bg:rgba(255,255,255,0.08);
-  --shadow:0 8px 32px rgba(0,0,0,0.25);
-}
-
-html{
-  scroll-behavior:smooth;
-  -webkit-tap-highlight-color:transparent;
-}
-
-body{
-  font-family:'Cairo',Arial,sans-serif;
-  direction:rtl;
-  text-align:center;
-
-  background:
-  linear-gradient(-45deg,
-  #0d1f2d,
-  #1a3a2a,
-  #162535,
-  #0d1f2d);
-
-  background-size:400% 400%;
-  animation:gradientMove 12s ease infinite;
-
-  color:white;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-@keyframes gradientMove{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-/* SPLASH */
-
-#splash{
-  position:fixed;
-  inset:0;
-  background:
-  linear-gradient(135deg,#0d1f2d,#1a3a2a);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  z-index:99999;
-  transition:0.5s;
-}
-
-.splash-content{
-  text-align:center;
-  animation:fadeZoom 1s ease;
-}
-
-.splash-content i{
-  font-size:60px;
-  color:var(--accent);
-  margin-bottom:15px;
-}
-
-.splash-content h1{
-  font-size:28px;
-  font-weight:900;
-}
-
-.splash-content p{
-  margin-top:10px;
-  color:rgba(255,255,255,0.7);
-}
-
-@keyframes fadeZoom{
-  from{
-    opacity:0;
-    transform:scale(0.8);
-  }
-  to{
-    opacity:1;
-    transform:scale(1);
-  }
-}
-
-/* HEADER */
-
-.header{
-  background:
-  linear-gradient(
-  135deg,
-  rgba(255,255,255,0.05),
-  rgba(26,107,74,0.18));
-
-  padding:24px 15px 18px;
-
-  border-bottom:1px solid rgba(255,255,255,0.08);
-
-  position:relative;
-  overflow:hidden;
-
-  backdrop-filter:blur(14px);
-}
-
-.header::before{
-  content:'';
-  position:absolute;
-  top:-40px;
-  left:-40px;
-
-  width:120px;
-  height:120px;
-
-  background:
-  radial-gradient(circle,
-  rgba(240,165,0,0.2),
-  transparent);
-
-  border-radius:50%;
-}
-
-.header-logo{
-  font-size:13px;
-  color:rgba(255,255,255,0.7);
-  margin-bottom:5px;
-}
-
-.header-title{
-  font-size:20px;
-  font-weight:900;
-  line-height:1.5;
-  margin-bottom:14px;
-}
-
-.header-title span{
-  color:var(--accent);
-}
-
-.fb-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-
-  background:
-  linear-gradient(45deg,#1877f2,#0d5ed7);
-
-  color:white;
-  padding:11px 22px;
-  border-radius:50px;
-  text-decoration:none;
-  font-size:14px;
-  font-weight:700;
-
-  box-shadow:0 4px 15px rgba(24,119,242,0.4);
-  transition:0.25s;
-}
-
-.fb-btn:hover{
-  transform:translateY(-2px);
-}
-
-/* NEWS TICKER */
-
-.news-ticker-container {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(135deg, rgba(22, 37, 53, 0.95), rgba(13, 31, 45, 0.95));
-  color: #fff;
-  direction: rtl;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  border-bottom: 2px solid var(--primary-light);
-}
-
-.ticker-title {
-  background: linear-gradient(135deg, var(--primary), #1e845b);
-  padding: 10px 18px;
-  white-space: nowrap;
-  font-weight: bold;
-  font-size: 13px;
-  z-index: 2;
-  box-shadow: 3px 0 10px rgba(0,0,0,0.3);
-}
-
-.ticker-content {
-  width: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.ticker-text {
-  display: inline-block;
-  white-space: nowrap;
-  padding-right: 100%;
-  animation: ticker-animation 25s linear infinite;
-}
-
-.ticker-text span {
-  display: inline-block;
-  padding-left: 50px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.news-ticker-container:hover .ticker-text {
-  animation-play-state: paused;
-}
-
-@keyframes ticker-animation {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(100%, 0, 0); }
-}
-
-/* TABS SYSTEM */
-
-.tabs-container {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  width: 92%;
-  max-width: 420px;
-  margin: 15px auto 5px auto;
-}
-
-.tab-btn {
-  flex: 1;
-  padding: 10px 5px;
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.7);
-  cursor: pointer;
-  margin: 0;
-  transition: 0.25s;
-}
-
-.tab-btn.active {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(26,107,74,0.3);
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-/* INFO */
-
-.info-section{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-
-  width:92%;
-  max-width:420px;
-
-  margin:14px auto;
-}
-
-.info-card{
-  background:rgba(255,255,255,0.08);
-
-  border:1px solid rgba(255,255,255,0.12);
-
-  border-radius:16px;
-
-  padding:15px 10px;
-
-  backdrop-filter:blur(14px);
-
-  transition:0.25s;
-}
-
-.info-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 12px 35px rgba(0,0,0,0.35);
-}
-
-.info-card .icon{
-  font-size:25px;
-  margin-bottom:7px;
-}
-
-.info-card .label{
-  font-size:11px;
-  color:rgba(255,255,255,0.6);
-  margin-bottom:3px;
-}
-
-.info-card .value{
-  font-size:15px;
-  font-weight:700;
-  color:var(--accent);
-}
-
-.info-card.full{
-  grid-column:span 2;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  text-align:right;
-  padding:15px 16px;
-}
-
-.info-card.full .icon{
-  font-size:28px;
-  flex-shrink:0;
-}
-
-.info-card.full .text .value{
-  color:white;
-  line-height:1.6;
-  font-size:13px;
-}
-
-/* CARDS */
-
-.card{
-  background:rgba(255,255,255,0.1);
-
-  color:white;
-
-  padding:22px 18px;
-
-  border-radius:24px;
-
-  width:92%;
-  max-width:420px;
-
-  margin:14px auto;
-
-  box-shadow:var(--shadow);
-
-  backdrop-filter:blur(14px);
-
-  border:1px solid rgba(255,255,255,0.12);
-
-  transition:0.25s;
-}
-
-.card:hover{
-  transform:translateY(-4px);
-}
-
-.card h3{
-  font-size:17px;
-  font-weight:800;
-  margin-bottom:14px;
-}
-
-/* INPUTS */
-
-input, select{
-  width:100%;
-
-  padding:13px 16px;
-
-  margin:7px 0;
-
-  border-radius:14px;
-
-  border:2px solid rgba(255,255,255,0.1);
-
-  font-family:'Cairo';
-
-  font-size:14px;
-
-  background:rgba(255,255,255,0.08);
-
-  color:white;
-
-  transition:0.25s;
-}
-
-input::placeholder{
-  color:rgba(255,255,255,0.5);
-}
-
-input:focus, select:focus{
-  outline:none;
-  border-color:var(--primary-light);
-  transform:scale(1.01);
-}
-
-/* BUTTONS */
-
-button{
-  width:100%;
-
-  padding:13px;
-
-  margin:6px 0;
-
-  border:none;
-  border-radius:14px;
-
-  font-family:'Cairo';
-  font-size:14px;
-  font-weight:700;
-
-  cursor:pointer;
-
-  position:relative;
-  overflow:hidden;
-
-  transition:0.25s;
-}
-
-button:hover{
-  transform:scale(1.02);
-}
-
-button::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:-100%;
-
-  width:100%;
-  height:100%;
-
-  background:rgba(255,255,255,0.15);
-
-  transition:0.4s;
-}
-
-button:hover::before{
-  left:100%;
-}
-
-.login{
-  background:
-  linear-gradient(135deg,
-  var(--primary),
-  var(--primary-light));
-
-  color:white;
-}
-
-.logout{
-  background:
-  linear-gradient(135deg,#c0392b,#e74c3c);
-
-  color:white;
-}
-
-.admin{
-  background:
-  linear-gradient(135deg,#e67e22,#f39c12);
-
-  color:white;
-}
-
-.whatsapp{
-  background:
-  linear-gradient(135deg,#128C7E,#25D366);
-
-  color:white;
-}
-
-.group{
-  background:
-  linear-gradient(135deg,#0d6b5e,#128C7E);
-
-  color:white;
-  text-align:right;
-  padding-right:16px;
-}
-
-/* ALERT */
-
-.alert{
-  background:
-  linear-gradient(135deg,
-  var(--primary),
-  var(--primary-light));
-
-  color:white;
-
-  padding:12px 16px;
-
-  border-radius:12px;
-
-  margin-bottom:14px;
-
-  font-weight:700;
-}
-
-/* USER STATS */
-
-.user-stat{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-
-  padding:11px 14px;
-
-  background:rgba(255,255,255,0.08);
-
-  border-radius:12px;
-
-  margin:7px 0;
-
-  font-size:14px;
-}
-
-.stat-label{
-  color:rgba(255,255,255,0.7);
-}
-
-.stat-value{
-  font-weight:700;
-}
-
-.divider{
-  border:none;
-  border-top:1px solid rgba(255,255,255,0.1);
-  margin:16px 0;
-}
-
-/* LOADING */
-
-.loading-spinner{
-  display:inline-block;
-
-  width:18px;
-  height:18px;
-
-  border:3px solid rgba(255,255,255,0.4);
-  border-top-color:white;
-
-  border-radius:50%;
-
-  animation:spin 0.7s linear infinite;
-
-  vertical-align:middle;
-  margin-left:6px;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-/* PROJECT GALLERY */
-
-.project-gallery-section {
-  padding: 15px 5px;
-  width: 92%;
-  max-width: 420px;
-  margin: 10px auto;
-  text-align: right;
-}
-
-.gallery-heading {
-  font-size: 16px;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 4px;
-}
-
-.gallery-subheading {
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 16px;
-  font-size: 11px;
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
-.gallery-item {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  aspect-ratio: 3 / 2;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px);
-  transition: transform 0.25s ease;
-}
-
-.gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.image-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, rgba(13,31,45,0.9) 0%, rgba(0,0,0,0.1) 100%);
-  opacity: 1;
-  display: flex;
-  align-items: flex-end;
-  padding: 12px;
-}
-
-.overlay-text {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.gallery-item:hover {
-  transform: translateY(-3px);
-}
-
-.gallery-item:hover img {
-  transform: scale(1.05);
-}
-
-/* FOOTER */
-
-.footer{
-  padding: 30px;
-  color: rgba(255,255,255,0.35);
-  font-size: 11px;
-}
-
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:'Cairo',sans-serif; direction:rtl; text-align:center; background:#0d1f2d; color:white; min-height:100vh;}
+#splash{position:fixed; inset:0; background:#0d1f2d; display:flex; align-items:center; justify-content:center; z-index:99999;}
+.splash-content i{font-size:60px; color:#f0a500; margin-bottom:15px;}
+.header{background:rgba(255,255,255,0.05); padding:20px; border-bottom:1px solid rgba(255,255,255,0.08);}
+.header-title span{color:#f0a500;}
+.tabs-container {display:flex; justify-content:center; gap:8px; width:92%; max-width:420px; margin:15px auto;}
+.tab-btn {flex:1; padding:10px; font-size:12px; font-weight:700; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:white; cursor:pointer;}
+.tab-btn.active {background:#1a6b4a; border-color:transparent;}
+.tab-content {display:none;}
+.tab-content.active {display:block;}
+.card{background:rgba(255,255,255,0.1); padding:20px; border-radius:24px; width:92%; max-width:420px; margin:15px auto; box-shadow:0 8px 32px rgba(0,0,0,0.25);}
+input{width:100%; padding:12px; margin:8px 0; border-radius:12px; border:none; background:rgba(255,255,255,0.1); color:white; font-family:'Cairo';}
+button{width:100%; padding:12px; margin:8px 0; border-radius:12px; border:none; font-family:'Cairo'; font-weight:700; cursor:pointer;}
+.login{background:#1a6b4a; color:white;}
+.logout{background:#c0392b; color:white;}
+.user-stat{display:flex; justify-content:between; align-items:center; padding:10px; background:rgba(255,255,255,0.05); border-radius:10px; margin:6px 0; font-size:14px;}
+.stat-label{color:rgba(255,255,255,0.7); flex-grow:1; text-align:right;}
+.stat-value{font-weight:700; text-align:left;}
+.loading-spinner{display:inline-block; width:14px; height:14px; border:2px solid white; border-top-color:transparent; border-radius:50%; animation:spin 0.6s linear infinite; margin-right:5px;}
+@keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
-
 <body>
 
 <div id="splash">
   <div class="splash-content">
     <i class="fa-solid fa-building-columns"></i>
     <h1>الجمعية التعاونية</h1>
-    <p>السكن والاصطياف بحلب</p>
+    <p>جاري تحميل النظام...</p>
   </div>
 </div>
 
 <div class="header">
-
-  <div class="header-logo">
-    🏛️ الجمعية التعاونية الشعبية
-  </div>
-
-  <div class="header-title">
-    للسكن والاصطياف<br>
-    <span>بحلب</span>
-  </div>
-
-  <a class="fb-btn"
-  href="https://www.facebook.com/share/16asmQNh5u/"
-  target="_blank">
-
-    <i class="fa-brands fa-facebook-f"></i>
-    صفحتنا على فيسبوك
-
-  </a>
-
+  <div class="header-title">الجمعية التعاونية الشعبية للسكن <span>بحلب</span></div>
 </div>
-
-<div class="news-ticker-container">
-  <div class="ticker-title">📢 آخر الأخبار</div>
-  <div class="ticker-content">
-    <div class="ticker-text">
-      <span>آخر تحديث للبيانات المادية والدفعات تم حتى تاريخ اليوم.</span>
-      <span>🏗️ رصد حي لآخر التطورات والأعمال الجارية والمستجدات في أرض الموقع للمشاريع.</span>
-      <span>نذكر الأعضاء الكرام بمتابعة حساباتهم بشكل دوري عبر تسجيل الدخول.</span>
-    </div>
-  </div>
-</div>
-
 
 <div id="mainPublicPage">
-
-  <section class="project-gallery-section">
-    <h2 class="gallery-heading">📸 أرض الموقع والمشاريع</h2>
-    <p class="gallery-subheading">توثيق حي ومباشر لآخر الأعمال الإنشائية وما يحدث على أرض الواقع</p>
-    
-    <div class="gallery-grid">
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop" alt="أرض الموقع">
-        <div class="image-overlay">
-          <div class="overlay-text">معاينة أرض موقع الجمعية والبدء بالتجهيزات الأولى</div>
-        </div>
-      </div>
-      
-      <div class="gallery-item">
-        <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop" alt="أعمال المشروع">
-        <div class="image-overlay">
-          <div class="overlay-text">سير الأعمال والإنشاءات الجارية على أرض الواقع</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <div class="card">
-    <h3>👥 مجموعات واتساب والتواصل</h3>
-    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">انضم إلى المجموعات الرسمية لمتابعة المستجدات العاجلة:</p>
-
-    <button class="group"
-    onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
-      📌 مجموعة المشروع السادس
-    </button>
-
-    <button class="group"
-    onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">
-      📌 مجموعة المشروع الثامن
-    </button>
-  </div>
-
-  <div class="info-section">
-    <div class="info-card">
-      <div class="icon">🏘️</div>
-      <div class="label">المشاريع الحالية</div>
-      <div class="value">المشروع ٦ و ٨</div>
-    </div>
-
-    <div class="info-card">
-      <div class="icon">📍</div>
-      <div class="label">الموقع الرئيسي</div>
-      <div class="value">حلب، سوريا</div>
-    </div>
-  </div>
-
-  <div class="card" id="loginBox">
     <h3>🔐 تسجيل دخول الأعضاء</h3>
-    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية الخاص بك للاطلاع على بيانات شقتك والمدفوعات</p>
-
-    <input id="id"
-    placeholder="رقم العضوية"
-    inputmode="numeric">
-
-    <input id="pass"
-    type="password"
-    placeholder="كلمة السر">
-
-    <button class="login"
-    id="loginBtn"
-    onclick="login()">
-    دخول
-    </button>
-
-    <p id="error"
-    style="
-    color:#ff8f8f;
-    font-size:13px;
-    margin-top:8px;
-    "></p>
+    <input id="id" placeholder="رقم العضوية" inputmode="numeric">
+    <input id="pass" type="password" placeholder="كلمة السر">
+    <button class="login" id="loginBtn" onclick="login()">دخول</button>
+    <p id="error" style="color:#ff8f8f; font-size:13px; margin-top:8px;"></p>
   </div>
-
 </div>
 
-
 <div id="memberDashboard" style="display: none;">
-  
   <div class="tabs-container">
     <button class="tab-btn active" onclick="switchTab('financialTab', this)">💰 الدفعات والوصل</button>
     <button class="tab-btn" onclick="switchTab('apartmentTab', this)">🏢 تفاصيل الشقة</button>
-    <button class="tab-btn" onclick="switchTab('newsTab', this)">📢 الأخبار والموقع</button>
   </div>
-
   <div id="financialTab" class="tab-content active">
     <div class="card" id="content"></div>
   </div>
-
   <div id="apartmentTab" class="tab-content">
     <div class="card">
-      <h3>🏢 تفاصيل الشقة والموقع</h3>
-      <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 15px;">المعطيات المسجلة لشقتك السكنية ضمن قيود الجمعية:</p>
-      
-      <div class="user-stat">
-        <span class="stat-label">🏗️ رصيد مشروع رقم</span>
-        <span class="stat-value" id="aptProject">-</span>
-      </div>
-      <div class="user-stat">
-        <span class="stat-label">🪜 الطابق</span>
-        <span class="stat-value" id="aptFloor">-</span>
-      </div>
-      <div class="user-stat">
-        <span class="stat-label">🧭 اتجاه الشقة</span>
-        <span class="stat-value" id="aptDirection">-</span>
-      </div>
-      <div class="user-stat">
-        <span class="stat-label">🚪 بيان التخصيص الكامل</span>
-        <span class="stat-value" id="aptRooms" style="font-size: 11px; max-width: 60%; text-align: left;">-</span>
-      </div>
-
-      <hr class="divider">
-      
-      <div class="user-stat" style="background: rgba(240, 165, 0, 0.1); border: 1px solid rgba(240, 165, 0, 0.3);">
-        <span class="stat-label" style="color: var(--accent);">🗺️ الإحداثيات الجغرافية:</span>
-        <span class="stat-value">
-          <a href="https://maps.google.com" target="_blank" style="color:#f0a500; text-decoration:none; font-weight:700;">
-            عرض على Google Maps
-          </a>
-        </span>
-      </div>
+      <h3>🏢 تفاصيل الشقة</h3>
+      <div class="user-stat"><span class="stat-label">🏗️ المشروع</span><span class="stat-value" id="aptProject">-</span></div>
+      <div class="user-stat"><span class="stat-label">🪜 الطابق</span><span class="stat-value" id="aptFloor">-</span></div>
+      <div class="user-stat"><span class="stat-label">🧭 الاتجاه</span><span class="stat-value" id="aptDirection">-</span></div>
+      <div class="user-stat"><span class="stat-label">🚪 بيان التخصيص</span><span class="stat-value" id="aptRooms">-</span></div>
+      <button class="logout" onclick="logout()">🚪 تسجيل الخروج</button>
     </div>
   </div>
-
-  <div id="newsTab" class="tab-content">
-     <div class="info-section">
-        <div class="info-card full">
-          <div class="icon">ℹ️</div>
-          <div class="text">
-            <div class="label">بيان رسمي</div>
-            <div class="value">جمعية تعاونية لخدمة الأعضاء في مجال السكن والاصطياف بحلب - نتابع التطوير والعمل الميداني لضمان تسليم الوحدات.</div>
-          </div>
-        </div>
-     </div>
-     
-     <section class="project-gallery-section" style="width:100%; margin:0;">
-        <div class="gallery-grid">
-          <div class="gallery-item">
-            <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=600&auto=format&fit=crop" alt="أرض الموقع">
-            <div class="image-overlay">
-              <div class="overlay-text">معاينة أرض موقع الجمعية والبدء بالتجهيزات الأولى</div>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=600&auto=format&fit=crop" alt="أعمال المشروع">
-            <div class="image-overlay">
-              <div class="overlay-text">سير الأعمال والإنشاءات الجارية على أرض الواقع</div>
-            </div>
-          </div>
-        </div>
-     </section>
-  </div>
-
 </div>
-
-<div class="footer">
-  جمعية السكن والاصطياف © حلب
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAqV1kUhJM2Y8UxtBX4uUc_QevWLdwKC_g",
-  authDomain: "alchaiba.firebaseapp.com",
-  projectId: "alchaiba",
-  storageBucket: "alchaiba.firebasestorage.app",
-  messagingSenderId: "586209422699",
-  appId: "1:586209422699:web:cdcb2f2ffc48902e30302e"
-};
-
-const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
-
-navigator.serviceWorker.register("./firebase-messaging-sw.js")
-.then(() => console.log("Service Worker Registered"))
-.catch(err => console.log("SW Error:", err));
-
-onMessage(messaging, (payload) => {
-  alert("📩 إشعار جديد: " + payload.notification.title);
-});
-</script>
 
 <script>
-let lastUpdate = localStorage.getItem("lastUpdate") || "مزامنة حية";
-// تم ربطه بـ API المحمي الجديد الخاص بك تلقائياً
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
-window.onload = function(){
-  try {
-    let savedUser = localStorage.getItem("currentUser");
-    if(savedUser){
-      showUser(JSON.parse(savedUser));
-    }
-  } catch(e) {
-    console.error("Error loading cache:", e);
-    localStorage.removeItem("currentUser");
-  }
-};
-
-window.addEventListener("load", ()=>{
-  setTimeout(()=>{
-    let splash = document.getElementById("splash");
-    if(splash) {
-      splash.style.opacity = "0";
-      setTimeout(()=>{ splash.style.display = "none"; }, 500);
-    }
-  }, 1400);
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const splash = document.getElementById("splash");
+    if(splash) splash.style.display = "none";
+  }, 1000);
+  
+  let savedUser = localStorage.getItem("currentUser");
+  if(savedUser) showUser(JSON.parse(savedUser));
 });
 
 function switchTab(tabId, element) {
   let contents = document.getElementsByClassName('tab-content');
-  for (let i = 0; i < contents.length; i++) {
-    contents[i].classList.remove('active');
-  }
+  for (let i = 0; i < contents.length; i++) contents[i].classList.remove('active');
   let buttons = document.getElementsByClassName('tab-btn');
-  for (let i = 0; i < buttons.length; i++) {
-    buttons[i].classList.remove('active');
-  }
+  for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
   document.getElementById(tabId).classList.add('active');
   element.classList.add('active');
 }
@@ -947,44 +104,49 @@ function login(){
   let btn = document.getElementById("loginBtn");
 
   errorEl.innerText = "";
-  if(!id || !pass){
-    errorEl.innerText = "⚠️ الرجاء إدخال البيانات";
-    return;
-  }
+  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
 
   btn.disabled = true;
-  btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
+  btn.innerHTML = 'جاري التحقق... <span class="loading-spinner"></span>';
 
   fetch(API_URL + "?id=" + id + "&password=" + pass)
   .then(res => res.json())
   .then(data => {
     btn.disabled = false;
     btn.innerHTML = "دخول";
-
     if(data.status === "success"){
-      let user = {
-        membership_id: id,
-        name: data.name,
-        total: data.total,
-        paid: data.paid,
-        remaining: data.remaining,
-        project: data.project || "قيد التحديد",
-        floor: data.floor || "قيد التحديد",
-        direction: data.direction || "قيد التحديد",
-        rooms: data.rooms || data.name || "قيد التحديد"
-      };
-
+      let user = { membership_id: id, name: data.name, total: data.total, paid: data.paid, remaining: data.remaining, project: data.project, floor: data.floor, direction: data.direction, rooms: data.rooms };
       localStorage.setItem("currentUser", JSON.stringify(user));
       showUser(user);
-    } else {
-      errorEl.innerText = "❌ البيانات غير صحيحة";
-    }
+    } else { errorEl.innerText = "❌ البيانات غير صحيحة"; }
   })
   .catch(() => {
     btn.disabled = false;
     btn.innerHTML = "دخول";
-    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
+    errorEl.innerText = "⚠️ خطأ في الاتصال بالخادم";
   });
 }
 
-fun
+function showUser(user){
+  document.getElementById("mainPublicPage").style.display = "none";
+  document.getElementById("memberDashboard").style.display = "block";
+  document.getElementById("aptProject").innerText = user.project;
+  document.getElementById("aptFloor").innerText = user.floor;
+  document.getElementById("aptDirection").innerText = user.direction;
+  document.getElementById("aptRooms").innerText = user.rooms;
+
+  document.getElementById("content").innerHTML = `
+    <div class="card">
+      <h3 style="color:#f0a500; margin-bottom:10px;">مرحباً بك</h3>
+      <p style="margin-bottom:15px; font-weight:600;">${user.name}</p>
+      <div class="user-stat"><span class="stat-label">💰 الإجمالي المطلوب</span><span class="stat-value">${user.total}</span></div>
+      <div class="user-stat"><span class="stat-label">💵 المدفوع</span><span class="stat-value" style="color:#4effb0">${user.paid}</span></div>
+      <div class="user-stat"><span class="stat-label">📉 المتبقي</span><span class="stat-value" style="color:#ff8f8f">${user.remaining}</span></div>
+    </div>
+  `;
+}
+
+function logout(){ localStorage.removeItem("currentUser"); location.reload(); }
+</script>
+</body>
+</html>
