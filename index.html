@@ -48,42 +48,51 @@ body{
   100%{background-position:0% 50%;}
 }
 
-/* SPLASH */
+/* 🌟 شاشة التحميل الأنيقة والذكية 🌟 */
 #splash{
   position:fixed;
   inset:0;
-  background: linear-gradient(135deg,#0d1f2d,#1a3a2a);
+  background: linear-gradient(135deg, #0d1f2d, #1a3a2a);
   display:flex;
   align-items:center;
   justify-content:center;
   z-index:99999;
-  transition:0.5s;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
 .splash-content{
   text-align:center;
-  animation:fadeZoom 1s ease;
+  animation:fadeZoom 1.2s ease;
 }
 
 .splash-content i{
-  font-size:60px;
+  font-size:65px;
   color:var(--accent);
-  margin-bottom:15px;
+  margin-bottom:18px;
+  animation: pulse 1.5s infinite;
 }
 
 .splash-content h1{
   font-size:28px;
   font-weight:900;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
 
 .splash-content p{
-  margin-top:10px;
   color:rgba(255,255,255,0.7);
+  font-size: 14px;
 }
 
 @keyframes fadeZoom{
-  from{ opacity:0; transform:scale(0.8); }
+  from{ opacity:0; transform:scale(0.85); }
   to{ opacity:1; transform:scale(1); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* HEADER */
@@ -404,6 +413,15 @@ button:hover{ transform:scale(1.02); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
+// ⏱️ كود الاختفاء التلقائي الفوري لشاشة التحميل بعد 1.5 ثانية لحل مشكلة التعليق للأبد
+setTimeout(function() {
+  let splash = document.getElementById("splash");
+  if(splash) {
+    splash.style.opacity = "0";
+    setTimeout(function() { splash.style.display = "none"; }, 500);
+  }
+}, 1500);
+
 window.onload = function(){
   try {
     let savedUser = localStorage.getItem("currentUser");
@@ -413,17 +431,6 @@ window.onload = function(){
   }
 };
 
-window.addEventListener("load", ()=>{
-  setTimeout(()=>{
-    let splash = document.getElementById("splash");
-    if(splash) {
-      splash.style.opacity = "0";
-      setTimeout(()=>{ splash.style.display = "none"; }, 500);
-    }
-  }, 1400);
-});
-
-// تعيين جلب تحديثات نظيفة دائماً لمنع الكراش
 function switchTab(tabId, element) {
   let contents = document.getElementsByClassName('tab-content');
   for (let i = 0; i < contents.length; i++) contents[i].classList.remove('active');
@@ -508,11 +515,4 @@ function changePassword(userId){
   let newPass = document.getElementById("newPass").value.trim();
   let msg = document.getElementById("msg");
   if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
-  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
-
-  fetch(API_URL, { method:"POST", body:JSON.stringify({ id:userId, password:newPass }) })
-  .then(() => {
-    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
-    document.getElementById("newPass").value = "";
-  })
-  .catch(() => { msg.style.color = "#ff8f8f"; ms
+  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerTex
