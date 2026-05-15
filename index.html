@@ -704,7 +704,7 @@ button:hover::before{
   <div class="ticker-title">📢 آخر الأخبار</div>
   <div class="ticker-content">
     <div class="ticker-text">
-      <span>آخر تحديث للبيانات المادية والدفعات تم حتى تاريخ اليوم 16-05-2026.</span>
+      <span>آخر تحديث للبيانات المادية والدفعات تم حتى تاريخ اليوم.</span>
       <span>🏗️ رصد حي لآخر التطورات والأعمال الجارية والمستجدات في أرض الموقع للمشاريع.</span>
       <span>نذكر الأعضاء الكرام بمتابعة حساباتهم بشكل دوري عبر تسجيل الدخول.</span>
     </div>
@@ -901,9 +901,9 @@ onMessage(messaging, (payload) => {
 </script>
 
 <script>
-let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
-// تم وضع رابط الـ API الجديد الخاص بك هنا بالأسفل
-const API_URL = "https://script.google.com/macros/s/AKfycbyx_sTkXg7GBqky3d-OgkIpljBCvxBmBE85wPBsOu9jHyAaaWA-N5_vcqq1hj14z2vXXw/exec";
+let lastUpdate = localStorage.getItem("lastUpdate") || "مزامنة حية";
+// تم ربطه بـ API المحمي الجديد الخاص بك تلقائياً
+const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
 window.onload = function(){
   try {
@@ -968,9 +968,9 @@ function login(){
         total: data.total,
         paid: data.paid,
         remaining: data.remaining,
-        project: data.project || "موضح في الاسم بالأسفل",
-        floor: data.floor || "راجع إدارة الجمعية",
-        direction: data.direction || "راجع إدارة الجمعية",
+        project: data.project || "قيد التحديد",
+        floor: data.floor || "قيد التحديد",
+        direction: data.direction || "قيد التحديد",
         rooms: data.rooms || data.name || "قيد التحديد"
       };
 
@@ -983,4 +983,8 @@ function login(){
   .catch(() => {
     btn.disabled = false;
     btn.innerHTML = "دخول";
-    errorEl.innerText = "⚠️ خطأ 
+    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
+  });
+}
+
+fun
