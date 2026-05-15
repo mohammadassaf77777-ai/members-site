@@ -243,7 +243,7 @@ body{
   100% { transform: translate3d(100%, 0, 0); }
 }
 
-/* TABS SYSTEM (NAVIGATION AFTER LOGIN) */
+/* TABS SYSTEM */
 
 .tabs-container {
   display: flex;
@@ -421,11 +421,6 @@ input:focus, select:focus{
   transform:scale(1.01);
 }
 
-select option {
-  background: var(--dark2);
-  color: white;
-}
-
 /* BUTTONS */
 
 button{
@@ -530,7 +525,7 @@ button:hover::before{
   font-weight:700;
 }
 
-/* USER */
+/* USER STATS */
 
 .user-stat{
   display:flex;
@@ -723,10 +718,9 @@ button:hover::before{
 </div>
 
 
-<!-- ======================== [1] الصفحة الرئيسية (قبل تسجيل الدخول) ======================== -->
+<!-- ======================== [1] الصفحة الرئيسية العامة ======================== -->
 <div id="mainPublicPage">
 
-  <!-- قسم آخر الأخبار الميدانية والصور المباشرة (الواجهة الأساسية) -->
   <section class="project-gallery-section">
     <h2 class="gallery-heading">📸 أرض الموقع والمشاريع</h2>
     <p class="gallery-subheading">توثيق حي ومباشر لآخر الأعمال الإنشائية وما يحدث على أرض الواقع</p>
@@ -748,10 +742,9 @@ button:hover::before{
     </div>
   </section>
 
-  <!-- قسم قنوات ومواقع التواصل الاجتماعي والمجموعات -->
   <div class="card">
     <h3>👥 مجموعات واتساب والتواصل</h3>
-    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">انضم إلى المجموعات الرسمية للمشاريع لمتابعة الإعلانات والمستجدات العاجلة:</p>
+    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">انضم إلى المجموعات الرسمية لمتابعة المستجدات العاجلة:</p>
 
     <button class="group"
     onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">
@@ -764,7 +757,6 @@ button:hover::before{
     </button>
   </div>
 
-  <!-- قسم معلومات عامة عن موقع الجمعية الميداني -->
   <div class="info-section">
     <div class="info-card">
       <div class="icon">🏘️</div>
@@ -779,7 +771,6 @@ button:hover::before{
     </div>
   </div>
 
-  <!-- صندوق تسجيل الدخول في نهاية الصفحة الرئيسية للعموم -->
   <div class="card" id="loginBox">
     <h3>🔐 تسجيل دخول الأعضاء</h3>
     <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية الخاص بك للاطلاع على بيانات شقتك والمدفوعات</p>
@@ -809,24 +800,20 @@ button:hover::before{
 </div>
 
 
-<!-- ======================== [2] لوحة تحكم العضو الحاصة (بعد تسجيل الدخول) ======================== -->
+<!-- ======================== [2] لوحة تحكم العضو ======================== -->
 <div id="memberDashboard" style="display: none;">
   
-  <!-- أزرار التنقل بين أقسام لوحة التحكم الداخية -->
   <div class="tabs-container">
     <button class="tab-btn active" onclick="switchTab('financialTab', this)">💰 الدفعات والوصل</button>
     <button class="tab-btn" onclick="switchTab('apartmentTab', this)">🏢 تفاصيل الشقة</button>
     <button class="tab-btn" onclick="switchTab('newsTab', this)">📢 الأخبار والموقع</button>
   </div>
 
-  <!-- محتوى القسم الأول: الحساب المالي وإرسال الوصل -->
+  <!-- الألسنة الداخية للوحة التحكم -->
   <div id="financialTab" class="tab-content active">
-    <div class="card" id="content">
-       <!-- يتم ملء هذا الجزء برمجياً بعد جلب بيانات العضو الماليّة -->
-    </div>
+    <div class="card" id="content"></div>
   </div>
 
-  <!-- محتوى القسم الثاني: تفاصيل الشقة الجغرافية والداخلية -->
   <div id="apartmentTab" class="tab-content">
     <div class="card">
       <h3>🏢 تفاصيل الشقة والموقع</h3>
@@ -841,7 +828,7 @@ button:hover::before{
         <span class="stat-value" id="aptFloor">-</span>
       </div>
       <div class="user-stat">
-        <span class="stat-label">🧭 اتجاه الشقة (القبلة)</span>
+        <span class="stat-label">🧭 اتجاه الشقة</span>
         <span class="stat-value" id="aptDirection">-</span>
       </div>
       <div class="user-stat">
@@ -862,14 +849,13 @@ button:hover::before{
     </div>
   </div>
 
-  <!-- محتوى القسم الثالث: آخر الأخبار مستنسخة من الواجهة لراحة العضو داخل حسابه -->
   <div id="newsTab" class="tab-content">
      <div class="info-section">
         <div class="info-card full">
           <div class="icon">ℹ️</div>
           <div class="text">
             <div class="label">بيان رسمي</div>
-            <div class="value">جمعية تعاونية لخدمة الأعضاء في مجال السكن والاصطياف بحلب - نتابع التطوير والعمل الميداني لضمان تسليم الوحدات في أوقاتها المحددة.</div>
+            <div class="value">جمعية تعاونية لخدمة الأعضاء في مجال السكن والاصطياف بحلب - نتابع التطوير والعمل الميداني لضمان تسليم الوحدات.</div>
           </div>
         </div>
      </div>
@@ -894,134 +880,63 @@ button:hover::before{
 
 </div>
 
-
 <div class="footer">
   جمعية السكن والاصطياف © حلب
 </div>
 
 <!-- FIREBASE -->
-
 <script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-
-import {
-getMessaging,
-getToken,
-onMessage
-}
-from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
 
 const firebaseConfig = {
-
   apiKey: "AIzaSyAqV1kUhJM2Y8UxtBX4uUc_QevWLdwKC_g",
-
   authDomain: "alchaiba.firebaseapp.com",
-
   projectId: "alchaiba",
-
   storageBucket: "alchaiba.firebasestorage.app",
-
   messagingSenderId: "586209422699",
-
   appId: "1:586209422699:web:cdcb2f2ffc48902e30302e"
-
 };
 
 const app = initializeApp(firebaseConfig);
-
 const messaging = getMessaging(app);
 
-navigator.serviceWorker
-.register("./firebase-messaging-sw.js")
-
+navigator.serviceWorker.register("./firebase-messaging-sw.js")
 .then(() => console.log("Service Worker Registered"))
-
 .catch(err => console.log("SW Error:", err));
 
-window.enableNotifications = function(){
-
-  Notification.requestPermission()
-
-  .then((permission) => {
-
-    if(permission === "granted"){
-
-      getToken(messaging, {
-
-        vapidKey:
-        "BERirHvZXQZ9invNBodU6-6rDgbH-2Q1sR8T5mBjzMOCPO2DtLOJvMJvohtqZCxF3-2pbI9tyj6hxHvMRpjPgpE"
-
-      })
-
-      .then((token) => {
-
-        console.log(token);
-
-        alert("✅ تم تفعيل الإشعارات");
-
-      });
-
-    } else {
-
-      alert("❌ يجب السماح بالإشعارات");
-
-    }
-
-  });
-
-};
-
 onMessage(messaging, (payload) => {
-
-  alert("📩 إشعار جديد: " +
-  payload.notification.title);
-
+  alert("📩 إشعار جديد: " + payload.notification.title);
 });
-
 </script>
 
 <script>
+let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
+const API_URL = "https://script.google.com/macros/s/AKfycbxT_8_FkM0GMzQG5UaHpWAIN4H1TcI6N1fWqVd0d5xG9lzWPfstqU-afwY1DCTZ4qwnYw/exec";
 
-let lastUpdate =
-localStorage.getItem("lastUpdate")
-|| "غير محدد";
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbxT_8_FkM0GMzQG5UaHpWAIN4H1TcI6N1fWqVd0d5xG9lzWPfstqU-afwY1DCTZ4qwnYw/exec";
-
+// تعديل أمان التشغيل التلقائي لمنع بقاء الشاشة معلقة
 window.onload = function(){
-
-  let savedUser =
-  localStorage.getItem("currentUser");
-
-  if(savedUser){
-
-    showUser(JSON.parse(savedUser));
-
+  try {
+    let savedUser = localStorage.getItem("currentUser");
+    if(savedUser){
+      showUser(JSON.parse(savedUser));
+    }
+  } catch(e) {
+    console.error("Error loading user data from cache:", e);
+    localStorage.removeItem("currentUser"); // تنظيف الكاش إن وجد خطأ قديم
   }
 };
 
 window.addEventListener("load", ()=>{
-
   setTimeout(()=>{
-
-    document.getElementById("splash")
-    .style.opacity = "0";
-
-    setTimeout(()=>{
-
-      document.getElementById("splash")
-      .style.display = "none";
-
-    },500);
-
-  },1400);
-
+    let splash = document.getElementById("splash");
+    if(splash) {
+      splash.style.opacity = "0";
+      setTimeout(()=>{ splash.style.display = "none"; }, 500);
+    }
+  }, 1400);
 });
 
-// دالة التنقل بين ألسنة العرض الداخلية (Tabs)
 function switchTab(tabId, element) {
   let contents = document.getElementsByClassName('tab-content');
   for (let i = 0; i < contents.length; i++) {
@@ -1032,4 +947,41 @@ function switchTab(tabId, element) {
     buttons[i].classList.remove('active');
   }
   document.getElementById(tabId).classList.add('active');
-  element.classList.add(
+  element.classList.add('active');
+}
+
+function login(){
+  let id = document.getElementById("id").value.trim();
+  let pass = document.getElementById("pass").value.trim();
+  let errorEl = document.getElementById("error");
+  let btn = document.getElementById("loginBtn");
+
+  errorEl.innerText = "";
+  if(!id || !pass){
+    errorEl.innerText = "⚠️ الرجاء إدخال البيانات";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
+
+  fetch(API_URL + "?id=" + id + "&password=" + pass)
+  .then(res => res.json())
+  .then(data => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+
+    if(data.status === "success"){
+      let user = {
+        membership_id: id,
+        name: data.name,
+        total: data.total,
+        paid: data.paid,
+        remaining: data.remaining,
+        project: data.project || "قيد التحديد",
+        floor: data.floor || "قيد التحديد",
+        direction: data.direction || "قيد التحديد",
+        rooms: data.rooms || "3 غرف ومنافع"
+      };
+
+      localStorage.setItem("currentU
