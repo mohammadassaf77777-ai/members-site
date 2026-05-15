@@ -423,6 +423,7 @@ window.addEventListener("load", ()=>{
   }, 1400);
 });
 
+// تعيين جلب تحديثات نظيفة دائماً لمنع الكراش
 function switchTab(tabId, element) {
   let contents = document.getElementsByClassName('tab-content');
   for (let i = 0; i < contents.length; i++) contents[i].classList.remove('active');
@@ -514,7 +515,4 @@ function changePassword(userId){
     msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
     document.getElementById("newPass").value = "";
   })
-  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
-}
-
-function o
+  .catch(() => { msg.style.color = "#ff8f8f"; ms
