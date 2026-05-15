@@ -670,8 +670,6 @@ button:hover::before{
 
 <body>
 
-<!-- SPLASH -->
-
 <div id="splash">
   <div class="splash-content">
     <i class="fa-solid fa-building-columns"></i>
@@ -679,8 +677,6 @@ button:hover::before{
     <p>السكن والاصطياف بحلب</p>
   </div>
 </div>
-
-<!-- HEADER -->
 
 <div class="header">
 
@@ -704,13 +700,11 @@ button:hover::before{
 
 </div>
 
-<!-- NEWS TICKER -->
-
 <div class="news-ticker-container">
   <div class="ticker-title">📢 آخر الأخبار</div>
   <div class="ticker-content">
     <div class="ticker-text">
-      <span>آخر تحديث للبيانات المادية والدفعات تم حتى تاريخ 16-05-2026.</span>
+      <span>آخر تحديث للبيانات المادية والدفعات تم حتى تاريخ اليوم 16-05-2026.</span>
       <span>🏗️ رصد حي لآخر التطورات والأعمال الجارية والمستجدات في أرض الموقع للمشاريع.</span>
       <span>نذكر الأعضاء الكرام بمتابعة حساباتهم بشكل دوري عبر تسجيل الدخول.</span>
     </div>
@@ -718,7 +712,6 @@ button:hover::before{
 </div>
 
 
-<!-- ======================== [1] الصفحة الرئيسية العامة ======================== -->
 <div id="mainPublicPage">
 
   <section class="project-gallery-section">
@@ -800,7 +793,6 @@ button:hover::before{
 </div>
 
 
-<!-- ======================== [2] لوحة تحكم العضو ======================== -->
 <div id="memberDashboard" style="display: none;">
   
   <div class="tabs-container">
@@ -809,7 +801,6 @@ button:hover::before{
     <button class="tab-btn" onclick="switchTab('newsTab', this)">📢 الأخبار والموقع</button>
   </div>
 
-  <!-- الألسنة الداخية للوحة التحكم -->
   <div id="financialTab" class="tab-content active">
     <div class="card" id="content"></div>
   </div>
@@ -832,8 +823,8 @@ button:hover::before{
         <span class="stat-value" id="aptDirection">-</span>
       </div>
       <div class="user-stat">
-        <span class="stat-label">🚪 عدد الغرف والمنافع</span>
-        <span class="stat-value" id="aptRooms">-</span>
+        <span class="stat-label">🚪 بيان التخصيص الكامل</span>
+        <span class="stat-value" id="aptRooms" style="font-size: 11px; max-width: 60%; text-align: left;">-</span>
       </div>
 
       <hr class="divider">
@@ -841,7 +832,7 @@ button:hover::before{
       <div class="user-stat" style="background: rgba(240, 165, 0, 0.1); border: 1px solid rgba(240, 165, 0, 0.3);">
         <span class="stat-label" style="color: var(--accent);">🗺️ الإحداثيات الجغرافية:</span>
         <span class="stat-value">
-          <a href="PUT_GOOGLE_MAPS_LINK_HERE" target="_blank" style="color:#f0a500; text-decoration:none; font-weight:700;">
+          <a href="https://maps.google.com" target="_blank" style="color:#f0a500; text-decoration:none; font-weight:700;">
             عرض على Google Maps
           </a>
         </span>
@@ -884,7 +875,6 @@ button:hover::before{
   جمعية السكن والاصطياف © حلب
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-messaging.js";
@@ -912,9 +902,9 @@ onMessage(messaging, (payload) => {
 
 <script>
 let lastUpdate = localStorage.getItem("lastUpdate") || "غير محدد";
-const API_URL = "https://script.google.com/macros/s/AKfycbxT_8_FkM0GMzQG5UaHpWAIN4H1TcI6N1fWqVd0d5xG9lzWPfstqU-afwY1DCTZ4qwnYw/exec";
+// تم وضع رابط الـ API الجديد الخاص بك هنا بالأسفل
+const API_URL = "https://script.google.com/macros/s/AKfycbyx_sTkXg7GBqky3d-OgkIpljBCvxBmBE85wPBsOu9jHyAaaWA-N5_vcqq1hj14z2vXXw/exec";
 
-// تعديل أمان التشغيل التلقائي لمنع بقاء الشاشة معلقة
 window.onload = function(){
   try {
     let savedUser = localStorage.getItem("currentUser");
@@ -922,8 +912,8 @@ window.onload = function(){
       showUser(JSON.parse(savedUser));
     }
   } catch(e) {
-    console.error("Error loading user data from cache:", e);
-    localStorage.removeItem("currentUser"); // تنظيف الكاش إن وجد خطأ قديم
+    console.error("Error loading cache:", e);
+    localStorage.removeItem("currentUser");
   }
 };
 
@@ -978,10 +968,19 @@ function login(){
         total: data.total,
         paid: data.paid,
         remaining: data.remaining,
-        project: data.project || "قيد التحديد",
-        floor: data.floor || "قيد التحديد",
-        direction: data.direction || "قيد التحديد",
-        rooms: data.rooms || "3 غرف ومنافع"
+        project: data.project || "موضح في الاسم بالأسفل",
+        floor: data.floor || "راجع إدارة الجمعية",
+        direction: data.direction || "راجع إدارة الجمعية",
+        rooms: data.rooms || data.name || "قيد التحديد"
       };
 
-      localStorage.setItem("currentU
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      showUser(user);
+    } else {
+      errorEl.innerText = "❌ البيانات غير صحيحة";
+    }
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+    errorEl.innerText = "⚠️ خطأ 
