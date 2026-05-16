@@ -9,24 +9,45 @@
 <style>
 *{ box-sizing:border-box; margin:0; padding:0; }
 :root{ --primary:#1a6b4a; --primary-light:#25a370; --accent:#f0a500; --dark:#0d1f2d; --shadow:0 8px 32px rgba(0,0,0,0.25); }
-body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; background: linear-gradient(-45deg, #0d1f2d, #1a3a2a, #162535, #0d1f2d); background-size:400% 400%; animation:gradientMove 12s ease infinite; color:white; min-height:100vh; }
+body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; background: linear-gradient(-45deg, #0d1f2d, #1a3a2a, #162535, #0d1f2d); background-size:400% 400%; animation:gradientMove 12s ease infinite; color:white; min-height:100vh; overflow-x: hidden; }
 @keyframes gradientMove{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 
-.navbar { position: sticky; top: 0; z-index: 1000; background: rgba(13, 31, 45, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: center; gap: 8px; padding: 12px; }
-.nav-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 8px; transition: 0.25s; }
-.nav-link:hover, .nav-link.active { color: white; background: rgba(255, 255, 255, 0.1); }
-.nav-link.highlight { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+/* الهيدر العلوي الثابت مع زر الثلاث شخوط */
+.navbar { position: sticky; top: 0; z-index: 1000; background: rgba(13, 31, 45, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
+.nav-links-right { display: flex; gap: 8px; }
+.nav-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; transition: 0.25s; }
+.nav-link:hover { color: white; background: rgba(255, 255, 255, 0.1); }
+.nav-link.active { color: white; background: rgba(255, 255, 255, 0.15); }
 
-.tabs-container { display: flex; justify-content: center; gap: 8px; width: 92%; max-width: 420px; margin: 15px auto 5px auto; }
-.tab-btn { flex: 1; padding: 10px 5px; font-size: 12px; font-weight: 700; border-radius: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); cursor: pointer; }
-.tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border-color: transparent; }
-.tab-content { display: none; } .tab-content.active { display: block; }
+/* زر الثلاث شخوط لفتح القائمة */
+.menu-toggle-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 5px 10px; width: auto; margin: 0; display: none; /* يظهر فقط بعد تسجيل الدخول */ }
+
+/* القائمة الجانبية (Sidebar) التي تفتح من اليمين */
+.sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #0d1f2d; box-shadow: -5px 0 25px rgba(0,0,0,0.5); z-index: 2000; transition: 0.3s ease; padding: 20px; text-align: right; border-left: 1px solid rgba(255,255,255,0.08); }
+.sidebar.open { right: 0; }
+.sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+.sidebar-header h3 { font-size: 16px; color: var(--primary-light); }
+.close-sidebar-btn { background: none; border: none; color: #ff8f8f; font-size: 22px; cursor: pointer; width: auto; padding: 0; margin: 0; }
+
+/* أزرار التنقل داخل القائمة الجانبية */
+.sidebar-menu { display: flex; flex-direction: column; gap: 10px; }
+.sidebar-btn { width: 100%; text-align: right; padding: 12px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border-radius: 12px; font-family: 'Cairo'; font-size: 14px; cursor: pointer; transition: 0.25s; display: flex; align-items: center; gap: 10px; margin: 0; }
+.sidebar-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+.sidebar-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border-color: transparent; }
+
+/* خلفية معتمة تظهر عند فتح القائمة لإغلاقها عند الضغط في أي مكان */
+.sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; backdrop-filter: blur(3px); }
+.sidebar-overlay.show { display: block; }
+
+/* الأقسام والمحتوى */
+.tab-content { display: none; } 
+.tab-content.active { display: block; }
 
 .card{ background:rgba(255,255,255,0.1); padding:22px 18px; border-radius:24px; width:92%; max-width:420px; margin:14px auto; box-shadow:var(--shadow); border:1px solid rgba(255,255,255,0.12); }
 input{ width:100%; padding:13px 16px; margin:7px 0; border-radius:14px; border:2px solid rgba(255,255,255,0.1); font-family:'Cairo'; background:rgba(255,255,255,0.08); color:white; }
 button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px; font-family:'Cairo'; font-size:14px; font-weight:700; cursor:pointer; }
 .login{ background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; }
-.logout{ background: linear-gradient(135deg,#c0392b,#e74c3c); color:white; margin-top:15px;}
+.logout{ background: linear-gradient(135deg,#c0392b,#e74c3c); color:white; margin-top:25px;}
 .admin{ background: linear-gradient(135deg,#e67e22,#f39c12); color:white; }
 .whatsapp{ background: linear-gradient(135deg,#128C7E,#25D366); color:white; }
 
@@ -43,9 +64,33 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 <body>
 
 <div class="navbar">
-  <a href="index.html" class="nav-link">الرئيسية 🏠</a>
-  <a href="faq.html" class="nav-link">دليل الخدمات ❓</a>
-  <a href="dashboard.html" class="nav-link highlight active">بياناتي المادية 🔐</a>
+  <div class="nav-links-right">
+    <a href="index.html" class="nav-link">الرئيسية 🏠</a>
+    <a href="faq.html" class="nav-link">دليل الخدمات ❓</a>
+  </div>
+  <button class="menu-toggle-btn" id="menuToggle" onclick="toggleSidebar(true)">
+    <i class="fas fa-bars"></i> الأقسام
+  </button>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar(false)"></div>
+
+<div class="sidebar" id="sidebarMenu">
+  <div class="sidebar-header">
+    <h3>📋 أقسام الحساب</h3>
+    <button class="close-sidebar-btn" onclick="toggleSidebar(false)"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="sidebar-menu">
+    <button class="sidebar-btn active" id="btnFinancial" onclick="switchSection('financialTab', this)">
+      <i class="fas fa-wallet"></i> البيانات المادية
+    </button>
+    <button class="sidebar-btn" id="btnApartment" onclick="switchSection('apartmentTab', this)">
+      <i class="fas fa-building"></i> بيان التخصيص
+    </button>
+    <button class="sidebar-btn" style="color: #ff8f8f; margin-top: 20px; background: rgba(192, 57, 43, 0.1);" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+    </button>
+  </div>
 </div>
 
 <div class="card" id="loginBox" style="margin-top:40px;">
@@ -63,11 +108,6 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 </div>
 
 <div id="memberDashboard" style="display: none; margin-top:20px;">
-  <div class="tabs-container">
-    <button class="tab-btn active" onclick="switchTab('financialTab', this)">💰 البيانات المادية</button>
-    <button class="tab-btn" onclick="switchTab('apartmentTab', this)">🏢 بيان التخصيص</button>
-  </div>
-
   <div id="financialTab" class="tab-content active">
     <div class="card" id="content"></div>
   </div>
@@ -86,7 +126,7 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
 
 <script>
-// تم وضع رابط السكريبت الجديد والمحدث الخاص بك هنا بنجاح
+// رابط السكريبت الشغال والمحدث الخاص بك
 const API_URL = "https://script.google.com/macros/s/AKfycbxZAgEhSCXgf8zdhvJX5LMz7kDU5-8dAerUmMz3YIMhwVNXRfeDkGGqBEEPbh9RU-lEiw/exec";
 
 window.onload = function(){
@@ -102,13 +142,31 @@ window.onload = function(){
   }
 };
 
-function switchTab(tabId, element) {
+// فتح وإغلاق القائمة الجانبية
+function toggleSidebar(open) {
+  let sidebar = document.getElementById('sidebarMenu');
+  let overlay = document.getElementById('sidebarOverlay');
+  if (open) {
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+  } else {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+}
+
+// التنقل بين الأقسام من القائمة الجانبية
+function switchSection(tabId, element) {
   let contents = document.getElementsByClassName('tab-content');
   for (let i = 0; i < contents.length; i++) contents[i].classList.remove('active');
-  let buttons = document.getElementsByClassName('tab-btn');
+  
+  let buttons = document.getElementsByClassName('sidebar-btn');
   for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
+  
   document.getElementById(tabId).classList.add('active');
   element.classList.add('active');
+  
+  toggleSidebar(false); // إغلاق القائمة تلقائياً بعد اختيار القسم
 }
 
 function login(){
@@ -150,7 +208,6 @@ function login(){
       localStorage.setItem("currentUser", JSON.stringify(user));
       showUser(user);
     } else { 
-      // نظام الفحص المطور لإظهار المشكلة الحقيقية
       if (data.debug === "wrong_password") {
         errorEl.innerText = "❌ كلمة السر غير صحيحة لهذا الحساب";
       } else if (data.debug === "id_not_found") {
@@ -165,7 +222,7 @@ function login(){
   .catch((err) => {
     btn.disabled = false;
     btn.innerHTML = "دخول";
-    errorEl.innerText = "⚠️ خطأ في الاتصال: تأكد من تحديث كود قوقل سكريبت ونشره كـ New Version";
+    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
     console.error(err);
   });
 }
@@ -174,6 +231,7 @@ function showUser(user){
   if (!user) return;
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("memberDashboard").style.display = "block";
+  document.getElementById("menuToggle").style.display = "block"; // إظهار زر الثلاث شخوط بعد الدخول
   
   document.getElementById("aptProject").innerText = user.project;
   document.getElementById("aptFloor").innerText = user.floor;
@@ -198,7 +256,6 @@ function showUser(user){
     <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
     <button class="admin" type="button" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
     <p id="msg" style="font-size:13px; color:#4effb0; margin-top:6px;"></p>
-    <button class="logout" type="button" onclick="logout()">🚪 تسجيل الخروج من الحساب</button>
   `;
 }
 
