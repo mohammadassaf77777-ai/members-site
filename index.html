@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>الجمعية التعاونية للسكن والاصطياف بحلب</title>
+<title>الجمعية التعاونية الشعبية للسكن والاصطياف بحلب</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -502,7 +502,6 @@ button:hover{ transform:scale(1.02); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
-// تنظيف وحظر الكاش القديم الخاص بالـ PWA
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(function(registrations) {
     for(let registration of registrations) { registration.unregister(); }
@@ -520,7 +519,6 @@ window.onload = function(){
     localStorage.removeItem("currentUser");
   }
 
-  // ميزة استرجاع رقم العضوية المحفوظ
   let rememberedId = localStorage.getItem("rememberedMembershipId");
   if(rememberedId) {
     document.getElementById("id").value = rememberedId;
@@ -550,4 +548,7 @@ function login(){
   let rememberMe = document.getElementById("rememberMe").checked;
 
   errorEl.innerText = "";
-  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء
+  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = 'جاري التحق
