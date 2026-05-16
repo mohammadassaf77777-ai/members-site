@@ -12,15 +12,15 @@
 body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; background: linear-gradient(-45deg, #0d1f2d, #1a3a2a, #162535, #0d1f2d); background-size:400% 400%; animation:gradientMove 12s ease infinite; color:white; min-height:100vh; overflow-x: hidden; }
 @keyframes gradientMove{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 
-/* الهيدر العلوي الثابت مع زر الثلاث شخوط */
+/* الهيدر العلوي الثابت مع زر الثلاث شخوط الظاهر دائماً */
 .navbar { position: sticky; top: 0; z-index: 1000; background: rgba(13, 31, 45, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
 .nav-links-right { display: flex; gap: 8px; }
 .nav-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; transition: 0.25s; }
 .nav-link:hover { color: white; background: rgba(255, 255, 255, 0.1); }
 .nav-link.active { color: white; background: rgba(255, 255, 255, 0.15); }
 
-/* زر الثلاث شخوط لفتح القائمة */
-.menu-toggle-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 5px 10px; width: auto; margin: 0; display: none; /* يظهر فقط بعد تسجيل الدخول */ }
+/* زر الثلاث شخوط - ظاهر دائماً الآن */
+.menu-toggle-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 5px 10px; width: auto; margin: 0; display: block; }
 
 /* القائمة الجانبية (Sidebar) التي تفتح من اليمين */
 .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #0d1f2d; box-shadow: -5px 0 25px rgba(0,0,0,0.5); z-index: 2000; transition: 0.3s ease; padding: 20px; text-align: right; border-left: 1px solid rgba(255,255,255,0.08); }
@@ -47,6 +47,7 @@ body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; backgrou
 input{ width:100%; padding:13px 16px; margin:7px 0; border-radius:14px; border:2px solid rgba(255,255,255,0.1); font-family:'Cairo'; background:rgba(255,255,255,0.08); color:white; }
 button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px; font-family:'Cairo'; font-size:14px; font-weight:700; cursor:pointer; }
 .login{ background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; }
+.logout-btn-sidebar { color: #ff8f8f !important; margin-top: 20px; background: rgba(192, 57, 43, 0.1) !important; display: none; /* تظهر فقط بعد تسجيل الدخول */ }
 .logout{ background: linear-gradient(135deg,#c0392b,#e74c3c); color:white; margin-top:25px;}
 .admin{ background: linear-gradient(135deg,#e67e22,#f39c12); color:white; }
 .whatsapp{ background: linear-gradient(135deg,#128C7E,#25D366); color:white; }
@@ -87,7 +88,7 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
     <button class="sidebar-btn" id="btnApartment" onclick="switchSection('apartmentTab', this)">
       <i class="fas fa-building"></i> بيان التخصيص
     </button>
-    <button class="sidebar-btn" style="color: #ff8f8f; margin-top: 20px; background: rgba(192, 57, 43, 0.1);" onclick="logout()">
+    <button class="sidebar-btn logout-btn-sidebar" id="sidebarLogoutBtn" onclick="logout()">
       <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
     </button>
   </div>
@@ -126,13 +127,16 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
 
 <script>
-// رابط السكريبت الشغال والمحدث الخاص بك
 const API_URL = "https://script.google.com/macros/s/AKfycbxZAgEhSCXgf8zdhvJX5LMz7kDU5-8dAerUmMz3YIMhwVNXRfeDkGGqBEEPbh9RU-lEiw/exec";
+let isLoggedIn = false; // متغير لتحديد حالة تسجيل الدخول
 
 window.onload = function(){
   try {
     let savedUser = localStorage.getItem("currentUser");
-    if(savedUser) { showUser(JSON.parse(savedUser)); return; }
+    if(savedUser) { 
+      showUser(JSON.parse(savedUser)); 
+      return; 
+    }
   } catch(e) { localStorage.removeItem("currentUser"); }
 
   let rememberedId = localStorage.getItem("rememberedMembershipId");
@@ -155,8 +159,21 @@ function toggleSidebar(open) {
   }
 }
 
-// التنقل بين الأقسام من القائمة الجانبية
+// التنقل الذكي بين الأقسام من القائمة الجانبية
 function switchSection(tabId, element) {
+  toggleSidebar(false); // إغلاق القائمة أولاً
+
+  // إذا لم يسجل العضو دخوله بعد وحاول الانتقال للأقسام
+  if (!isLoggedIn) {
+    let errorEl = document.getElementById("error");
+    errorEl.innerText = "⚠️ يرجى تسجيل الدخول أولاً لتتمكن من تصفح هذا القسم";
+    
+    // عمل تأثير اهتزاز أو تركيز خفيف على صندوق الدخول لتنبيهه
+    document.getElementById("id").focus();
+    return;
+  }
+
+  // إذا كان العضو مسجلاً، نقوم بالتبديل بشكل طبيعي
   let contents = document.getElementsByClassName('tab-content');
   for (let i = 0; i < contents.length; i++) contents[i].classList.remove('active');
   
@@ -165,8 +182,6 @@ function switchSection(tabId, element) {
   
   document.getElementById(tabId).classList.add('active');
   element.classList.add('active');
-  
-  toggleSidebar(false); // إغلاق القائمة تلقائياً بعد اختيار القسم
 }
 
 function login(){
@@ -229,9 +244,11 @@ function login(){
 
 function showUser(user){
   if (!user) return;
+  isLoggedIn = true; // تعيين حالة الدخول لـ true للسماح بالتنقل
+  
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("memberDashboard").style.display = "block";
-  document.getElementById("menuToggle").style.display = "block"; // إظهار زر الثلاث شخوط بعد الدخول
+  document.getElementById("sidebarLogoutBtn").style.display = "flex"; // إظهار زر الخروج داخل السايدبار
   
   document.getElementById("aptProject").innerText = user.project;
   document.getElementById("aptFloor").innerText = user.floor;
@@ -273,7 +290,11 @@ function changePassword(userId){
   .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
 }
 
-function logout(){ localStorage.removeItem("currentUser"); location.reload(); }
+function logout(){ 
+  isLoggedIn = false;
+  localStorage.removeItem("currentUser"); 
+  location.reload(); 
+}
 </script>
 </body>
 </html>
