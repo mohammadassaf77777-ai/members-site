@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>الجمعية</title>
+<title>الجمعية التعاونية للسكن والاصطياف بحلب</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
@@ -49,6 +49,41 @@ body{
   0%{background-position:0% 50%;}
   50%{background-position:100% 50%;}
   100%{background-position:0% 50%;}
+}
+
+/* 🧭 شريط التنقل العلوي المطور */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(13, 31, 45, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: 0.25s;
+  display: inline-block;
+}
+
+.nav-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.highlight {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
 }
 
 /* HEADER */
@@ -144,6 +179,60 @@ body{
   100% { transform: translate3d(100%, 0, 0); }
 }
 
+/* ❓ قسم الأسئلة الشائعة والمعلومات الإدارية */
+.faq-section {
+  width: 92%;
+  max-width: 420px;
+  margin: 25px auto 10px auto;
+  text-align: right;
+}
+.faq-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: white;
+  padding-right: 4px;
+}
+.faq-item {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.faq-question {
+  padding: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.faq-question i {
+  font-size: 12px;
+  color: var(--primary-light);
+  transition: transform 0.3s;
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background: rgba(0, 0, 0, 0.15);
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+}
+.faq-answer-content {
+  padding: 14px;
+}
+.faq-item.open .faq-answer {
+  max-height: 200px;
+}
+.faq-item.open .faq-question i {
+  transform: rotate(180deg);
+}
+
 /* TABS SYSTEM */
 .tabs-container {
   display: flex;
@@ -204,6 +293,23 @@ body{
 .card:hover{ transform:translateY(-4px); }
 .card h3{ font-size:17px; font-weight:800; margin-bottom:14px; }
 
+/* 🔐 خيار تذكرني */
+.remember-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  user-select: none;
+}
+.remember-container input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
 /* INPUTS & BUTTONS */
 input, select{
   width:100%; padding:13px 16px; margin:7px 0; border-radius:14px;
@@ -224,7 +330,7 @@ button:hover{ transform:scale(1.02); }
 .logout{ background: linear-gradient(135deg,#c0392b,#e74c3c); color:white; }
 .admin{ background: linear-gradient(135deg,#e67e22,#f39c12); color:white; }
 .whatsapp{ background: linear-gradient(135deg,#128C7E,#25D366); color:white; }
-.group{ background: linear-gradient(135deg,#0d6b5e,#128C7E); color:white; text-align:right; padding-right:16px; }
+.group{ background: linear-gradient(135deg,#0d6b5e,#128C7E); color:white; text-align:right; padding-right:16px; width: 100%; }
 
 .alert{ background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; padding:12px 16px; border-radius:12px; margin-bottom:14px; font-weight:700; }
 .user-stat{ display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:rgba(255,255,255,0.08); border-radius:12px; margin:7px 0; font-size:14px; }
@@ -252,7 +358,14 @@ button:hover{ transform:scale(1.02); }
 
 <body>
 
-<div class="header">
+<div class="navbar" id="publicNavbar">
+  <a href="#headerSec" class="nav-link">الرئيسية</a>
+  <a href="#gallerySec" class="nav-link">المشاريع</a>
+  <a href="#faqSec" class="nav-link">دليل الخدمات</a>
+  <a href="#loginBox" class="nav-link highlight">حساب العضو 🔐</a>
+</div>
+
+<div class="header" id="headerSec">
   <div class="header-logo">🏛️ الجمعية التعاونية الشعبية</div>
   <div class="header-title">للسكن والاصطياف<br><span>بحلب</span></div>
   <a class="fb-btn" href="https://www.facebook.com/share/16asmQNh5u/" target="_blank">
@@ -272,7 +385,7 @@ button:hover{ transform:scale(1.02); }
 </div>
 
 <div id="mainPublicPage">
-  <section class="project-gallery-section">
+  <section class="project-gallery-section" id="gallerySec">
     <h2 class="gallery-heading">📸 أرض الموقع والمشاريع</h2>
     <p class="gallery-subheading">توثيق حي ومباشر لآخر الأعمال الإنشائية وما يحدث على أرض الواقع</p>
     <div class="gallery-grid">
@@ -287,11 +400,34 @@ button:hover{ transform:scale(1.02); }
     </div>
   </section>
 
+  <section class="faq-section" id="faqSec">
+    <h2 class="faq-title">❓ دليل الخدمات والمعلومات الرسمية</h2>
+    
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)"><span>📍 أين يقع المقر الإداري للجمعية؟</span><i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-answer"><div class="faq-answer-content">يقع المقر الإداري الرسمي في مدينة حلب، سوريا. يسعدنا استقبالكم لمراجعة الدفاتر المالية والأوراق الثبوتية خلال أوقات الدوام الرسمي المعتمد من قبل مجلس الإدارة.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)"><span>📝 ما هي إجراءات التنازل ونقل الملكية؟</span><i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-answer"><div class="faq-answer-content">يتطلب نقل تخصيص الشقة أو الأسهم حضور الطرفين (المتنازل والمتنازل له) شخصياً إلى مقر الجمعية، مصطحبين الهويات الشخصية، دفتر الأسهم المالي، وبراءة ذمة مالية حديثة صادرة عن إدارة الجمعية.</div></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)"><span>🏢 ما هي المشاريع المتاحة حالياً؟</span><i class="fa-solid fa-chevron-down"></i></div>
+      <div class="faq-answer"><div class="faq-answer-content">تصب الجمعية كامل جهودها الإنشائية الحالية في تنفيذ وتسليم وحدات "المشروع السادس" و "المشروع الثامن" بمدينة حلب وفقاً للجداول الزمنية المقررة.</div></div>
+    </div>
+  </section>
+
   <div class="card">
     <h3>👥 مجموعات واتساب والتواصل</h3>
     <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 12px;">انضم إلى المجموعات الرسمية لمتابعة المستجدات العاجلة:</p>
-    <button class="group" onclick="openLink('https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk')">📌 مجموعة المشروع السادس</button>
-    <button class="group" onclick="openLink('https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD')">📌 مجموعة المشروع الثامن</button>
+    <a href="https://chat.whatsapp.com/DMYyaNAJjEUKBtyuCCmBzk" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block; margin: 6px 0;">
+      <button class="group" type="button">📌 مجموعة المشروع السادس</button>
+    </a>
+    <a href="https://chat.whatsapp.com/DFRRCjgDTLFF0HDOmniHFD" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: block; margin: 6px 0;">
+      <button class="group" type="button">📌 مجموعة المشروع الثامن</button>
+    </a>
   </div>
 
   <div class="info-section">
@@ -304,6 +440,11 @@ button:hover{ transform:scale(1.02); }
     <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية الخاص بك للاطلاع على بيانات شقتك والمدفوعات</p>
     <input id="id" placeholder="رقم العضوية" inputmode="numeric">
     <input id="pass" type="password" placeholder="كلمة السر">
+    
+    <label class="remember-container">
+      <input type="checkbox" id="rememberMe"> تذكر رقم العضوية على هذا الجهاز
+    </label>
+
     <button class="login" id="loginBtn" onclick="login()">دخول</button>
     <p id="error" style="color:#ff8f8f; font-size:13px; margin-top:8px;"></p>
   </div>
@@ -361,14 +502,36 @@ button:hover{ transform:scale(1.02); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
+// تنظيف وحظر الكاش القديم الخاص بالـ PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) { registration.unregister(); }
+  });
+}
+
 window.onload = function(){
   try {
     let savedUser = localStorage.getItem("currentUser");
-    if(savedUser) showUser(JSON.parse(savedUser));
+    if(savedUser) {
+      showUser(JSON.parse(savedUser));
+      return;
+    }
   } catch(e) {
     localStorage.removeItem("currentUser");
   }
+
+  // ميزة استرجاع رقم العضوية المحفوظ
+  let rememberedId = localStorage.getItem("rememberedMembershipId");
+  if(rememberedId) {
+    document.getElementById("id").value = rememberedId;
+    document.getElementById("rememberMe").checked = true;
+  }
 };
+
+function toggleFaq(element) {
+  let item = element.parentElement;
+  item.classList.toggle("open");
+}
 
 function switchTab(tabId, element) {
   let contents = document.getElementsByClassName('tab-content');
@@ -384,89 +547,7 @@ function login(){
   let pass = document.getElementById("pass").value.trim();
   let errorEl = document.getElementById("error");
   let btn = document.getElementById("loginBtn");
+  let rememberMe = document.getElementById("rememberMe").checked;
 
   errorEl.innerText = "";
-  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
-
-  btn.disabled = true;
-  btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
-
-  fetch(API_URL + "?id=" + id + "&password=" + pass)
-  .then(res => res.json())
-  .then(data => {
-    btn.disabled = false;
-    btn.innerHTML = "دخول";
-
-    if(data.status === "success"){
-      let user = {
-        membership_id: id, name: data.name, total: data.total, paid: data.paid, remaining: data.remaining,
-        project: data.project || "قيد التحديد", floor: data.floor || "قيد التحديد",
-        direction: data.direction || "قيد التحديد", rooms: data.rooms || data.name || "قيد التحديد"
-      };
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      showUser(user);
-    } else { errorEl.innerText = "❌ البيانات غير صحيحة"; }
-  })
-  .catch(() => {
-    btn.disabled = false;
-    btn.innerHTML = "دخول";
-    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
-  });
-}
-
-function showUser(user){
-  if (!user) return;
-  document.getElementById("mainPublicPage").style.display = "none";
-  document.getElementById("memberDashboard").style.display = "block";
-  
-  document.getElementById("aptProject").innerText = user.project;
-  document.getElementById("aptFloor").innerText = user.floor;
-  document.getElementById("aptDirection").innerText = user.direction;
-  document.getElementById("aptRooms").innerText = user.rooms;
-
-  document.getElementById("content").innerHTML = `
-    <div class="alert">✅ أهلاً بك<br><span style="font-size:13px; font-weight:normal;">${user.name || ''}</span></div>
-    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</span><span class="stat-value">${user.total || '0'}</span></div>
-    <div class="user-stat"><span class="stat-label">💵 إجمالي مدفوعاتك المسجلة</span><span class="stat-value" style="color:#4effb0">${user.paid || '0'}</span></div>
-    <div class="user-stat"><span class="stat-label">📉 الرصيد المتبقي عليك للجمعية</span><span class="stat-value" style="color:#ff8f8f">${user.remaining || '0'}</span></div>
-    <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:10px;">📅 حالة البيانات المادية: محدثة ومزامنة</p>
-    <hr class="divider">
-    <h4 style="margin-bottom:8px; font-size:15px; text-align:right; color:var(--accent);">📷 إرسال إشعار الدفع والوصل المالي</h4>
-    <button class="whatsapp" style="background: linear-gradient(135deg,#25D366,#128C7E);" onclick="sendReceiptLink('${user.membership_id}', '${user.name}')">📤 إرسال صورة الوصل المالي عبر واتساب</button>
-    <hr class="divider">
-    <h4 style="margin-bottom:10px; font-size:15px;">🔑 أمان الحساب (تغيير كلمة السر)</h4>
-    <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
-    <button class="admin" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
-    <p id="msg" style="font-size:13px; color:#1a6b4a; margin-top:6px;"></p>
-    <hr class="divider">
-    <button class="whatsapp" onclick="openWA()">📱 تواصل عام مع إدارة الجمعية</button>
-    <button class="logout" onclick="logout()">🚪 تسجيل الخروج</button>
-  `;
-}
-
-function sendReceiptLink(id, name) {
-  let cleanName = name.split("إفراز")[0].trim();
-  let text = encodeURIComponent(`مرحباً إدارة الجمعية، أنا العضو: ${cleanName}\nرقم العضوية: ${id}\nأود إرسال صورة وصل مالي قمت بدفعه مؤخراً`);
-  window.open(`https://wa.me/963980049054?text=${text}`, "_blank");
-}
-
-function changePassword(userId){
-  let newPass = document.getElementById("newPass").value.trim();
-  let msg = document.getElementById("msg");
-  if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
-  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
-
-  fetch(API_URL, { method:"POST", body:JSON.stringify({ id:userId, password:newPass }) })
-  .then(() => {
-    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
-    document.getElementById("newPass").value = "";
-  })
-  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
-}
-
-function openWA(){ window.open("https://wa.me/963980049054", "_blank"); }
-function logout(){ localStorage.removeItem("currentUser"); location.reload(); }
-function openLink(url){ window.open(url,"_blank"); }
-</script>
-</body>
-</html>
+  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء
