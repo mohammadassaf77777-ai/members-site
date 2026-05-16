@@ -59,7 +59,7 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
   </label>
 
   <button class="login" id="loginBtn" onclick="login()">دخول</button>
-  <p id="error" style="color:#ff8f8f; font-size:13px; margin-top:8px;"></p>
+  <p id="error" style="color:#ff8f8f; font-size:13px; margin-top:8px; font-weight: bold;"></p>
 </div>
 
 <div id="memberDashboard" style="display: none; margin-top:20px;">
@@ -86,8 +86,8 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
 
 <script>
-// تم وضع رابط السكريبت الجديد بنجاح هنا
-const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
+// تم وضع رابط السكريبت الجديد والمحدث الخاص بك هنا بنجاح
+const API_URL = "https://script.google.com/macros/s/AKfycbxZAgEhSCXgf8zdhvJX5LMz7kDU5-8dAerUmMz3YIMhwVNXRfeDkGGqBEEPbh9RU-lEiw/exec";
 
 window.onload = function(){
   try {
@@ -130,7 +130,7 @@ function login(){
     btn.disabled = false;
     btn.innerHTML = "دخول";
 
-    if(data.status === "success" || data.success === "success" || data === "success"){
+    if(data.status === "success"){
       if(rememberMe) { localStorage.setItem("rememberedMembershipId", id); } 
       else { localStorage.removeItem("rememberedMembershipId"); }
 
@@ -150,13 +150,22 @@ function login(){
       localStorage.setItem("currentUser", JSON.stringify(user));
       showUser(user);
     } else { 
-      errorEl.innerText = "❌ البيانات غير صحيحة"; 
+      // نظام الفحص المطور لإظهار المشكلة الحقيقية
+      if (data.debug === "wrong_password") {
+        errorEl.innerText = "❌ كلمة السر غير صحيحة لهذا الحساب";
+      } else if (data.debug === "id_not_found") {
+        errorEl.innerText = "❌ رقم العضوية هذا غير موجود في الجدول";
+      } else if (data.debug === "sheet_not_found") {
+        errorEl.innerText = "⚠️ خطأ بالسيرفر: لم يتم العثور على شيت باسم Members";
+      } else {
+        errorEl.innerText = "❌ البيانات غير صحيحة";
+      }
     }
   })
   .catch((err) => {
     btn.disabled = false;
     btn.innerHTML = "دخول";
-    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
+    errorEl.innerText = "⚠️ خطأ في الاتصال: تأكد من تحديث كود قوقل سكريبت ونشره كـ New Version";
     console.error(err);
   });
 }
