@@ -28,7 +28,7 @@ body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; backgrou
 .sidebar-btn { width: 100%; text-align: right; padding: 12px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border-radius: 12px; font-family: 'Cairo'; font-size: 14px; cursor: pointer; transition: 0.25s; display: flex; align-items: center; gap: 10px; margin: 0; }
 .sidebar-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 .sidebar-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border-color: transparent; }
-.logout-btn-sidebar { color: #ff8f8f !important; margin-top: 20px; background: rgba(192, 57, 43, 0.1) !important; display: none; }
+.logout-btn-sidebar { color: #ff8f8f !important; margin-top: 20px; background: rgba(192, 57, 43, 0.1) !important; display: block; }
 
 .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; backdrop-filter: blur(3px); }
 .sidebar-overlay.show { display: block; }
@@ -38,12 +38,11 @@ body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; backgrou
 .card{ background:rgba(255,255,255,0.1); padding:22px 18px; border-radius:24px; width:92%; max-width:420px; margin:14px auto; box-shadow:var(--shadow); border:1px solid rgba(255,255,255,0.12); position: relative; }
 input{ width:100%; padding:13px 16px; margin:7px 0; border-radius:14px; border:2px solid rgba(255,255,255,0.1); font-family:'Cairo'; background:rgba(255,255,255,0.08); color:white; }
 button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px; font-family:'Cairo'; font-size:14px; font-weight:700; cursor:pointer; }
-.login{ background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; }
-.admin{ background: linear-gradient(135deg,#e67e22,#f39c12); color:white; }
-.whatsapp{ background: linear-gradient(135deg,#128C7E,#25D366); color:white; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+.login { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; }
+.whatsapp { background: linear-gradient(135deg,#128C7E,#25D366); color:white; }
 
 .forgot-link { display: inline-block; margin-top: 10px; font-size: 12px; color: var(--accent); text-decoration: none; font-weight: bold; cursor: pointer; }
-.security-badge { background: rgba(240, 165, 0, 0.15); border: 1px dashed var(--accent); padding: 12px; border-radius: 14px; margin-top: 15px; font-size: 13px; text-align: right; }
 .timer-text { font-size: 12px; color: #ff8f8f; margin-top: 5px; font-weight: bold; }
 
 .remember-container { display: flex; align-items: center; gap: 8px; margin: 10px 2px; font-size: 12px; color: rgba(255, 255, 255, 0.7); cursor: pointer; }
@@ -116,7 +115,7 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
     </div>
 
     <div id="forgotNewPassZone" style="display: none;">
-      <input id="forgotNewPass" type="password" placeholder="كلمة السر الجديدة">
+      <input id="forgotNewPass" type="password" placeholder="كلمة السر الجديدة (4 خانات على الأقل)">
     </div>
 
     <button class="login" id="forgotMainBtn" onclick="handleForgotFlow()">إرسال كود التحقق</button>
@@ -142,9 +141,9 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 </div>
 
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
-
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxaN5jwedsneXGb4DQ3M4bHqaQgoex7R5pK8G00QPmZZpEevi5KwEvQaGgf2acrh5uMuw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby-2sn0I-t18WFCbvuPB6gxHhOqptEH2xxLGQJW1wpnKiVHveC7QMjCs6X6nrymjKA-6w/exec";
+
 let isLoggedIn = false;
 let globalUserData = null;
 let forgotStep = 1; 
@@ -166,8 +165,10 @@ window.onload = function(){
 function toggleSidebar(open) {
   let sidebar = document.getElementById('sidebarMenu');
   let overlay = document.getElementById('sidebarOverlay');
-  if (open) { sidebar.classList.add('open'); overlay.classList.add('show'); } 
-  else { sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+  if (sidebar && overlay) {
+    if (open) { sidebar.classList.add('open'); overlay.classList.add('show'); } 
+    else { sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+  }
 }
 
 function switchSection(tabId, element) {
@@ -189,12 +190,13 @@ function switchSection(tabId, element) {
 function startTimer(durationInSeconds, displayElement, onTimeout) {
   clearInterval(timerInterval);
   let timer = durationInSeconds;
+  
   timerInterval = setInterval(function () {
     let minutes = parseInt(timer / 60, 10);
     let seconds = parseInt(timer % 60, 10);
     minutes = minutes < 10 ? "0" + minutes : minutes;
     seconds = seconds < 10 ? "0" + seconds : seconds;
-    displayElement.innerText = "⏳ تنتهي صلاحية الكود خلال: " + minutes + ":" + seconds;
+    if(displayElement) displayElement.innerText = "⏳ تنتهي صلاحية الكود خلال: " + minutes + ":" + seconds;
     if (--timer < 0) {
       clearInterval(timerInterval);
       onTimeout();
@@ -232,21 +234,27 @@ function handleForgotFlow() {
     fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "send_otp", id: id, isForgot: true }) })
     .then(res => res.json())
     .then(data => {
-      btn.disabled = false;
-      if (data.status === "otp_sent") {
+      btn.disabled = false; btn.innerText = "تأكيد كود التحقق";
+      if (data.status === "otp_sent" || data.success === true) {
         forgotStep = 2;
         document.getElementById("forgotOtpZone").style.display = "block";
-        document.getElementById("forgotMaskedMsg").innerText = "📧 تم إرسال الكود إلى بريدك المربوط: " + data.maskedEmail;
-        btn.innerText = "تأكيد كود التحقق";
+        document.getElementById("forgotMaskedMsg").innerText = "📧 تم إرسال الكود إلى بريدك المربوط: " + (data.maskedEmail || "المسجل لدينا");
         
         startTimer(300, document.getElementById("forgotTimer"), function() {
           errorEl.innerText = "❌ انتهت صلاحية الكود. يرجى إعادة المحاولة من جديد.";
           showForgotSection(true);
         });
       } else {
-        errorEl.innerText = data.message === "no_email_linked" ? "❌ هذا الحساب لم يتم ربطه ببريد إلكتروني من قبل مسبقاً لحمايته" : "❌ رقم العضوية غير صحيح";
+        btn.innerText = "إرسال كود التحقق";
+        if (data.message === "rate_limit_exceeded") {
+          errorEl.innerText = `⏳ يرجى الانتظار ${data.wait} ثانية قبل طلب كود جديد.`;
+        } else if (data.message === "no_email_linked") {
+          errorEl.innerText = "❌ هذا الحساب لم يتم ربطه ببريد إلكتروني مراجع إدارة الجمعية.";
+        } else {
+          errorEl.innerText = "❌ رقم العضوية غير صحيح أو غير موجود.";
+        }
       }
-    }).catch(() => { btn.disabled = false; btn.innerText = "إرسال كود التحقق"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
+    }).catch(() => { btn.disabled = false; btn.innerText = "إرسال كود التحقق"; errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر"; });
   } 
   else if (forgotStep === 2) {
     let otp = document.getElementById("forgotOtp").value.trim();
@@ -257,30 +265,31 @@ function handleForgotFlow() {
     .then(res => res.json())
     .then(data => {
       btn.disabled = false;
-      if (data.status === "verified") {
+      if (data.status === "verified" || data.success === true) {
         clearInterval(timerInterval);
         forgotStep = 3;
         document.getElementById("forgotOtpZone").style.display = "none";
         document.getElementById("forgotNewPassZone").style.display = "block";
         btn.innerText = "حفظ كلمة السر الجديدة";
       } else {
-        errorEl.innerText = data.message === "expired" ? "❌ انتهت صلاحية الكود (5 دقائق)" : "❌ كود التحقق غير صحيح";
+        btn.innerText = "تأكيد كود التحقق";
+        errorEl.innerText = data.message === "expired" ? "❌ انتهت صلاحية الكود" : "❌ كود التحقق غير صحيح";
       }
     }).catch(() => { btn.disabled = false; btn.innerText = "تأكيد كود التحقق"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
   } 
   else if (forgotStep === 3) {
     let newPass = document.getElementById("forgotNewPass").value.trim();
-    if (!newPass) { errorEl.innerText = "⚠️ يرجى كتابة كلمة السر الجديدة"; return; }
+    if (!newPass || newPass.length < 4) { errorEl.innerText = "⚠️ يجب ألا تقل كلمة السر عن 4 خانات"; return; }
     btn.disabled = true; btn.innerHTML = 'جاري الحفظ والتعيين <span class="loading-spinner"></span>';
     
-    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reset_password", id: id, password: newPass }) })
+    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reset_password", id: id, pass: newPass }) })
     .then(res => res.json())
     .then(data => {
-      btn.disabled = false;
-      if (data.status === "success") {
-        alert("✅ تم تعيين كلمة السر الجديدة بنجاح! يمكنك الآن تسجيل الدخول بها.");
+      btn.disabled = false; btn.innerText = "حفظ كلمة السر الجديدة";
+      if (data.status === "success" || data.success === true) {
+        alert("✅ تم تعيين وتشفير كلمة السر الجديدة بنجاح!");
         showForgotSection(false);
-      } else { errorEl.innerText = "❌ فشل تعيين كلمة السر"; }
+      } else { errorEl.innerText = "❌ فشل تعيين كلمة السر."; }
     }).catch(() => { btn.disabled = false; btn.innerText = "حفظ كلمة السر الجديدة"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
   }
 }
@@ -293,16 +302,24 @@ function login(){
   let rememberMe = document.getElementById("rememberMe").checked;
 
   errorEl.innerText = "";
-  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
-  btn.disabled = true; btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
+  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال رقم العضوية وكلمة السر"; return; }
+  btn.disabled = true; btn.innerHTML = 'جاري التحقق الآمن <span class="loading-spinner"></span>';
 
-  fetch(`${API_URL}?id=${encodeURIComponent(id)}&pass=${encodeURIComponent(pass)}`)
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "login",
+      id: id,
+      pass: pass
+    })
+  })
   .then(res => res.json())
   .then(data => {
     btn.disabled = false; btn.innerHTML = "دخول";
-    if(data.status === "success"){
+    if(data.status === "success" || data.success === true){
       if(rememberMe) { localStorage.setItem("rememberedMembershipId", id); } 
       else { localStorage.removeItem("rememberedMembershipId"); }
+      
       let cleanId = id.split('.')[0];
       let user = {
         membership_id: cleanId, name: data.name || "", total: data.total || "0", paid: data.paid || "0", remaining: data.remaining || "0",
@@ -311,135 +328,57 @@ function login(){
       localStorage.setItem("currentUser", JSON.stringify(user));
       showUser(user);
     } else {
-      if (data.debug === "wrong_password") errorEl.innerText = "❌ كلمة السر غير صحيحة لهذا الحساب";
-      else if (data.debug === "id_not_found") errorEl.innerText = "❌ رقم العضوية هذا غير موجود في الجدول";
-      else errorEl.innerText = "❌ البيانات غير صحيحة";
+      if (data.debug === "account_locked") {
+        errorEl.innerText = `❌ الحساب مقفل مؤقتاً بسبب محاولات فاشلة. انتظر ${data.wait} دقيقة.`;
+      } else if (data.debug === "wrong_password") {
+        errorEl.innerText = `❌ كلمة السر خاطئة! متبقي ${data.remaining_attempts} محاولات.`;
+      } else {
+        errorEl.innerText = "❌ البيانات المدخلة غير صحيحة أو العضوية غير موجودة.";
+      }
     }
   }).catch(() => { btn.disabled = false; btn.innerHTML = "دخول"; errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر"; });
 }
 
 function showUser(user){
-  if (!user) return;
   isLoggedIn = true;
   globalUserData = user;
-  
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("memberDashboard").style.display = "block";
-  document.getElementById("sidebarLogoutBtn").style.display = "flex";
   
+  let formattedTotal = Number(user.total).toLocaleString();
+  let formattedPaid = Number(user.paid).toLocaleString();
+  let formattedRemaining = Number(user.remaining).toLocaleString();
+
+  let html = `
+    <div class="alert">👋 أهلاً بك يا سيد: ${user.name}</div>
+    <div class="user-stat"><span class="stat-label">🆔 رقم العضوية:</span><span class="stat-value">${user.membership_id}</span></div>
+    <div class="divider"></div>
+    <h3>📊 البيان المالي الموثق</h3>
+    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب:</span><span class="stat-value" style="color:#f0a500;">${formattedTotal} ل.س</span></div>
+    <div class="user-stat"><span class="stat-label">✅ المدفوع الفعلي:</span><span class="stat-value" style="color:#25a370;">${formattedPaid} ل.س</span></div>
+    <div class="user-stat"><span class="stat-label">⏳ المتبقي بذمتكم:</span><span class="stat-value" style="color:#ff8f8f;">${formattedRemaining} ل.س</span></div>
+    <div class="divider"></div>
+    <button class="whatsapp" onclick="sendWhatsappReceipt('${user.membership_id}', '${user.name}', '${formattedPaid}')"><i class="fab fa-whatsapp"></i> إرسال إيصال الدفع عبر الواتساب</button>
+  `;
+  document.getElementById("content").innerHTML = html;
+
   document.getElementById("aptProject").innerText = user.project;
   document.getElementById("aptFloor").innerText = user.floor;
   document.getElementById("aptDirection").innerText = user.direction;
   document.getElementById("aptRooms").innerText = user.rooms;
-
-  let cleanName = user.name ? user.name.split("إفراز")[0].trim() : "عضو الجمعية";
-  let waText = "مرحباً إدارة الجمعية، أنا العضو: " + cleanName + "\nرقم العضوية: " + user.membership_id + "\nأود إرسال صورة وصل مالي قمت بدفعه مؤخراً";
-
-  let emailSectionHtml = "";
-  if (user.email === "") {
-    emailSectionHtml = `
-      <div class="security-badge" id="emailBindZone">
-        <h5 style="color:var(--accent); margin-bottom:5px;"><i class="fas fa-shield-alt"></i> ميزة أمان اختيارية: تأمين الحساب</h5>
-        <p style="font-size:11px; color:rgba(255,255,255,0.7); margin-bottom:8px;">اربط إيميلك لتتمكن من استعادة كلمة السر تلقائياً واستلام إشعارات الأمان.</p>
-        <input id="bindEmailInput" placeholder="أدخل بريدك الإلكتروني (Gmail)">
-        <div id="bindOtpZone" style="display:none;">
-          <input id="bindOtpInput" placeholder="أدخل كود التحقق" inputmode="numeric">
-          <div class="timer-text" id="bindTimer"></div>
-        </div>
-        <button class="login" style="padding:8px; font-size:12px;" id="bindEmailBtn" onclick="handleEmailBinding()">ربط وتأكيد البريد</button>
-        <p id="bindError" style="color:#ff8f8f; font-size:11px; margin-top:4px; font-weight:bold;"></p>
-      </div>`;
-  } else {
-    emailSectionHtml = `<div style="color:#4effb0; font-size:12px; margin-top:10px; text-align:right;"><i class="fas fa-check-circle"></i> الحساب محمي بالبريد: ${user.email.replace(/(..)(.*)(@.*)/, "$1***$3")}</div>`;
-  }
-
-  document.getElementById("content").innerHTML = `
-    <div class="alert">✅ أهلاً بك كعضو مسجل<br><span style="font-size:13px; font-weight:normal;">${user.name}</span></div>
-    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</span><span class="stat-value">${user.total}</span></div>
-    <div class="user-stat"><span class="stat-label">💵 إجمالي مدفوعاتك المسجلة</span><span class="stat-value" style="color:#4effb0">${user.paid}</span></div>
-    <div class="user-stat"><span class="stat-label">📉 الرصيد المتبقي المستحق</span><span class="stat-value" style="color:#ff8f8f">${user.remaining}</span></div>
-    ${emailSectionHtml}
-    <hr class="divider">
-    <h4 style="margin-bottom:8px; font-size:14px; text-align:right; color:var(--accent);">📷 إرسال إشعار الوصل المالي</h4>
-    <a href="https://wa.me/963980049054?text=${encodeURIComponent(waText)}" target="_blank" style="text-decoration:none;">
-      <button class="whatsapp" type="button">📤 إرسال صورة الوصل المالي عبر واتساب</button>
-    </a>
-    <hr class="divider">
-    <h4 style="margin-bottom:10px; font-size:14px;">🔑 تغيير كلمة السر الحالية</h4>
-    <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
-    <button class="admin" type="button" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
-    <p id="msg" style="font-size:13px; color:#4effb0; margin-top:6px;"></p>
-  `;
 }
 
-let bindStep = 1;
-function handleEmailBinding() {
-  let email = document.getElementById("bindEmailInput").value.trim();
-  let errorEl = document.getElementById("bindError");
-  let btn = document.getElementById("bindEmailBtn");
-  
-  errorEl.innerText = "";
-  if (!email) { errorEl.innerText = "⚠️ يرجى كتابة الإيميل أولاً"; return; }
-
-  if (bindStep === 1) {
-    btn.disabled = true; btn.innerText = "جاري إرسال الكود...";
-    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "send_otp", id: globalUserData.membership_id, email: email, isForgot: false }) })
-    .then(res => res.json())
-    .then(data => {
-      btn.disabled = false;
-      if (data.status === "otp_sent") {
-        bindStep = 2;
-        document.getElementById("bindOtpZone").style.display = "block";
-        document.getElementById("bindEmailInput").disabled = true;
-        btn.innerText = "تأكيد الكود والربط";
-        
-        startTimer(300, document.getElementById("bindTimer"), function() {
-          errorEl.innerText = "❌ انتهت صلاحية الكود. أعد المحاولة.";
-          bindStep = 1;
-          document.getElementById("bindOtpZone").style.display = "none";
-          document.getElementById("bindEmailInput").disabled = false;
-          btn.innerText = "ربط وتأكيد البريد";
-        });
-      }
-    }).catch(() => { btn.disabled = false; btn.innerText = "ربط وتأكيد البريد"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
-  } 
-  else if (bindStep === 2) {
-    let otp = document.getElementById("bindOtpInput").value.trim();
-    if (!otp) { errorEl.innerText = "⚠️ أدخل كود التحقق المعطى"; return; }
-    btn.disabled = true; btn.innerText = "جاري التوثيق...";
-    
-    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "verify_otp", id: globalUserData.membership_id, otp: otp, email: email, isForgot: false }) })
-    .then(res => res.json())
-    .then(data => {
-      btn.disabled = false;
-      if (data.status === "verified") {
-        clearInterval(timerInterval);
-        alert("✅ تم ربط وتأمين حسابك بالإيميل بنجاح!");
-        globalUserData.email = email;
-        localStorage.setItem("currentUser", JSON.stringify(globalUserData));
-        showUser(globalUserData);
-      } else {
-        errorEl.innerText = data.message === "expired" ? "❌ انتهت صلاحية الكود" : "❌ كود التحقق غير صحيح";
-      }
-    }).catch(() => { btn.disabled = false; btn.innerText = "تأكيد الكود والربط"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
-  }
+function sendWhatsappReceipt(id, name, paid) {
+  let msg = encodeURIComponent(`السلام عليكم، أنا العضو ${name} رقم العضوية ${id}، أرغب في تدقيق دفعتي المسجلة بقيمة ${paid} ل.س.`);
+  window.open(`https://api.whatsapp.com/send?phone=963933880404&text=${msg}`, '_blank');
 }
 
-function changePassword(userId){
-  let newPass = document.getElementById("newPass").value.trim();
-  let msg = document.getElementById("msg");
-  if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
-  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
-
-  fetch(API_URL, { method:"POST", body:JSON.stringify({ action: "reset_password", id:userId, password:newPass }) })
-  .then(() => {
-    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
-    document.getElementById("newPass").value = "";
-  })
-  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
+function logout(){
+  isLoggedIn = false;
+  globalUserData = null;
+  localStorage.removeItem("currentUser");
+  window.location.href = "index.html";
 }
-
-function logout(){ isLoggedIn = false; globalUserData = null; clearInterval(timerInterval); localStorage.removeItem("currentUser"); location.reload(); }
 </script>
 </body>
 </html>
