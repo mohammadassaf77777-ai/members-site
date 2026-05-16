@@ -48,6 +48,52 @@ body{
   100%{background-position:0% 50%;}
 }
 
+/* 🌟 شاشة التحميل الأنيقة والذكية 🌟 */
+#splash{
+  position:fixed;
+  inset:0;
+  background: linear-gradient(135deg, #0d1f2d, #1a3a2a);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.splash-content{
+  text-align:center;
+  animation:fadeZoom 0.8s ease;
+}
+
+.splash-content i{
+  font-size:60px;
+  color:var(--accent);
+  margin-bottom:15px;
+  animation: pulse 1.4s infinite;
+}
+
+.splash-content h1{
+  font-size:26px;
+  font-weight:900;
+  margin-bottom: 6px;
+}
+
+.splash-content p{
+  color:rgba(255,255,255,0.7);
+  font-size: 13px;
+}
+
+@keyframes fadeZoom{
+  from{ opacity:0; transform:scale(0.9); }
+  to{ opacity:1; transform:scale(1); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 /* HEADER */
 .header{
   background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(26,107,74,0.18));
@@ -249,6 +295,14 @@ button:hover{ transform:scale(1.02); }
 
 <body>
 
+<div id="splash">
+  <div class="splash-content">
+    <i class="fa-solid fa-building-columns"></i>
+    <h1>الجمعية التعاونية</h1>
+    <p>السكن والاصطياف بحلب</p>
+  </div>
+</div>
+
 <div class="header">
   <div class="header-logo">🏛️ الجمعية التعاونية الشعبية</div>
   <div class="header-title">للسكن والاصطياف<br><span>بحلب</span></div>
@@ -358,6 +412,17 @@ button:hover{ transform:scale(1.02); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
+// ⏱️ العداد الحتمي المستقل: يختفي بعد 1000 ملي ثانية تماماً دون أي شروط أخرى
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(function() {
+    let splash = document.getElementById("splash");
+    if(splash) {
+      splash.style.opacity = "0";
+      setTimeout(function() { splash.style.display = "none"; }, 400);
+    }
+  }, 1000);
+});
+
 window.onload = function(){
   try {
     let savedUser = localStorage.getItem("currentUser");
@@ -451,19 +516,4 @@ function changePassword(userId){
   let newPass = document.getElementById("newPass").value.trim();
   let msg = document.getElementById("msg");
   if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
-  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
-
-  fetch(API_URL, { method:"POST", body:JSON.stringify({ id:userId, password:newPass }) })
-  .then(() => {
-    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
-    document.getElementById("newPass").value = "";
-  })
-  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
-}
-
-function openWA(){ window.open("https://wa.me/963980049054", "_blank"); }
-function logout(){ localStorage.removeItem("currentUser"); location.reload(); }
-function openLink(url){ window.open(url,"_blank"); }
-</script>
-</body>
-</html>
+  msg.style.col
