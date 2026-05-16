@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>حساب العضو المالي - جمعية حلب</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* نفس نمط التنسيق البرمي الموحد */
+*{ box-sizing:border-box; margin:0; padding:0; }
+:root{ --primary:#1a6b4a; --primary-light:#25a370; --accent:#f0a500; --dark:#0d1f2d; --shadow:0 8px 32px rgba(0,0,0,0.25); }
+body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; background: linear-gradient(-45deg, #0d1f2d, #1a3a2a, #162535, #0d1f2d); background-size:400% 400%; animation:gradientMove 12s ease infinite; color:white; min-height:100vh; }
+@keyframes gradientMove{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+
+.navbar { position: sticky; top: 0; z-index: 1000; background: rgba(13, 31, 45, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: center; gap: 8px; padding: 12px; }
+.nav-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 8px; transition: 0.25s; }
+.nav-link:hover, .nav-link.active { color: white; background: rgba(255, 255, 255, 0.1); }
+.nav-link.highlight { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+
+.tabs-container { display: flex; justify-content: center; gap: 8px; width: 92%; max-width: 420px; margin: 15px auto 5px auto; }
+.tab-btn { flex: 1; padding: 10px 5px; font-size: 12px; font-weight: 700; border-radius: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); cursor: pointer; }
+.tab-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border-color: transparent; }
+.tab-content { display: none; } .tab-content.active { display: block; }
+
+.card{ background:rgba(255,255,255,0.1); padding:22px 18px; border-radius:24px; width:92%; max-width:420px; margin:14px auto; box-shadow:var(--shadow); border:1px solid rgba(255,255,255,0.12); }
+input{ width:100%; padding:13px 16px; margin:7px 0; border-radius:14px; border:2px solid rgba(255,255,255,0.1); font-family:'Cairo'; background:rgba(255,255,255,0.08); color:white; }
+button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px; font-family:'Cairo'; font-size:14px; font-weight:700; cursor:pointer; }
+.login{ background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; }
+.logout{ background: linear-gradient(135deg,#c0392b,#e74c3c); color:white; margin-top:15px;}
+.admin{ background: linear-gradient(135deg,#e67e22,#f39c12); color:white; }
+.whatsapp{ background: linear-gradient(135deg,#128C7E,#25D366); color:white; }
+
+.remember-container { display: flex; align-items: center; gap: 8px; margin: 10px 2px; font-size: 12px; color: rgba(255, 255, 255, 0.7); cursor: pointer; }
+.user-stat { display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:rgba(255,255,255,0.08); border-radius:12px; margin:7px 0; font-size:14px; }
+.stat-label { color:rgba(255,255,255,0.7); text-align: right; } .stat-value { font-weight:700; }
+.alert { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; padding:12px 16px; border-radius:12px; margin-bottom:14px; font-weight:700; }
+.divider { border:none; border-top:1px solid rgba(255,255,255,0.1); margin:16px 0; }
+.loading-spinner { display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,0.4); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-left:6px; }
+@keyframes spin{ to{transform:rotate(360deg);} }
+.footer{ padding: 30px; color: rgba(255,255,255,0.35); font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <a href="index.html" class="nav-link">الرئيسية 🏠</a>
+  <a href="faq.html" class="nav-link">دليل الخدمات ❓</a>
+  <a href="dashboard.html" class="nav-link highlight active">بياناتي المادية 🔐</a>
+</div>
+
+<div class="card" id="loginBox" style="margin-top:40px;">
+  <h3>🔐 تسجيل دخول الأعضاء</h3>
+  <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية الخاص بك للاطلاع على البيانات المادية</p>
+  <input id="id" placeholder="رقم العضوية" inputmode="numeric">
+  <input id="pass" type="password" placeholder="كلمة السر">
+  
+  <label class="remember-container">
+    <input type="checkbox" id="rememberMe"> تذكر رقم العضوية على هذا الجهاز
+  </label>
+
+  <button class="login" id="loginBtn" onclick="login()">دخول</button>
+  <p id="error" style="color:#ff8f8f; font-size:13px; margin-top:8px;"></p>
+</div>
+
+<div id="memberDashboard" style="display: none; margin-top:20px;">
+  <div class="tabs-container">
+    <button class="tab-btn active" onclick="switchTab('financialTab', this)">💰 البيانات المادية</button>
+    <button class="tab-btn" onclick="switchTab('apartmentTab', this)">🏢 بيان التخصيص</button>
+  </div>
+
+  <div id="financialTab" class="tab-content active">
+    <div class="card" id="content"></div>
+  </div>
+
+  <div id="apartmentTab" class="tab-content">
+    <div class="card">
+      <h3>🏢 تفاصيل الشقة والموقع</h3>
+      <div class="user-stat"><span class="stat-label">🏗️ رصيد مشروع رقم</span><span class="stat-value" id="aptProject">-</span></div>
+      <div class="user-stat"><span class="stat-label">🪜 الطابق</span><span class="stat-value" id="aptFloor">-</span></div>
+      <div class="user-stat"><span class="stat-label">🧭 اتجاه الشقة</span><span class="stat-value" id="aptDirection">-</span></div>
+      <div class="user-stat"><span class="stat-label">🚪 التخصيص الكامل</span><span class="stat-value" id="aptRooms" style="font-size:11px; max-width:60%; text-align:left;">-</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">جمعية السكن والاصطياف © حلب</div>
+
+<script>
+// الصق رابط السكريبت الذكي الخاص بك هنا
+const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
+
+window.onload = function(){
+  try {
+    let savedUser = localStorage.getItem("currentUser");
+    if(savedUser) { showUser(JSON.parse(savedUser)); return; }
+  } catch(e) { localStorage.removeItem("currentUser"); }
+
+  let rememberedId = localStorage.getItem("rememberedMembershipId");
+  if(rememberedId) {
+    document.getElementById("id").value = rememberedId;
+    document.getElementById("rememberMe").checked = true;
+  }
+};
+
+function switchTab(tabId, element) {
+  let contents = document.getElementsByClassName('tab-content');
+  for (let i = 0; i < contents.length; i++) contents[i].classList.remove('active');
+  let buttons = document.getElementsByClassName('tab-btn');
+  for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
+  document.getElementById(tabId).classList.add('active');
+  element.classList.add('active');
+}
+
+function login(){
+  let id = document.getElementById("id").value.trim();
+  let pass = document.getElementById("pass").value.trim();
+  let errorEl = document.getElementById("error");
+  let btn = document.getElementById("loginBtn");
+  let rememberMe = document.getElementById("rememberMe").checked;
+
+  errorEl.innerText = "";
+  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
+
+  btn.disabled = true;
+  btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
+
+  fetch(`${API_URL}?id=${encodeURIComponent(id)}&pass=${encodeURIComponent(pass)}`)
+  .then(res => res.json())
+  .then(data => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+
+    if(data.status === "success" || data.success === "success"){
+      if(rememberMe) { localStorage.setItem("rememberedMembershipId", id); } 
+      else { localStorage.removeItem("rememberedMembershipId"); }
+
+      let user = {
+        membership_id: id,
+        name: data.name || "",
+        total: data.total || "0",
+        paid: data.paid || "0",
+        remaining: data.remaining || "0",
+        project: data.project || "قيد التحديد",
+        floor: data.floor || "قيد التحديد",
+        direction: data.direction || "قيد التحديد",
+        rooms: data.rooms || "قيد التحديد"
+      };
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      showUser(user);
+    } else { errorEl.innerText = "❌ البيانات غير صحيحة"; }
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
+  });
+}
+
+function showUser(user){
+  if (!user) return;
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("memberDashboard").style.display = "block";
+  
+  document.getElementById("aptProject").innerText = user.project;
+  document.getElementById("aptFloor").innerText = user.floor;
+  document.getElementById("aptDirection").innerText = user.direction;
+  document.getElementById("aptRooms").innerText = user.rooms;
+
+  let cleanName = user.name ? user.name.split("إفراز")[0].trim() : "عضو الجمعية";
+  let waText = "مرحباً إدارة الجمعية، أنا العضو: " + cleanName + "\nرقم العضوية: " + user.membership_id + "\nأود إرسال صورة وصل مالي قمت بدفعه مؤخراً";
+
+  document.getElementById("content").innerHTML = `
+    <div class="alert">✅ أهلاً بك كعضو مسجل<br><span style="font-size:13px; font-weight:normal;">${user.name}</span></div>
+    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</span><span class="stat-value">${user.total}</span></div>
+    <div class="user-stat"><span class="stat-label">💵 إجمالي مدفوعاتك المسجلة</span><span class="stat-value" style="color:#4effb0">${user.paid}</span></div>
+    <div class="user-stat"><span class="stat-label">📉 الرصيد المتبقي المستحق</span><span class="stat-value" style="color:#ff8f8f">${user.remaining}</span></div>
+    <hr class="divider">
+    <h4 style="margin-bottom:8px; font-size:14px; text-align:right; color:var(--accent);">📷 إرسال إشعار الوصل المالي</h4>
+    <a href="https://wa.me/963980049054?text=${encodeURIComponent(waText)}" target="_blank" style="text-decoration:none;">
+      <button class="whatsapp" type="button">📤 إرسال صورة الوصل المالي عبر واتساب</button>
+    </a>
+    <hr class="divider">
+    <h4 style="margin-bottom:10px; font-size:14px;">🔑 أمان الحساب (تغيير كلمة السر)</h4>
+    <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
+    <button class="admin" type="button" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
+    <p id="msg" style="font-size:13px; color:#4effb0; margin-top:6px;"></p>
+    <button class="logout" type="button" onclick="logout()">🚪 تسجيل الخروج من الحساب</button>
+  `;
+}
+
+function changePassword(userId){
+  let newPass = document.getElementById("newPass").value.trim();
+  let msg = document.getElementById("msg");
+  if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
+  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
+
+  fetch(API_URL, { method:"POST", body:JSON.stringify({ id:userId, password:newPass }) })
+  .then(() => {
+    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
+    document.getElementById("newPass").value = "";
+  })
+  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
+}
+
+function logout(){ localStorage.removeItem("currentUser"); location.reload(); }
+</script>
+</body>
+</html>
+
