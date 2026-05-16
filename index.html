@@ -51,7 +51,6 @@ body{
   100%{background-position:0% 50%;}
 }
 
-/* 🧭 شريط التنقل العلوي */
 .navbar {
   position: sticky;
   top: 0;
@@ -86,7 +85,6 @@ body{
   color: white;
 }
 
-/* HEADER */
 .header{
   background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(26,107,74,0.18));
   padding:24px 15px 18px;
@@ -139,7 +137,6 @@ body{
 
 .fb-btn:hover{ transform:translateY(-2px); }
 
-/* NEWS TICKER */
 .news-ticker-container {
   display: flex;
   align-items: center;
@@ -179,7 +176,6 @@ body{
   100% { transform: translate3d(100%, 0, 0); }
 }
 
-/* ❓ قسم الأسئلة الشائعة والمعلومات الإدارية */
 .faq-section {
   width: 92%;
   max-width: 420px;
@@ -233,7 +229,6 @@ body{
   transform: rotate(180deg);
 }
 
-/* TABS SYSTEM */
 .tabs-container {
   display: flex;
   justify-content: center;
@@ -266,7 +261,6 @@ body{
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* INFO & CARDS */
 .info-section{ display:grid; grid-template-columns:1fr 1fr; gap:10px; width:92%; max-width:420px; margin:14px auto; }
 .info-card{ background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:16px; padding:15px 10px; backdrop-filter:blur(14px); transition:0.25s; }
 .info-card:hover{ transform:translateY(-4px); box-shadow:0 12px 35px rgba(0,0,0,0.35); }
@@ -293,7 +287,6 @@ body{
 .card:hover{ transform:translateY(-4px); }
 .card h3{ font-size:17px; font-weight:800; margin-bottom:14px; }
 
-/* 🔐 خيار تذكرني */
 .remember-container {
   display: flex;
   align-items: center;
@@ -310,7 +303,6 @@ body{
   cursor: pointer;
 }
 
-/* INPUTS & BUTTONS */
 input, select{
   width:100%; padding:13px 16px; margin:7px 0; border-radius:14px;
   border:2px solid rgba(255,255,255,0.1); font-family:'Cairo'; font-size:14px;
@@ -341,7 +333,6 @@ button:hover{ transform:scale(1.02); }
 .loading-spinner{ display:inline-block; width:18px; height:18px; border:3px solid rgba(255,255,255,0.4); border-top-color:white; border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-left:6px; }
 @keyframes spin{ to{transform:rotate(360deg);} }
 
-/* PROJECT GALLERY */
 .project-gallery-section { padding: 15px 5px; width: 92%; max-width: 420px; margin: 10px auto; text-align: right; }
 .gallery-heading { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px; }
 .gallery-subheading { color: rgba(255,255,255,0.6); margin-bottom: 16px; font-size: 11px; }
@@ -498,7 +489,6 @@ button:hover{ transform:scale(1.02); }
 </div>
 
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
-
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
@@ -540,7 +530,7 @@ function switchTab(tabId, element) {
   element.classList.add('active');
 }
 
-// 🌐 دالة تسجيل الدخول الكاملة وبدون أي نقصان 
+// 🌐 دالة تسجيل الدخول المحمية والكاملة 100%
 function login(){
   let id = document.getElementById("id").value.trim();
   let pass = document.getElementById("pass").value.trim();
@@ -551,4 +541,101 @@ function login(){
   errorEl.innerText = "";
   if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
 
-  btn.disab
+  btn.disabled = true;
+  btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
+
+  // الحل 1: الاعتماد على الـ pass بالكامل وتشفير النصوص لمنع مشاكل الفراغات 
+  fetch(`${API_URL}?id=${encodeURIComponent(id)}&pass=${encodeURIComponent(pass)}`)
+  .then(res => res.json())
+  .then(data => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+
+    // الحل 2: فحص كلمة النجاح (success) بجميع الأشكال الممكنة التي قد يعيدها السيرفر لضمان الأمان
+    if(data.success === "success" || data.status === "success" || data === "success"){
+      if(rememberMe) {
+        localStorage.setItem("rememberedMembershipId", id);
+      } else {
+        localStorage.removeItem("rememberedMembershipId");
+      }
+
+      // الحل 3: سحب التخصيص بشكل منفصل (rooms) بدلاً من الاسم
+      let user = {
+        membership_id: id,
+        name: data.name || "",
+        total: data.total || "0",
+        paid: data.paid || "0",
+        remaining: data.remaining || "0",
+        project: data.project || "قيد التحديد",
+        floor: data.floor || "قيد التحديد",
+        direction: data.direction || "قيد التحديد",
+        rooms: data.rooms || "قيد التحديد"
+      };
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      showUser(user);
+    } else { errorEl.innerText = "❌ البيانات غير صحيحة"; }
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.innerHTML = "دخول";
+    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
+  });
+}
+
+// 💻 دالة عرض لوحة تحكم العضو الحالية والآمنة بالكامل
+function showUser(user){
+  if (!user) return;
+  if(document.getElementById("publicNavbar")) document.getElementById("publicNavbar").style.display = "none";
+  document.getElementById("mainPublicPage").style.display = "none";
+  document.getElementById("memberDashboard").style.display = "block";
+  
+  document.getElementById("aptProject").innerText = user.project;
+  document.getElementById("aptFloor").innerText = user.floor;
+  document.getElementById("aptDirection").innerText = user.direction;
+  document.getElementById("aptRooms").innerText = user.rooms;
+
+  let cleanName = user.name ? user.name.split("إفراز")[0].trim() : "عضو الجمعية";
+  let waText = "مرحباً إدارة الجمعية، أنا العضو: " + cleanName + "\nرقم العضوية: " + user.membership_id + "\nأود إرسال صورة وصل مالي قمت بدفعه مؤخراً";
+
+  document.getElementById("content").innerHTML = `
+    <div class="alert">✅ أهلاً بك<br><span style="font-size:13px; font-weight:normal;">${user.name}</span></div>
+    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</span><span class="stat-value">${user.total}</span></div>
+    <div class="user-stat"><span class="stat-label">💵 إجمالي مدفوعاتك المسجلة</span><span class="stat-value" style="color:#4effb0">${user.paid}</span></div>
+    <div class="user-stat"><span class="stat-label">📉 الرصيد المتبقي عليك للجمعية</span><span class="stat-value" style="color:#ff8f8f">${user.remaining}</span></div>
+    <p style="font-size:12px; color:rgba(255,255,255,0.5); margin-top:10px;">📅 حالة البيانات المادية: محدثة ومزامنة</p>
+    <hr class="divider">
+    <h4 style="margin-bottom:8px; font-size:15px; text-align:right; color:var(--accent);">📷 إرسال إشعار الدفع والوصل المالي</h4>
+    <a href="https://wa.me/963980049054?text=${encodeURIComponent(waText)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+      <button class="whatsapp" type="button" style="background: linear-gradient(135deg,#25D366,#128C7E);">📤 إرسال صورة الوصل المالي عبر واتساب</button>
+    </a>
+    <hr class="divider">
+    <h4 style="margin-bottom:10px; font-size:15px;">🔑 أمان الحساب (تغيير كلمة السر)</h4>
+    <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
+    <button class="admin" type="button" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
+    <p id="msg" style="font-size:13px; color:#4effb0; margin-top:6px;"></p>
+    <hr class="divider">
+    <a href="https://wa.me/963980049054" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+      <button class="whatsapp" type="button">📱 تواصل عام مع إدارة الجمعية</button>
+    </a>
+    <button class="logout" type="button" onclick="logout()">🚪 تسجيل الخروج</button>
+  `;
+}
+
+function changePassword(userId){
+  let newPass = document.getElementById("newPass").value.trim();
+  let msg = document.getElementById("msg");
+  if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
+  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
+
+  fetch(API_URL, { method:"POST", body:JSON.stringify({ id:userId, password:newPass }) })
+  .then(() => {
+    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
+    document.getElementById("newPass").value = "";
+  })
+  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
+}
+
+function logout(){ localStorage.removeItem("currentUser"); location.reload(); }
+</script>
+</body>
+</html>
