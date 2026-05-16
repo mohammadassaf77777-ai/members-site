@@ -12,45 +12,39 @@
 body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; background: linear-gradient(-45deg, #0d1f2d, #1a3a2a, #162535, #0d1f2d); background-size:400% 400%; animation:gradientMove 12s ease infinite; color:white; min-height:100vh; overflow-x: hidden; }
 @keyframes gradientMove{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 
-/* الهيدر العلوي الثابت مع زر الثلاث شخوط الظاهر دائماً */
 .navbar { position: sticky; top: 0; z-index: 1000; background: rgba(13, 31, 45, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
 .nav-links-right { display: flex; gap: 8px; }
 .nav-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 8px; transition: 0.25s; }
 .nav-link:hover { color: white; background: rgba(255, 255, 255, 0.1); }
-.nav-link.active { color: white; background: rgba(255, 255, 255, 0.15); }
-
-/* زر الثلاث شخوط - ظاهر دائماً الآن */
 .menu-toggle-btn { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 5px 10px; width: auto; margin: 0; display: block; }
 
-/* القائمة الجانبية (Sidebar) التي تفتح من اليمين */
 .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #0d1f2d; box-shadow: -5px 0 25px rgba(0,0,0,0.5); z-index: 2000; transition: 0.3s ease; padding: 20px; text-align: right; border-left: 1px solid rgba(255,255,255,0.08); }
 .sidebar.open { right: 0; }
 .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
 .sidebar-header h3 { font-size: 16px; color: var(--primary-light); }
 .close-sidebar-btn { background: none; border: none; color: #ff8f8f; font-size: 22px; cursor: pointer; width: auto; padding: 0; margin: 0; }
 
-/* أزرار التنقل داخل القائمة الجانبية */
 .sidebar-menu { display: flex; flex-direction: column; gap: 10px; }
 .sidebar-btn { width: 100%; text-align: right; padding: 12px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border-radius: 12px; font-family: 'Cairo'; font-size: 14px; cursor: pointer; transition: 0.25s; display: flex; align-items: center; gap: 10px; margin: 0; }
 .sidebar-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 .sidebar-btn.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border-color: transparent; }
+.logout-btn-sidebar { color: #ff8f8f !important; margin-top: 20px; background: rgba(192, 57, 43, 0.1) !important; display: none; }
 
-/* خلفية معتمة تظهر عند فتح القائمة لإغلاقها عند الضغط في أي مكان */
 .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; backdrop-filter: blur(3px); }
 .sidebar-overlay.show { display: block; }
 
-/* الأقسام والمحتوى */
-.tab-content { display: none; } 
-.tab-content.active { display: block; }
+.tab-content { display: none; } .tab-content.active { display: block; }
 
-.card{ background:rgba(255,255,255,0.1); padding:22px 18px; border-radius:24px; width:92%; max-width:420px; margin:14px auto; box-shadow:var(--shadow); border:1px solid rgba(255,255,255,0.12); }
+.card{ background:rgba(255,255,255,0.1); padding:22px 18px; border-radius:24px; width:92%; max-width:420px; margin:14px auto; box-shadow:var(--shadow); border:1px solid rgba(255,255,255,0.12); position: relative; }
 input{ width:100%; padding:13px 16px; margin:7px 0; border-radius:14px; border:2px solid rgba(255,255,255,0.1); font-family:'Cairo'; background:rgba(255,255,255,0.08); color:white; }
 button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px; font-family:'Cairo'; font-size:14px; font-weight:700; cursor:pointer; }
 .login{ background: linear-gradient(135deg, var(--primary), var(--primary-light)); color:white; }
-.logout-btn-sidebar { color: #ff8f8f !important; margin-top: 20px; background: rgba(192, 57, 43, 0.1) !important; display: none; /* تظهر فقط بعد تسجيل الدخول */ }
-.logout{ background: linear-gradient(135deg,#c0392b,#e74c3c); color:white; margin-top:25px;}
 .admin{ background: linear-gradient(135deg,#e67e22,#f39c12); color:white; }
 .whatsapp{ background: linear-gradient(135deg,#128C7E,#25D366); color:white; }
+
+.forgot-link { display: inline-block; margin-top: 10px; font-size: 12px; color: var(--accent); text-decoration: none; font-weight: bold; cursor: pointer; }
+.security-badge { background: rgba(240, 165, 0, 0.15); border: 1px dashed var(--accent); padding: 12px; border-radius: 14px; margin-top: 15px; font-size: 13px; text-align: right; }
+.timer-text { font-size: 12px; color: #ff8f8f; margin-top: 5px; font-weight: bold; }
 
 .remember-container { display: flex; align-items: center; gap: 8px; margin: 10px 2px; font-size: 12px; color: rgba(255, 255, 255, 0.7); cursor: pointer; }
 .user-stat { display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:rgba(255,255,255,0.08); border-radius:12px; margin:7px 0; font-size:14px; }
@@ -95,17 +89,40 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 </div>
 
 <div class="card" id="loginBox" style="margin-top:40px;">
-  <h3>🔐 تسجيل دخول الأعضاء</h3>
-  <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية الخاص بك للاطلاع على البيانات المادية</p>
-  <input id="id" placeholder="رقم العضوية" inputmode="numeric">
-  <input id="pass" type="password" placeholder="كلمة السر">
-  
-  <label class="remember-container">
-    <input type="checkbox" id="rememberMe"> تذكر رقم العضوية على هذا الجهاز
-  </label>
+  <div id="loginFormSection">
+    <h3>🔐 تسجيل دخول الأعضاء</h3>
+    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية للاطلاع على البيانات المادية</p>
+    <input id="id" placeholder="رقم العضوية" inputmode="numeric">
+    <input id="pass" type="password" placeholder="كلمة السر">
+    
+    <label class="remember-container">
+      <input type="checkbox" id="rememberMe"> تذكر رقم العضوية على هذا الجهاز
+    </label>
 
-  <button class="login" id="loginBtn" onclick="login()">دخول</button>
-  <p id="error" style="color:#ff8f8f; font-size:13px; margin-top:8px; font-weight: bold;"></p>
+    <button class="login" id="loginBtn" onclick="login()">دخول</button>
+    <span class="forgot-link" onclick="showForgotSection(true)">هل نسيت كلمة السر؟ 🤔</span>
+    <p id="error" style="color:#ff8f8f; font-size:13px; margin-top:8px; font-weight: bold;"></p>
+  </div>
+
+  <div id="forgotFormSection" style="display: none;">
+    <h3>🔑 استعادة كلمة السر</h3>
+    <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">أدخل رقم عضويتك لإرسال كود التحقق إلى بريدك الإلكتروني المربوط</p>
+    <input id="forgotId" placeholder="أدخل رقم العضوية" inputmode="numeric">
+    
+    <div id="forgotOtpZone" style="display: none;">
+      <p style="font-size: 12px; color: #4effb0;" id="forgotMaskedMsg"></p>
+      <input id="forgotOtp" placeholder="أدخل كود التحقق (6 أرقام)" inputmode="numeric">
+      <div class="timer-text" id="forgotTimer"></div>
+    </div>
+
+    <div id="forgotNewPassZone" style="display: none;">
+      <input id="forgotNewPass" type="password" placeholder="كلمة السر الجديدة">
+    </div>
+
+    <button class="login" id="forgotMainBtn" onclick="handleForgotFlow()">إرسال كود التحقق</button>
+    <span class="forgot-link" style="color:#ff8f8f;" onclick="showForgotSection(false)">رجوع لتسجيل الدخول</span>
+    <p id="forgotError" style="color:#ff8f8f; font-size:13px; margin-top:8px; font-weight: bold;"></p>
+  </div>
 </div>
 
 <div id="memberDashboard" style="display: none; margin-top:20px;">
@@ -127,16 +144,17 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxZAgEhSCXgf8zdhvJX5LMz7kDU5-8dAerUmMz3YIMhwVNXRfeDkGGqBEEPbh9RU-lEiw/exec";
-let isLoggedIn = false; // متغير لتحديد حالة تسجيل الدخول
+// تم وضع رابط السكريبت الجديد والمحدث الخاص بك هنا بنجاح
+const API_URL = "https://script.google.com/macros/s/AKfycbxaN5jwedsneXGb4DQ3M4bHqaQgoex7R5pK8G00QPmZZpEevi5KwEvQaGgf2acrh5uMuw/exec";
+let isLoggedIn = false;
+let globalUserData = null;
+let forgotStep = 1; 
+let timerInterval = null;
 
 window.onload = function(){
   try {
     let savedUser = localStorage.getItem("currentUser");
-    if(savedUser) { 
-      showUser(JSON.parse(savedUser)); 
-      return; 
-    }
+    if(savedUser) { showUser(JSON.parse(savedUser)); return; }
   } catch(e) { localStorage.removeItem("currentUser"); }
 
   let rememberedId = localStorage.getItem("rememberedMembershipId");
@@ -146,42 +164,126 @@ window.onload = function(){
   }
 };
 
-// فتح وإغلاق القائمة الجانبية
 function toggleSidebar(open) {
   let sidebar = document.getElementById('sidebarMenu');
   let overlay = document.getElementById('sidebarOverlay');
-  if (open) {
-    sidebar.classList.add('open');
-    overlay.classList.add('show');
-  } else {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('show');
-  }
+  if (open) { sidebar.classList.add('open'); overlay.classList.add('show'); } 
+  else { sidebar.classList.remove('open'); overlay.classList.remove('show'); }
 }
 
-// التنقل الذكي بين الأقسام من القائمة الجانبية
 function switchSection(tabId, element) {
-  toggleSidebar(false); // إغلاق القائمة أولاً
-
-  // إذا لم يسجل العضو دخوله بعد وحاول الانتقال للأقسام
+  toggleSidebar(false);
   if (!isLoggedIn) {
-    let errorEl = document.getElementById("error");
-    errorEl.innerText = "⚠️ يرجى تسجيل الدخول أولاً لتتمكن من تصفح هذا القسم";
-    
-    // عمل تأثير اهتزاز أو تركيز خفيف على صندوق الدخول لتنبيهه
+    document.getElementById("error").innerText = "⚠️ يرجى تسجيل الدخول أولاً لتتمكن من تصفح هذا القسم";
+    showForgotSection(false);
     document.getElementById("id").focus();
     return;
   }
-
-  // إذا كان العضو مسجلاً، نقوم بالتبديل بشكل طبيعي
   let contents = document.getElementsByClassName('tab-content');
   for (let i = 0; i < contents.length; i++) contents[i].classList.remove('active');
-  
   let buttons = document.getElementsByClassName('sidebar-btn');
   for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove('active');
-  
   document.getElementById(tabId).classList.add('active');
   element.classList.add('active');
+}
+
+function startTimer(durationInSeconds, displayElement, onTimeout) {
+  clearInterval(timerInterval);
+  let timer = durationInSeconds;
+  timerInterval = setInterval(function () {
+    let minutes = parseInt(timer / 60, 10);
+    let seconds = parseInt(timer % 60, 10);
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+    displayElement.innerText = "⏳ تنتهي صلاحية الكود خلال: " + minutes + ":" + seconds;
+    if (--timer < 0) {
+      clearInterval(timerInterval);
+      onTimeout();
+    }
+  }, 1000);
+}
+
+function showForgotSection(show) {
+  document.getElementById("error").innerText = "";
+  document.getElementById("forgotError").innerText = "";
+  clearInterval(timerInterval);
+  if(show) {
+    document.getElementById("loginFormSection").style.display = "none";
+    document.getElementById("forgotFormSection").style.display = "block";
+    forgotStep = 1;
+    document.getElementById("forgotOtpZone").style.display = "none";
+    document.getElementById("forgotNewPassZone").style.display = "none";
+    document.getElementById("forgotMainBtn").innerText = "إرسال كود التحقق";
+  } else {
+    document.getElementById("loginFormSection").style.display = "block";
+    document.getElementById("forgotFormSection").style.display = "none";
+  }
+}
+
+function handleForgotFlow() {
+  let id = document.getElementById("forgotId").value.trim();
+  let errorEl = document.getElementById("forgotError");
+  let btn = document.getElementById("forgotMainBtn");
+
+  errorEl.innerText = "";
+  if (!id) { errorEl.innerText = "⚠️ يرجى كتابة رقم العضوية أولاً"; return; }
+
+  if (forgotStep === 1) {
+    btn.disabled = true; btn.innerHTML = 'جاري البحث وإرسال الكود <span class="loading-spinner"></span>';
+    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "send_otp", id: id, isForgot: true }) })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      if (data.status === "otp_sent") {
+        forgotStep = 2;
+        document.getElementById("forgotOtpZone").style.display = "block";
+        document.getElementById("forgotMaskedMsg").innerText = "📧 تم إرسال الكود إلى بريدك المربوط: " + data.maskedEmail;
+        btn.innerText = "تأكيد كود التحقق";
+        
+        startTimer(300, document.getElementById("forgotTimer"), function() {
+          errorEl.innerText = "❌ انتهت صلاحية الكود. يرجى إعادة المحاولة من جديد.";
+          showForgotSection(true);
+        });
+      } else {
+        errorEl.innerText = data.message === "no_email_linked" ? "❌ هذا الحساب لم يتم ربطه ببريد إلكتروني من قبل مسبقاً لحمايته" : "❌ رقم العضوية غير صحيح";
+      }
+    }).catch(() => { btn.disabled = false; btn.innerText = "إرسال كود التحقق"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
+  } 
+  else if (forgotStep === 2) {
+    let otp = document.getElementById("forgotOtp").value.trim();
+    if (!otp) { errorEl.innerText = "⚠️ أدخل كود التحقق"; return; }
+    btn.disabled = true; btn.innerHTML = 'جاري الفحص <span class="loading-spinner"></span>';
+    
+    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "verify_otp", id: id, otp: otp, isForgot: true }) })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      if (data.status === "verified") {
+        clearInterval(timerInterval);
+        forgotStep = 3;
+        document.getElementById("forgotOtpZone").style.display = "none";
+        document.getElementById("forgotNewPassZone").style.display = "block";
+        btn.innerText = "حفظ كلمة السر الجديدة";
+      } else {
+        errorEl.innerText = data.message === "expired" ? "❌ انتهت صلاحية الكود (5 دقائق)" : "❌ كود التحقق غير صحيح";
+      }
+    }).catch(() => { btn.disabled = false; btn.innerText = "تأكيد كود التحقق"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
+  } 
+  else if (forgotStep === 3) {
+    let newPass = document.getElementById("forgotNewPass").value.trim();
+    if (!newPass) { errorEl.innerText = "⚠️ يرجى كتابة كلمة السر الجديدة"; return; }
+    btn.disabled = true; btn.innerHTML = 'جاري الحفظ والتعيين <span class="loading-spinner"></span>';
+    
+    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reset_password", id: id, password: newPass }) })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      if (data.status === "success") {
+        alert("✅ تم تعيين كلمة السر الجديدة بنجاح! يمكنك الآن تسجيل الدخول بها.");
+        showForgotSection(false);
+      } else { errorEl.innerText = "❌ فشل تعيين كلمة السر"; }
+    }).catch(() => { btn.disabled = false; btn.innerText = "حفظ كلمة السر الجديدة"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
+  }
 }
 
 function login(){
@@ -193,62 +295,38 @@ function login(){
 
   errorEl.innerText = "";
   if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
-
-  btn.disabled = true;
-  btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
+  btn.disabled = true; btn.innerHTML = 'جاري التحقق <span class="loading-spinner"></span>';
 
   fetch(`${API_URL}?id=${encodeURIComponent(id)}&pass=${encodeURIComponent(pass)}`)
   .then(res => res.json())
   .then(data => {
-    btn.disabled = false;
-    btn.innerHTML = "دخول";
-
+    btn.disabled = false; btn.innerHTML = "دخول";
     if(data.status === "success"){
       if(rememberMe) { localStorage.setItem("rememberedMembershipId", id); } 
       else { localStorage.removeItem("rememberedMembershipId"); }
-
       let cleanId = id.split('.')[0];
-
       let user = {
-        membership_id: cleanId,
-        name: data.name || "",
-        total: data.total || "0",
-        paid: data.paid || "0",
-        remaining: data.remaining || "0",
-        project: data.project || "قيد التحديد",
-        floor: data.floor || "قيد التحديد",
-        direction: data.direction || "قيد التحديد",
-        rooms: data.rooms || "قيد التحديد"
+        membership_id: cleanId, name: data.name || "", total: data.total || "0", paid: data.paid || "0", remaining: data.remaining || "0",
+        project: data.project || "قيد التحديد", floor: data.floor || "قيد التحديد", direction: data.direction || "قيد التحديد", rooms: data.rooms || "قيد التحديد", email: data.email || ""
       };
       localStorage.setItem("currentUser", JSON.stringify(user));
       showUser(user);
-    } else { 
-      if (data.debug === "wrong_password") {
-        errorEl.innerText = "❌ كلمة السر غير صحيحة لهذا الحساب";
-      } else if (data.debug === "id_not_found") {
-        errorEl.innerText = "❌ رقم العضوية هذا غير موجود في الجدول";
-      } else if (data.debug === "sheet_not_found") {
-        errorEl.innerText = "⚠️ خطأ بالسيرفر: لم يتم العثور على شيت باسم Members";
-      } else {
-        errorEl.innerText = "❌ البيانات غير صحيحة";
-      }
+    } else {
+      if (data.debug === "wrong_password") errorEl.innerText = "❌ كلمة السر غير صحيحة لهذا الحساب";
+      else if (data.debug === "id_not_found") errorEl.innerText = "❌ رقم العضوية هذا غير موجود في الجدول";
+      else errorEl.innerText = "❌ البيانات غير صحيحة";
     }
-  })
-  .catch((err) => {
-    btn.disabled = false;
-    btn.innerHTML = "دخول";
-    errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
-    console.error(err);
-  });
+  }).catch(() => { btn.disabled = false; btn.innerHTML = "دخول"; errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر"; });
 }
 
 function showUser(user){
   if (!user) return;
-  isLoggedIn = true; // تعيين حالة الدخول لـ true للسماح بالتنقل
+  isLoggedIn = true;
+  globalUserData = user;
   
   document.getElementById("loginBox").style.display = "none";
   document.getElementById("memberDashboard").style.display = "block";
-  document.getElementById("sidebarLogoutBtn").style.display = "flex"; // إظهار زر الخروج داخل السايدبار
+  document.getElementById("sidebarLogoutBtn").style.display = "flex";
   
   document.getElementById("aptProject").innerText = user.project;
   document.getElementById("aptFloor").innerText = user.floor;
@@ -258,43 +336,24 @@ function showUser(user){
   let cleanName = user.name ? user.name.split("إفراز")[0].trim() : "عضو الجمعية";
   let waText = "مرحباً إدارة الجمعية، أنا العضو: " + cleanName + "\nرقم العضوية: " + user.membership_id + "\nأود إرسال صورة وصل مالي قمت بدفعه مؤخراً";
 
+  let emailSectionHtml = "";
+  if (user.email === "") {
+    emailSectionHtml = `
+      <div class="security-badge" id="emailBindZone">
+        <h5 style="color:var(--accent); margin-bottom:5px;"><i class="fas fa-shield-alt"></i> ميزة أمان اختيارية: تأمين الحساب</h5>
+        <p style="font-size:11px; color:rgba(255,255,255,0.7); margin-bottom:8px;">اربط إيميلك لتتمكن من استعادة كلمة السر تلقائياً واستلام إشعارات الأمان.</p>
+        <input id="bindEmailInput" placeholder="أدخل بريدك الإلكتروني (Gmail)">
+        <div id="bindOtpZone" style="display:none;">
+          <input id="bindOtpInput" placeholder="أدخل كود التحقق" inputmode="numeric">
+          <div class="timer-text" id="bindTimer"></div>
+        </div>
+        <button class="login" style="padding:8px; font-size:12px;" id="bindEmailBtn" onclick="handleEmailBinding()">ربط وتأكيد البريد</button>
+        <p id="bindError" style="color:#ff8f8f; font-size:11px; margin-top:4px; font-weight:bold;"></p>
+      </div>`;
+  } else {
+    emailSectionHtml = `<div style="color:#4effb0; font-size:12px; margin-top:10px; text-align:right;"><i class="fas fa-check-circle"></i> الحساب محمي بالبريد: ${user.email.replace(/(..)(.*)(@.*)/, "$1***$3")}</div>`;
+  }
+
   document.getElementById("content").innerHTML = `
     <div class="alert">✅ أهلاً بك كعضو مسجل<br><span style="font-size:13px; font-weight:normal;">${user.name}</span></div>
-    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</span><span class="stat-value">${user.total}</span></div>
-    <div class="user-stat"><span class="stat-label">💵 إجمالي مدفوعاتك المسجلة</span><span class="stat-value" style="color:#4effb0">${user.paid}</span></div>
-    <div class="user-stat"><span class="stat-label">📉 الرصيد المتبقي المستحق</span><span class="stat-value" style="color:#ff8f8f">${user.remaining}</span></div>
-    <hr class="divider">
-    <h4 style="margin-bottom:8px; font-size:14px; text-align:right; color:var(--accent);">📷 إرسال إشعار الوصل المالي</h4>
-    <a href="https://wa.me/963980049054?text=${encodeURIComponent(waText)}" target="_blank" style="text-decoration:none;">
-      <button class="whatsapp" type="button">📤 إرسال صورة الوصل المالي عبر واتساب</button>
-    </a>
-    <hr class="divider">
-    <h4 style="margin-bottom:10px; font-size:14px;">🔑 أمان الحساب (تغيير كلمة السر)</h4>
-    <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
-    <button class="admin" type="button" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
-    <p id="msg" style="font-size:13px; color:#4effb0; margin-top:6px;"></p>
-  `;
-}
-
-function changePassword(userId){
-  let newPass = document.getElementById("newPass").value.trim();
-  let msg = document.getElementById("msg");
-  if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
-  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
-
-  fetch(API_URL, { method:"POST", body:JSON.stringify({ id:userId, password:newPass }) })
-  .then(() => {
-    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
-    document.getElementById("newPass").value = "";
-  })
-  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
-}
-
-function logout(){ 
-  isLoggedIn = false;
-  localStorage.removeItem("currentUser"); 
-  location.reload(); 
-}
-</script>
-</body>
-</html>
+    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</sp
