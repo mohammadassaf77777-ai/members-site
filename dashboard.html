@@ -144,7 +144,6 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
 
 <script>
-// تم وضع رابط السكريبت الجديد والمحدث الخاص بك هنا بنجاح
 const API_URL = "https://script.google.com/macros/s/AKfycbxaN5jwedsneXGb4DQ3M4bHqaQgoex7R5pK8G00QPmZZpEevi5KwEvQaGgf2acrh5uMuw/exec";
 let isLoggedIn = false;
 let globalUserData = null;
@@ -356,4 +355,91 @@ function showUser(user){
 
   document.getElementById("content").innerHTML = `
     <div class="alert">✅ أهلاً بك كعضو مسجل<br><span style="font-size:13px; font-weight:normal;">${user.name}</span></div>
-    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</sp
+    <div class="user-stat"><span class="stat-label">💰 المبلغ الإجمالي المطلوب</span><span class="stat-value">${user.total}</span></div>
+    <div class="user-stat"><span class="stat-label">💵 إجمالي مدفوعاتك المسجلة</span><span class="stat-value" style="color:#4effb0">${user.paid}</span></div>
+    <div class="user-stat"><span class="stat-label">📉 الرصيد المتبقي المستحق</span><span class="stat-value" style="color:#ff8f8f">${user.remaining}</span></div>
+    ${emailSectionHtml}
+    <hr class="divider">
+    <h4 style="margin-bottom:8px; font-size:14px; text-align:right; color:var(--accent);">📷 إرسال إشعار الوصل المالي</h4>
+    <a href="https://wa.me/963980049054?text=${encodeURIComponent(waText)}" target="_blank" style="text-decoration:none;">
+      <button class="whatsapp" type="button">📤 إرسال صورة الوصل المالي عبر واتساب</button>
+    </a>
+    <hr class="divider">
+    <h4 style="margin-bottom:10px; font-size:14px;">🔑 تغيير كلمة السر الحالية</h4>
+    <input id="newPass" type="password" placeholder="كلمة السر الجديدة">
+    <button class="admin" type="button" onclick="changePassword('${user.membership_id}')">💾 حفظ كلمة السر</button>
+    <p id="msg" style="font-size:13px; color:#4effb0; margin-top:6px;"></p>
+  `;
+}
+
+let bindStep = 1;
+function handleEmailBinding() {
+  let email = document.getElementById("bindEmailInput").value.trim();
+  let errorEl = document.getElementById("bindError");
+  let btn = document.getElementById("bindEmailBtn");
+  
+  errorEl.innerText = "";
+  if (!email) { errorEl.innerText = "⚠️ يرجى كتابة الإيميل أولاً"; return; }
+
+  if (bindStep === 1) {
+    btn.disabled = true; btn.innerText = "جاري إرسال الكود...";
+    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "send_otp", id: globalUserData.membership_id, email: email, isForgot: false }) })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      if (data.status === "otp_sent") {
+        bindStep = 2;
+        document.getElementById("bindOtpZone").style.display = "block";
+        document.getElementById("bindEmailInput").disabled = true;
+        btn.innerText = "تأكيد الكود والربط";
+        
+        startTimer(300, document.getElementById("bindTimer"), function() {
+          errorEl.innerText = "❌ انتهت صلاحية الكود. أعد المحاولة.";
+          bindStep = 1;
+          document.getElementById("bindOtpZone").style.display = "none";
+          document.getElementById("bindEmailInput").disabled = false;
+          btn.innerText = "ربط وتأكيد البريد";
+        });
+      }
+    }).catch(() => { btn.disabled = false; btn.innerText = "ربط وتأكيد البريد"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
+  } 
+  else if (bindStep === 2) {
+    let otp = document.getElementById("bindOtpInput").value.trim();
+    if (!otp) { errorEl.innerText = "⚠️ أدخل كود التحقق المعطى"; return; }
+    btn.disabled = true; btn.innerText = "جاري التوثيق...";
+    
+    fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "verify_otp", id: globalUserData.membership_id, otp: otp, email: email, isForgot: false }) })
+    .then(res => res.json())
+    .then(data => {
+      btn.disabled = false;
+      if (data.status === "verified") {
+        clearInterval(timerInterval);
+        alert("✅ تم ربط وتأمين حسابك بالإيميل بنجاح!");
+        globalUserData.email = email;
+        localStorage.setItem("currentUser", JSON.stringify(globalUserData));
+        showUser(globalUserData);
+      } else {
+        errorEl.innerText = data.message === "expired" ? "❌ انتهت صلاحية الكود" : "❌ كود التحقق غير صحيح";
+      }
+    }).catch(() => { btn.disabled = false; btn.innerText = "تأكيد الكود والربط"; errorEl.innerText = "⚠️ خطأ في الاتصال"; });
+  }
+}
+
+function changePassword(userId){
+  let newPass = document.getElementById("newPass").value.trim();
+  let msg = document.getElementById("msg");
+  if(!newPass){ msg.style.color = "#ff8f8f"; msg.innerText = "⚠️ أدخل كلمة السر"; return; }
+  msg.style.color = "rgba(255,255,255,0.6)"; msg.innerText = "جاري الحفظ...";
+
+  fetch(API_URL, { method:"POST", body:JSON.stringify({ action: "reset_password", id:userId, password:newPass }) })
+  .then(() => {
+    msg.style.color = "#4effb0"; msg.innerText = "✅ تم تغيير كلمة السر";
+    document.getElementById("newPass").value = "";
+  })
+  .catch(() => { msg.style.color = "#ff8f8f"; msg.innerText = "❌ فشل الحفظ"; });
+}
+
+function logout(){ isLoggedIn = false; globalUserData = null; clearInterval(timerInterval); localStorage.removeItem("currentUser"); location.reload(); }
+</script>
+</body>
+</html>
