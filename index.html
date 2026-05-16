@@ -51,7 +51,7 @@ body{
   100%{background-position:0% 50%;}
 }
 
-/* 🧭 شريط التنقل العالمي المطور */
+/* 🧭 شريط التنقل */
 .navbar {
   position: sticky;
   top: 0;
@@ -162,7 +162,7 @@ body{
   100% { transform: translate3d(100%, 0, 0); }
 }
 
-/* 📊 قسم الإحصائيات العالمي */
+/* 📊 قسم الإحصائيات */
 .metrics-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -189,7 +189,7 @@ body{
   margin-top: 2px;
 }
 
-/* ❓ قسم الأسئلة الشائعة والمعلومات المنسدلة */
+/* ❓ قسم الأسئلة الشائعة */
 .faq-section {
   width: 92%;
   max-width: 420px;
@@ -244,10 +244,10 @@ body{
   transform: rotate(180deg);
 }
 
-/* TABS SYSTEM (داخل لوحة التحكم) */
+/* TABS SYSTEM */
 .tabs-container {
   display: flex;
-  justify-content: center;
+  justify(content): center;
   gap: 8px;
   width: 92%;
   max-width: 420px;
@@ -365,7 +365,7 @@ button:hover{ transform:scale(1.02); }
   <div class="nav-link" onclick="scrollToSec('headerSec')">الرئيسية</div>
   <div class="nav-link" onclick="scrollToSec('gallerySec')">المشاريع</div>
   <div class="nav-link" onclick="scrollToSec('faqSec')">دليل الخدمات</div>
-  <div class="nav-link highlight" onclick="scrollToSec('loginSec')">حساب العضو 🔐</div>
+  <div class="nav-link highlight" onclick="scrollToSec('loginBox')">حساب العضو 🔐</div>
 </div>
 
 <div class="header" id="headerSec">
@@ -441,7 +441,7 @@ button:hover{ transform:scale(1.02); }
     <div class="info-card"><div class="icon">📍</div><div class="label">الموقع الرئيسي</div><div class="value">حلب، سوريا</div></div>
   </div>
 
-  <div class="card" id="loginSec">
+  <div class="card" id="loginBox">
     <h3>🔐 تسجيل دخول الأعضاء</h3>
     <p style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">ادخل رقم العضوية الخاص بك للاطلاع على بيانات شقتك والمدفوعات</p>
     <input id="id" placeholder="رقم العضوية" inputmode="numeric">
@@ -508,9 +508,7 @@ button:hover{ transform:scale(1.02); }
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
-// عند تحميل الصفحة بالكامل
 window.onload = function(){
-  // 1. التحقق من وجود جلسة دخول محفوظة كاملة (عضو مسجل دخول سابقاً)
   try {
     let savedUser = localStorage.getItem("currentUser");
     if(savedUser) {
@@ -519,7 +517,6 @@ window.onload = function(){
     }
   } catch(e) { localStorage.removeItem("currentUser"); }
 
-  // 2. التحقق من ميزة تذكرني (حفظ رقم العضوية فقط في الخانة)
   let rememberedId = localStorage.getItem("rememberedMembershipId");
   if(rememberedId) {
     document.getElementById("id").value = rememberedId;
@@ -527,13 +524,11 @@ window.onload = function(){
   }
 };
 
-// كود الملاحة والنزول السلس للأقسام العامة
 function scrollToSec(id) {
   let el = document.getElementById(id);
   if(el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
-// فتح وإغلاق قائمة دليل الخدمات (FAQ)
 function toggleFaq(element) {
   let item = element.parentElement;
   item.classList.toggle("open");
@@ -550,4 +545,12 @@ function switchTab(tabId, element) {
 
 function login(){
   let id = document.getElementById("id").value.trim();
-  let pass = document.getElementById
+  let pass = document.getElementById("pass").value.trim();
+  let errorEl = document.getElementById("error");
+  let btn = document.getElementById("loginBtn");
+  let rememberMe = document.getElementById("rememberMe").checked;
+
+  errorEl.innerText = "";
+  if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
+
+  btn.dis
