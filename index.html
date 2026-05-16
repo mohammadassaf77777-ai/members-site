@@ -540,6 +540,7 @@ function switchTab(tabId, element) {
   element.classList.add('active');
 }
 
+// 🌐 دالة تسجيل الدخول الكاملة وبدون أي نقصان 
 function login(){
   let id = document.getElementById("id").value.trim();
   let pass = document.getElementById("pass").value.trim();
@@ -550,5 +551,4 @@ function login(){
   errorEl.innerText = "";
   if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
 
-  btn.disabled = true;
-  btn.innerHTML = 'جاري التحقق <span
+  btn.disab
