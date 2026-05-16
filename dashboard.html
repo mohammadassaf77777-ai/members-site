@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
-/* نفس نمط التنسيق البرمي الموحد */
 *{ box-sizing:border-box; margin:0; padding:0; }
 :root{ --primary:#1a6b4a; --primary-light:#25a370; --accent:#f0a500; --dark:#0d1f2d; --shadow:0 8px 32px rgba(0,0,0,0.25); }
 body{ font-family:'Cairo',sans-serif; direction:rtl; text-align:center; background: linear-gradient(-45deg, #0d1f2d, #1a3a2a, #162535, #0d1f2d); background-size:400% 400%; animation:gradientMove 12s ease infinite; color:white; min-height:100vh; }
@@ -87,7 +86,7 @@ button{ width:100%; padding:13px; margin:6px 0; border:none; border-radius:14px;
 <div class="footer">جمعية السكن والاصطياف © حلب</div>
 
 <script>
-// الصق رابط السكريبت الذكي الخاص بك هنا
+// تم وضع رابط السكريبت الجديد بنجاح هنا
 const API_URL = "https://script.google.com/macros/s/AKfycby7aZQ3aWrK3RXZluBqUsgnEXiCfa0SO7laUuRUKj2gtwwWAQY8mjxiuWiiMqqZu8RZzA/exec";
 
 window.onload = function(){
@@ -131,12 +130,14 @@ function login(){
     btn.disabled = false;
     btn.innerHTML = "دخول";
 
-    if(data.status === "success" || data.success === "success"){
+    if(data.status === "success" || data.success === "success" || data === "success"){
       if(rememberMe) { localStorage.setItem("rememberedMembershipId", id); } 
       else { localStorage.removeItem("rememberedMembershipId"); }
 
+      let cleanId = id.split('.')[0];
+
       let user = {
-        membership_id: id,
+        membership_id: cleanId,
         name: data.name || "",
         total: data.total || "0",
         paid: data.paid || "0",
@@ -148,12 +149,15 @@ function login(){
       };
       localStorage.setItem("currentUser", JSON.stringify(user));
       showUser(user);
-    } else { errorEl.innerText = "❌ البيانات غير صحيحة"; }
+    } else { 
+      errorEl.innerText = "❌ البيانات غير صحيحة"; 
+    }
   })
-  .catch(() => {
+  .catch((err) => {
     btn.disabled = false;
     btn.innerHTML = "دخول";
     errorEl.innerText = "⚠️ خطأ في الاتصال بالسيرفر";
+    console.error(err);
   });
 }
 
@@ -207,4 +211,3 @@ function logout(){ localStorage.removeItem("currentUser"); location.reload(); }
 </script>
 </body>
 </html>
-
