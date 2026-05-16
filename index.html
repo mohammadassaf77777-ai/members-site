@@ -51,17 +51,17 @@ body{
   100%{background-position:0% 50%;}
 }
 
-/* 🧭 شريط التنقل */
+/* 🧭 شريط التنقل العلوي */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(13, 31, 45, 0.85);
+  background: rgba(13, 31, 45, 0.9);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   padding: 12px;
 }
 
@@ -70,13 +70,13 @@ body{
   text-decoration: none;
   font-size: 12px;
   font-weight: 700;
-  padding: 6px 12px;
+  padding: 6px 10px;
   border-radius: 8px;
   transition: 0.25s;
   cursor: pointer;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover {
   color: white;
   background: rgba(255, 255, 255, 0.1);
 }
@@ -209,7 +209,6 @@ body{
   border-radius: 12px;
   margin-bottom: 8px;
   overflow: hidden;
-  transition: 0.3s;
 }
 .faq-question {
   padding: 14px;
@@ -247,7 +246,7 @@ body{
 /* TABS SYSTEM */
 .tabs-container {
   display: flex;
-  justify(content): center;
+  justify-content: center;
   gap: 8px;
   width: 92%;
   max-width: 420px;
@@ -526,7 +525,9 @@ window.onload = function(){
 
 function scrollToSec(id) {
   let el = document.getElementById(id);
-  if(el) el.scrollIntoView({ behavior: 'smooth' });
+  if(el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
 }
 
 function toggleFaq(element) {
@@ -553,4 +554,5 @@ function login(){
   errorEl.innerText = "";
   if(!id || !pass){ errorEl.innerText = "⚠️ الرجاء إدخال البيانات"; return; }
 
-  btn.dis
+  btn.disabled = true;
+  btn.inn
